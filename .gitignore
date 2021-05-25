@@ -1,0 +1,8 @@
+node_modules
+.secret
+build
+cache
+typechain
+*.code-workspace
+artifacts
+*.log
