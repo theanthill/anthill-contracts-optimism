@@ -7,7 +7,6 @@ const writeFile = util.promisify(fs.writeFile);
 function distributionPoolContracts() {
     return fs
         .readdirSync(path.resolve(__dirname, '../contracts/distribution'))
-        .filter((filename) => filename.endsWith('Pool.sol'))
         .map((filename) => filename.replace('.sol', ''));
 }
 
@@ -20,14 +19,11 @@ const exportedContracts = [
     'AntShare',
     'Boardroom',
     'Treasury',
-    //...distributionPoolContracts(), [workerant] REVIEW: do it manually for now
-    'BUSDANTLPTokenANTPool',
-    'LiquidityProviderHelper',
-    'MockStdReference',
+    ...distributionPoolContracts(),
     'TokenFaucet'
 ];
 
-const externalTokens = ['ANT-BUSD', 'BUSD', 'PancakeRouter'];
+const externalTokens = ['ANT-BUSD', 'BUSD', 'ANT-BNB', 'BNB', 'PancakeRouter'];
 
 module.exports = async (deployer, network, accounts) => {
     // Deployments

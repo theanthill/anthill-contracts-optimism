@@ -1,7 +1,7 @@
 /**
  * Deployment of the initial reward distributor for each pool that generates ANT Tokens as rewards
  */
-const {ANTBUSDLPTokenPool, ANTBUSD_POOL_ANT_REWARD_ALLOCATION} = require('./migration-config');
+const {ANTBUSDLPTokenPool, ANTBNBLPTokenPool, ANTBUSD_POOL_ANT_REWARD_ALLOCATION} = require('./migration-config');
 
 const AntToken = artifacts.require('AntToken');
 const InitialAntTokenDistributor = artifacts.require('InitialAntTokenDistributor');
@@ -13,7 +13,7 @@ module.exports = async (deployer, network, accounts) => {
 
     const antToken = await AntToken.deployed();
 
-    const poolsConfig = [ANTBUSDLPTokenPool];
+    const poolsConfig = [ANTBUSDLPTokenPool, ANTBNBLPTokenPool];
     const poolsContracts = poolsConfig.map(({contractName}) => artifacts.require(contractName));
     const poolsAddresses = poolsContracts.map((p) => p.address);
 

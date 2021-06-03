@@ -1,19 +1,23 @@
 /**
  * Export external contracts addresses
  */
-const {getPancakeFactory, getPancakeRouter, getBUSD} = require('./external-contracts');
+const {getPancakeFactory, getPancakeRouter, getBUSD, getBNB} = require('./external-contracts');
 const {exportContract, exportToken} = require('./export-contracts');
 const AntToken = artifacts.require('AntToken');
 
 module.exports = async (deployer, network, accounts) => {
-    const busd = await getBUSD(network);
+    const BUSD = await getBUSD(network);
+    const BNB = await getBNB(network);
     const pancakeRouter = await getPancakeRouter(network);
     const pancakeFactory = await getPancakeFactory(network);
     const antToken = await AntToken.deployed();
 
-    const busdAntPairAddress = await pancakeFactory.getPair(busd.address, antToken.address);
+    const BUSDANTPairAddress = await pancakeFactory.getPair(BUSD.address, antToken.address);
+    const BNBANTPairAddress = await pancakeFactory.getPair(BNB.address, antToken.address);
 
-    exportToken('BUSD', busd.address, 18);
-    exportToken('ANT-BUSD', busdAntPairAddress, 18);
+    exportToken('BUSD', BUSD.address, 18);
+    exportToken('BNB', BNB.address, 18);
+    exportToken('ANT-BUSD', BUSDANTPairAddress, 18);
+    exportToken('ANT-BNB', BNBANTPairAddress, 18);
     exportContract('PancakeRouter', pancakeRouter.address, 18);
 };

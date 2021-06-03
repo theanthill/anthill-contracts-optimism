@@ -15,12 +15,14 @@ contract TokenFaucet is Operator {
 
     IERC20 token0;
     IERC20 token1;
+    IERC20 token2;
     uint256 maxAmount;
 
-    constructor(IERC20 _token0, IERC20 _token1, uint256 _maxAmount)
+    constructor(IERC20 _token0, IERC20 _token1, IERC20 _token2, uint256 _maxAmount)
     {
         token0 = _token0;
         token1 = _token1;
+        token2 = _token2;
         maxAmount = _maxAmount;
     }
 
@@ -34,6 +36,11 @@ contract TokenFaucet is Operator {
         currentAmount = token1.balanceOf(msg.sender);
         if (currentAmount<maxAmount) {
             token1.safeTransfer(msg.sender, maxAmount.sub(currentAmount));
+        }
+
+        currentAmount = token2.balanceOf(msg.sender);
+        if (currentAmount<maxAmount) {
+            token2.safeTransfer(msg.sender, maxAmount.sub(currentAmount));
         }
     }
 }

@@ -15,7 +15,7 @@ import "@theanthill/pancake-swap-periphery/contracts/interfaces/IPancakeRouter02
 
 import "../token/LPTokenWrapperDelegated.sol";
 
-contract LiquidityProviderHelper {
+contract BUSDANTLPHelper {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 

@@ -7,6 +7,7 @@ const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
 const PancakeFactory = artifacts.require('PancakeFactory');
 const PancakeRouter = artifacts.require('PancakeRouter');
 const MockBUSD = artifacts.require('MockBUSD');
+const MockBNB = artifacts.require('MockBNB');
 const MockBandOracle = artifacts.require('MockStdReference');
 const IERC20 = artifacts.require('IERC20');
 
@@ -22,6 +23,10 @@ async function getBUSD(network) {
     return MAIN_NETWORKS.includes(network) ? await IERC20.at(knownContracts.BUSD[network]) : await MockBUSD.deployed();
 }
 
+async function getBNB(network) {
+    return MAIN_NETWORKS.includes(network) ? await IERC20.at(knownContracts.BNB[network]) : await MockBNB.deployed();
+}
+
 async function getBandOracle(network) {
     return MAIN_NETWORKS.includes(network) ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network]) : await MockBandOracle.deployed();
 }
@@ -30,5 +35,6 @@ module.exports = {
     getPancakeFactory,
     getPancakeRouter,
     getBUSD,
+    getBNB,
     getBandOracle,
 };

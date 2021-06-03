@@ -6,7 +6,7 @@
 const INITIAL_ANT_SUPPLY = 500000;
 
 // Amount of Ant Tokens allocated for the ANTBUSD liquidity pool
-const ANTBUSD_INITIAL_ANT_ALLOCATION = 50000;
+const POOLS_INITIAL_ANT_ALLOCATION = 50000;
 
 // Amount of Ant Tokens allocated as rewards for the ANTBUSD liquidity pool stake holders
 const ANTBUSD_POOL_ANT_REWARD_ALLOCATION = 100000;
@@ -23,12 +23,16 @@ const FAUCET_INITIAL_ALLOCATION = 500000;
 // ANT-BUSD LP Tokens pool that generate ANT Token rewards
 const ANTBUSDLPTokenPool = {contractName: 'BUSDANTLPTokenANTPool', token: 'BUSD_ANT-LPv2'};
 
+// ANT-BNB LP Tokens pool that generate ANT Token rewards
+const ANTBNBLPTokenPool = {contractName: 'BNBANTLPTokenANTPool', token: 'WBNB_ANT-LPv2'};
+
 module.exports = {
     INITIAL_ANT_SUPPLY,
-    ANTBUSD_INITIAL_ANT_ALLOCATION,
+    POOLS_INITIAL_ANT_ALLOCATION,
     ANTBUSD_POOL_ANT_REWARD_ALLOCATION,
     MAX_ANTS_SUPPLY,
     FAUCET_MAX_REFILL,
     FAUCET_INITIAL_ALLOCATION,
     ANTBUSDLPTokenPool,
+    ANTBNBLPTokenPool
 };
