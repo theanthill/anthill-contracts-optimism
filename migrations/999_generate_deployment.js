@@ -20,7 +20,8 @@ const exportedContracts = [
     'Boardroom',
     'Treasury',
     ...distributionPoolContracts(),
-    'TokenFaucet'
+    'TokenFaucet',
+    'MockStdReference'
 ];
 
 const externalTokens = ['ANT-BUSD', 'BUSD', 'ANT-BNB', 'BNB', 'PancakeRouter'];
