@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./owner/Operator.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+/**
+    Token that represents the value of the protocol
+ */
+import "./core/BaseToken.sol";
 
-contract AntShare is ERC20Burnable, Operator {
-    constructor(uint256 maxAmount) ERC20("AntShare", "ANTS") {
+contract AntShare is BaseToken {
+
+    // [workerant] Use ERC20Capped to set the maximum amount
+    constructor(uint256 maxAmount) BaseToken("AntShare", "ANTS") {
         // Pre-mints the max amount of shares that will ever exist
-        _mint(msg.sender, maxAmount);
+        mint(msg.sender, maxAmount);
     }
 }

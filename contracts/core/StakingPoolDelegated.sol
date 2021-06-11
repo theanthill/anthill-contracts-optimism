@@ -14,14 +14,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
     balances of the tokens are shown for the origin account. This allows for a helper
     contract to add liquidity and stake all in one transaction
 */
-contract LPTokenWrapperDelegated is Ownable {
+contract StakingPoolDelegated is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    IERC20 public lpt;
+    IERC20 public token;
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
+
+    constructor(address token_) {
+        token = IERC20(token_);
+    }
 
     /**
         Returns the total supply of LP tokens staked in the contract
@@ -54,7 +58,7 @@ contract LPTokenWrapperDelegated is Ownable {
         _balances[origin_account] = _balances[origin_account].add(amount);
 
 
-        lpt.safeTransferFrom(msg.sender, address(this), amount);
+        token.safeTransferFrom(msg.sender, address(this), amount);
     }
 
     /**
@@ -70,7 +74,7 @@ contract LPTokenWrapperDelegated is Ownable {
         _totalSupply = _totalSupply.sub(amount);
         _balances[origin_account] = _balances[origin_account].sub(amount);
 
-        lpt.safeTransfer(msg.sender, amount);
+        token.safeTransfer(msg.sender, amount);
     }
 
     /**
