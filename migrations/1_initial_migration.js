@@ -4,7 +4,6 @@ const artifactor = new Artifactor(`${__dirname}/../build/contracts`);
 const Migrations = artifacts.require('Migrations');
 
 const InitialArtifacts = {
-    // [workerant] TODO: implement for PancakeRouter
     PancakeFactory: require('@pancakeswap2/pancake-swap-core/build/PancakeFactory.json'),
     PancakeRouter: require('@theanthill/pancake-swap-periphery/build/PancakeRouter.json'),
 };

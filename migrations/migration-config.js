@@ -5,6 +5,9 @@
 // Amount of Ant Tokens to be minted at deploy
 const INITIAL_ANT_SUPPLY = 500000;
 
+// Amount of fake BNB tokens to be minted at deploy
+const INITIAL_BNB_SUPPLY = 1000;
+
 // Amount of Ant Tokens allocated for the ANTBUSD liquidity pool
 const POOLS_INITIAL_ANT_ALLOCATION = 50000;
 
@@ -27,15 +30,16 @@ const FAUCET_MAX_REFILL = 100;
 const FAUCET_INITIAL_ALLOCATION = 500000;
 
 // ANT-BUSD LP Tokens pool that generate ANT Token rewards
-const ANTBUSDLPTokenPool = {contractName: 'BUSDANTLPTokenANTPool', token: 'BUSD_ANT-LPv2'};
+const ANTBUSDLPTokenPool = {contractName: 'BUSDANTLPTokenANTPool', otherToken: 'BUSD', lpToken: 'BUSD_ANT-LPv2'};
 
 // ANT-BNB LP Tokens pool that generate ANT Token rewards
-const ANTBNBLPTokenPool = {contractName: 'BNBANTLPTokenANTPool', token: 'WBNB_ANT-LPv2'};
+const ANTBNBLPTokenPool = {contractName: 'BNBANTLPTokenANTPool', otherToken: 'BNB', lpToken: 'WBNB_ANT-LPv2'};
 
-
+const INITIAL_DEPLOYMENT_POOLS = [ ANTBUSDLPTokenPool, ANTBNBLPTokenPool ];
 
 module.exports = {
     INITIAL_ANT_SUPPLY,
+    INITIAL_BNB_SUPPLY,
     POOLS_INITIAL_ANT_ALLOCATION,
     TREASURY_INITIAL_ANT_ALLOCATION,
     ANTBUSD_POOL_ANT_REWARD_ALLOCATION,
@@ -44,5 +48,6 @@ module.exports = {
     FAUCET_MAX_REFILL,
     FAUCET_INITIAL_ALLOCATION,
     ANTBUSDLPTokenPool,
-    ANTBNBLPTokenPool
+    ANTBNBLPTokenPool,
+    INITIAL_DEPLOYMENT_POOLS
 };

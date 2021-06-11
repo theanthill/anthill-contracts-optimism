@@ -31,10 +31,25 @@ async function getBandOracle(network) {
     return MAIN_NETWORKS.includes(network) ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network]) : await MockBandOracle.deployed();
 }
 
+async function getTokenContract(tokenName, network) {
+     // function exists
+    switch(tokenName)
+    {
+        case "BUSD":
+            return getBUSD(network);
+        case "BNB":
+            return getBNB(network);
+        default:
+            throw "getTokenContract: Token contract not found: " + tokenName;
+
+    }
+}
+
 module.exports = {
     getPancakeFactory,
     getPancakeRouter,
     getBUSD,
     getBNB,
     getBandOracle,
+    getTokenContract
 };

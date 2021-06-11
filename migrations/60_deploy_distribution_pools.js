@@ -4,8 +4,6 @@
 const externalContracts = require('./external-contracts');
 const {POOL_START_DATE} = require('../deploy.config.ts');
 
-const { WBNB } = require('./known-contracts');
-
 const AntToken = artifacts.require('AntToken');
 const Oracle = artifacts.require('Oracle');
 

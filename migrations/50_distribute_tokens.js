@@ -1,3 +1,8 @@
+/**
+ * Transfer tokens to Treasury
+ */
+const BigNumber = require('bignumber.js');
+
 const {TREASURY_INITIAL_ANT_ALLOCATION, TREASURY_ANTS_ALLOCATION} = require('./migration-config');
 
 const AntToken = artifacts.require('AntToken');
@@ -9,9 +14,9 @@ async function migration(deployer, network, accounts) {
     const antShare = await AntShare.deployed();
     const treasury = await Treasury.deployed();
 
-    const unit = web3.utils.toBN(10 ** 18);
-    const trasuryInitialAntAllocation = unit.muln(TREASURY_INITIAL_ANT_ALLOCATION);
-    const treasuryANTSAllocation = unit.muln(TREASURY_ANTS_ALLOCATION);
+    const unit = BigNumber(10 ** 18);
+    const trasuryInitialAntAllocation = unit.times(TREASURY_INITIAL_ANT_ALLOCATION);
+    const treasuryANTSAllocation = unit.times(TREASURY_ANTS_ALLOCATION);
 
     console.log('Transferring ' + TREASURY_INITIAL_ANT_ALLOCATION + ' Ant Tokens to Treasury');
     await antToken.transfer(treasury.address, trasuryInitialAntAllocation);

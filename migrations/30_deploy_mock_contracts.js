@@ -1,9 +1,12 @@
 /**
  * Deploy Mock contract for testing
  */
-const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
-const {INITIAL_ANT_SUPPLY, FAUCET_MAX_REFILL, FAUCET_INITIAL_ALLOCATION} = require('../migrations/migration-config');
+const BigNumber = require('bignumber.js');
 
+const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
+const {INITIAL_ANT_SUPPLY, INITIAL_BNB_SUPPLY, FAUCET_MAX_REFILL, FAUCET_INITIAL_ALLOCATION} = require('../migrations/migration-config');
+
+const AntToken = artifacts.require('AntToken');
 const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
 const MockBandOracle = artifacts.require('MockStdReference');
@@ -11,16 +14,14 @@ const TokenFaucet = artifacts.require('TokenFaucet');
 const PancakeFactory = artifacts.require('PancakeFactory');
 const PancakeRouter = artifacts.require('PancakeRouter');
 
-const AntToken = artifacts.require('AntToken');
-
 async function migration(deployer, network, accounts) {
     // BUSD
     if (!MAIN_NETWORKS.includes(network)) {
         await deployer.deploy(MockBUSD);
         const mockBUSD = await MockBUSD.deployed();
 
-        const unit = web3.utils.toBN(10 ** 18);
-        const busdInitialAllocation = unit.muln(INITIAL_ANT_SUPPLY);
+        const unit = BigNumber(10 ** 18);
+        const busdInitialAllocation = unit.times(INITIAL_ANT_SUPPLY);
 
         await mockBUSD.mint(accounts[0], busdInitialAllocation);
     }
@@ -30,8 +31,8 @@ async function migration(deployer, network, accounts) {
         await deployer.deploy(MockBNB);
         const mockBNB = await MockBNB.deployed();
 
-        const unit = web3.utils.toBN(10 ** 18);
-        const bnbInitialAllocation = unit.muln(INITIAL_ANT_SUPPLY);
+        const unit = BigNumber(10 ** 18);
+        const bnbInitialAllocation = unit.times(INITIAL_BNB_SUPPLY);
 
         await mockBNB.mint(accounts[0], bnbInitialAllocation);
     }
@@ -41,9 +42,10 @@ async function migration(deployer, network, accounts) {
         await deployer.deploy(MockBandOracle);
     }
 
+    // Faucet
     if (!MAIN_NETWORKS.includes(network)) {
-        const faucetMaxRefill = web3.utils.toBN(10 ** 18).muln(FAUCET_MAX_REFILL);
-        const faucetInitialAllocation = web3.utils.toBN(10 ** 18).muln(FAUCET_INITIAL_ALLOCATION);
+        const faucetMaxRefill = BigNumber(10 ** 18).times(FAUCET_MAX_REFILL);
+        const faucetInitialAllocation = BigNumber(10 ** 18).times(FAUCET_INITIAL_ALLOCATION);
 
         const antToken = await AntToken.deployed();
         const mockBUSD = await MockBUSD.deployed();

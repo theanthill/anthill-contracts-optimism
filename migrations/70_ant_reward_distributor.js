@@ -1,6 +1,8 @@
 /**
  * Deployment of the initial reward distributor for each pool that generates ANT Tokens as rewards
  */
+const BigNumber = require('bignumber.js');
+
 const {ANTBUSDLPTokenPool, ANTBNBLPTokenPool, ANTBUSD_POOL_ANT_REWARD_ALLOCATION} = require('./migration-config');
 
 const AntToken = artifacts.require('AntToken');
@@ -8,8 +10,8 @@ const InitialAntTokenDistributor = artifacts.require('InitialAntTokenDistributor
 
 // ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
-    const unit = web3.utils.toBN(10 ** 18);
-    const antRewardAllocationAmount = unit.muln(ANTBUSD_POOL_ANT_REWARD_ALLOCATION);
+    const unit = BigNumber(10 ** 18);
+    const antRewardAllocationAmount = unit.times(ANTBUSD_POOL_ANT_REWARD_ALLOCATION);
 
     const antToken = await AntToken.deployed();
 

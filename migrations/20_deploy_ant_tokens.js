@@ -1,6 +1,8 @@
 /**
  * Deploys ANT, ANTS and ANTB tokens
  */
+const BigNumber = require('bignumber.js');
+
 const {INITIAL_ANT_SUPPLY, MAX_ANTS_SUPPLY} = require('./migration-config');
 
 // ============ Contracts ============
@@ -10,8 +12,8 @@ const AntShare = artifacts.require('AntShare');
 
 // ============ Main Migration ============
 const migration = async (deployer, network, accounts) => {
-    const initialAntTokenSupply = web3.utils.toBN(10 ** 18).muln(INITIAL_ANT_SUPPLY);
-    const maxAntSharesSupply = web3.utils.toBN(10 ** 18).muln(MAX_ANTS_SUPPLY);
+    const initialAntTokenSupply = BigNumber(10 ** 18).times(INITIAL_ANT_SUPPLY);
+    const maxAntSharesSupply = BigNumber(10 ** 18).times(MAX_ANTS_SUPPLY);
 
     await deployer.deploy(AntToken, initialAntTokenSupply);
     await deployer.deploy(AntShare, maxAntSharesSupply);
