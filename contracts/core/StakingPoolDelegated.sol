@@ -60,7 +60,7 @@ contract StakingPoolDelegated is Ownable {
         _balances[origin_account] = _balances[origin_account].add(amount);
 
 
-        token.safeTransferFrom(msg.sender, address(this), amount);
+        token.safeTransferFrom(_msgSender(), address(this), amount);
     }
 
     /**
@@ -76,7 +76,7 @@ contract StakingPoolDelegated is Ownable {
         _totalSupply = _totalSupply.sub(amount);
         _balances[origin_account] = _balances[origin_account].sub(amount);
 
-        token.safeTransfer(msg.sender, amount);
+        token.safeTransfer(_msgSender(), amount);
     }
 
     /**

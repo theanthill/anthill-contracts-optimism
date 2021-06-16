@@ -5,17 +5,17 @@ pragma solidity ^0.8.0;
     Helper for providing liquidity to a pair pool
  */
 
+import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "@theanthill/pancake-swap-periphery/contracts/interfaces/IPancakeRouter02.sol";
 
 import "./StakingPoolDelegated.sol";
 
-contract LiquidityStakingHelper {
+contract LiquidityStakingHelper is Context {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -47,30 +47,30 @@ contract LiquidityStakingHelper {
     }
 
     function stake(uint amount0Desired, uint amount1Desired, uint amount0Min, uint amount1Min, uint deadline) public {
-        _token0.safeTransferFrom(msg.sender, address(this), amount0Desired);
-        _token1.safeTransferFrom(msg.sender, address(this), amount1Desired);
+        _token0.safeTransferFrom(_msgSender(), address(this), amount0Desired);
+        _token1.safeTransferFrom(_msgSender(), address(this), amount1Desired);
 
         (uint amount0, uint amount1, uint liquidity) = _pancakeRouter.addLiquidity(address(_token0), address(_token1), amount0Desired, amount1Desired, amount0Min, amount1Min, address(this), deadline);
         require(liquidity > 0, "Received 0 liquidity from Router");
         
         // Returned unused tokens
         if (amount0 != amount0Desired) {
-            _token0.safeTransfer(msg.sender, amount0Desired - amount0);
+            _token0.safeTransfer(_msgSender(), amount0Desired - amount0);
         }
         if (amount1 != amount1Desired) {
-            _token1.safeTransfer(msg.sender, amount1Desired - amount1);
+            _token1.safeTransfer(_msgSender(), amount1Desired - amount1);
         }
 
-        _lpTokenPool.stake(liquidity, msg.sender);
+        _lpTokenPool.stake(liquidity, _msgSender());
     }
 
     function withdraw(uint liquidity, uint amount0Min, uint amount1Min, uint deadline) public {
-        _lpTokenPool.withdraw(liquidity, msg.sender);
-        _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, amount0Min, amount1Min, msg.sender, deadline);
+        _lpTokenPool.withdraw(liquidity, _msgSender());
+        _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, amount0Min, amount1Min, _msgSender(), deadline);
     }
 
     function exit(uint deadline) external {
-        uint256 liquidity = _lpTokenPool.exit(msg.sender);
-        _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, 0, 0, msg.sender, deadline);
+        uint256 liquidity = _lpTokenPool.exit(_msgSender());
+        _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, 0, 0, _msgSender(), deadline);
     }
 }

@@ -15,8 +15,8 @@ contract SimpleERCFund is ISimpleERCFund, Operator {
         uint256 amount,
         string memory reason
     ) public override {
-        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
-        emit Deposit(msg.sender, block.timestamp, reason);
+        IERC20(token).safeTransferFrom(_msgSender(), address(this), amount);
+        emit Deposit(_msgSender(), block.timestamp, reason);
     }
 
     function withdraw(
@@ -26,7 +26,7 @@ contract SimpleERCFund is ISimpleERCFund, Operator {
         string memory reason
     ) public override onlyOperator {
         IERC20(token).safeTransfer(to, amount);
-        emit Withdrawal(msg.sender, to, block.timestamp, reason);
+        emit Withdrawal(_msgSender(), to, block.timestamp, reason);
     }
 
     event Deposit(address indexed from, uint256 indexed at, string reason);

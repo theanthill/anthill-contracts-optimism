@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./owner/Operator.sol";
 import "./utils/ContractGuard.sol";
 
-contract AntShareWrapper {
+contract AntShareWrapper is Context {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -27,16 +27,16 @@ contract AntShareWrapper {
 
     function stake(uint256 amount) public virtual {
         _totalSupply = _totalSupply.add(amount);
-        _balances[msg.sender] = _balances[msg.sender].add(amount);
-        antShare.safeTransferFrom(msg.sender, address(this), amount);
+        _balances[_msgSender()] = _balances[_msgSender()].add(amount);
+        antShare.safeTransferFrom(_msgSender(), address(this), amount);
     }
 
     function withdraw(uint256 amount) public virtual {
-        uint256 directorAntShare = _balances[msg.sender];
+        uint256 directorAntShare = _balances[_msgSender()];
         require(directorAntShare >= amount, "Boardroom: withdraw request greater than staked amount");
         _totalSupply = _totalSupply.sub(amount);
-        _balances[msg.sender] = directorAntShare.sub(amount);
-        antShare.safeTransfer(msg.sender, amount);
+        _balances[_msgSender()] = directorAntShare.sub(amount);
+        antShare.safeTransfer(_msgSender(), amount);
     }
 }
 
@@ -77,7 +77,7 @@ contract Boardroom is AntShareWrapper, ContractGuard, Operator {
 
     /* ========== Modifiers =============== */
     modifier directorExists {
-        require(balanceOf(msg.sender) > 0, "Boardroom: The director does not exist");
+        require(balanceOf(_msgSender()) > 0, "Boardroom: The director does not exist");
         _;
     }
 
@@ -126,29 +126,29 @@ contract Boardroom is AntShareWrapper, ContractGuard, Operator {
 
     /* ========== MUTATIVE FUNCTIONS ========== */
 
-    function stake(uint256 amount) public override onlyOneBlock updateReward(msg.sender) {
+    function stake(uint256 amount) public override onlyOneBlock updateReward(_msgSender()) {
         require(amount > 0, "Boardroom: Cannot stake 0");
         super.stake(amount);
-        emit Staked(msg.sender, amount);
+        emit Staked(_msgSender(), amount);
     }
 
-    function withdraw(uint256 amount) public override onlyOneBlock directorExists updateReward(msg.sender) {
+    function withdraw(uint256 amount) public override onlyOneBlock directorExists updateReward(_msgSender()) {
         require(amount > 0, "Boardroom: Cannot withdraw 0");
         super.withdraw(amount);
-        emit Withdrawn(msg.sender, amount);
+        emit Withdrawn(_msgSender(), amount);
     }
 
     function exit() external {
-        withdraw(balanceOf(msg.sender));
+        withdraw(balanceOf(_msgSender()));
         claimReward();
     }
 
-    function claimReward() public updateReward(msg.sender) {
-        uint256 reward = directors[msg.sender].rewardEarned;
+    function claimReward() public updateReward(_msgSender()) {
+        uint256 reward = directors[_msgSender()].rewardEarned;
         if (reward > 0) {
-            directors[msg.sender].rewardEarned = 0;
-            ant.safeTransfer(msg.sender, reward);
-            emit RewardPaid(msg.sender, reward);
+            directors[_msgSender()].rewardEarned = 0;
+            ant.safeTransfer(_msgSender(), reward);
+            emit RewardPaid(_msgSender(), reward);
         }
     }
 
@@ -163,9 +163,9 @@ contract Boardroom is AntShareWrapper, ContractGuard, Operator {
         BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPerAntShare: nextRPS});
         boardHistory.push(newSnapshot);
 
-        ant.safeTransferFrom(msg.sender, address(this), amount);
-        
-        emit RewardAdded(msg.sender, amount);
+        ant.safeTransferFrom(_msgSender(), address(this), amount);
+
+        emit RewardAdded(_msgSender(), amount);
     }
 
     /* ========== EVENTS ========== */

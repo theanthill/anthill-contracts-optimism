@@ -141,12 +141,12 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardDistrib
 
         This method can only be called by the contract owner
     */
-     function getMyReward() public updateReward(msg.sender) checkStart {
-        uint256 reward = earned(msg.sender);
+     function getMyReward() public updateReward(_msgSender()) checkStart {
+        uint256 reward = earned(_msgSender());
         if (reward > 0) {
-            rewards[msg.sender] = 0;
-            rewardToken.safeTransfer(msg.sender, reward);
-            emit RewardPaid(msg.sender, reward);
+            rewards[_msgSender()] = 0;
+            rewardToken.safeTransfer(_msgSender(), reward);
+            emit RewardPaid(_msgSender(), reward);
         }
     }
 

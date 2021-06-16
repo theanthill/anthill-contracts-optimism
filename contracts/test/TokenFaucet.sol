@@ -28,19 +28,19 @@ contract TokenFaucet is Operator {
 
     function refill() public
     {
-        uint256 currentAmount = token0.balanceOf(msg.sender);
+        uint256 currentAmount = token0.balanceOf(_msgSender());
         if (currentAmount<maxAmount) {
-            token0.safeTransfer(msg.sender, maxAmount.sub(currentAmount));
+            token0.safeTransfer(_msgSender(), maxAmount.sub(currentAmount));
         }
 
-        currentAmount = token1.balanceOf(msg.sender);
+        currentAmount = token1.balanceOf(_msgSender());
         if (currentAmount<maxAmount) {
-            token1.safeTransfer(msg.sender, maxAmount.sub(currentAmount));
+            token1.safeTransfer(_msgSender(), maxAmount.sub(currentAmount));
         }
 
-        currentAmount = token2.balanceOf(msg.sender);
+        currentAmount = token2.balanceOf(_msgSender());
         if (currentAmount<maxAmount) {
-            token2.safeTransfer(msg.sender, maxAmount.sub(currentAmount));
+            token2.safeTransfer(_msgSender(), maxAmount.sub(currentAmount));
         }
     }
 }

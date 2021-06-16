@@ -9,6 +9,6 @@ contract AntToken is BaseToken {
      */
     constructor(uint256 amount) BaseToken("AntToken", "ANT") {
         // Mints an initial amount of ANT token for liquidity purposes
-        mint(msg.sender, amount);
+        mint(_msgSender(), amount);
     }
 }

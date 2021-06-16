@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "./interfaces/IOracle.sol";
 import "./interfaces/IBoardroom.sol";
@@ -130,12 +129,12 @@ contract Treasury is ContractGuard, Epoch {
 
     function setFund(address newFund) public onlyOperator {
         fund = newFund;
-        emit ContributionPoolChanged(msg.sender, newFund);
+        emit ContributionPoolChanged(_msgSender(), newFund);
     }
 
     function setFundAllocationRate(uint256 rate) public onlyOperator {
         fundAllocationRate = rate;
-        emit ContributionPoolRateChanged(msg.sender, rate);
+        emit ContributionPoolRateChanged(_msgSender(), rate);
     }
 
     /* ========== MUTABLE FUNCTIONS ========== */
@@ -157,11 +156,12 @@ contract Treasury is ContractGuard, Epoch {
         require(antTokenPrice < antTokenPriceExternal, "Treasury: antTokenPrice not eligible for antBond purchase");
 
         uint256 priceRatio = antTokenPrice.mul(1e18).div(antTokenPriceExternal);
-        IBaseToken(antToken).burnFrom(msg.sender, amount);
-        IBaseToken(antBond).mint(msg.sender, amount.mul(1e18).div(priceRatio));
+        IBaseToken(antToken).burnFrom(_msgSender(), amount);
+        IBaseToken(antBond).mint(_msgSender(), amount.mul(1e18).div(priceRatio));
+
         _updateAntTokenPrice();
 
-        emit BoughtAntBonds(msg.sender, amount);
+        emit BoughtAntBonds(_msgSender(), amount);
     }
 
     function redeemAntBonds(
@@ -180,11 +180,11 @@ contract Treasury is ContractGuard, Epoch {
 
         accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amount));
 
-        IBaseToken(antBond).burnFrom(msg.sender, amount);
-        IERC20(antToken).safeTransfer(msg.sender, amount);
+        IBaseToken(antBond).burnFrom(_msgSender(), amount);
+        IERC20(antToken).safeTransfer(_msgSender(), amount);
         _updateAntTokenPrice();
 
-        emit RedeemedAntBonds(msg.sender, amount);
+        emit RedeemedAntBonds(_msgSender(), amount);
     }
 
     /**
