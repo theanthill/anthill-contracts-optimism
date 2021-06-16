@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "../interfaces/IStdReference.sol";
 
 contract MockStdReference is IStdReference {
-    uint256 testRate = 1;
+    uint256 testRate = 1e18;
 
     bytes32 encodedANT;
     bytes32 encodedBNB;
@@ -32,18 +32,18 @@ contract MockStdReference is IStdReference {
             data.lastUpdatedQuote = 0;
         } else if (encodedBase == encodedBNB)
         {
-            data.rate = 300;
+            data.rate = 300 * 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
         } else if (encodedBase == encodedBUSD)
         {
-            data.rate = 1;
+            data.rate = 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
         }
         else
         {
-            data.rate = 1;
+            data.rate = 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
         }

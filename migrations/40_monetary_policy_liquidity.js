@@ -20,12 +20,12 @@ async function migration(deployer, network, accounts) {
         const referenceDataOtherToken = await bandOracle.getReferenceData(pool.otherToken, "BUSD");
         const otherToken = await getTokenContract(pool.otherToken, network);
 
+        const unit = BigNumber(10 ** 18);
         const priceOtherToken = BigNumber(referenceDataOtherToken.rate);
 
         // Approve amounts for adding liquidity
-        const unit = BigNumber(10 ** 18);
         let antTokenAmount = unit.times(POOLS_INITIAL_ANT_ALLOCATION);
-        let otherTokenAmount = unit.times(POOLS_INITIAL_ANT_ALLOCATION).idiv(priceOtherToken);
+        let otherTokenAmount = unit.times(POOLS_INITIAL_ANT_ALLOCATION).times(unit).idiv(priceOtherToken);
 
         console.log("Approving ANT token for " + getDisplayBalance(antTokenAmount) + " tokens");
         console.log("Approving " + pool.otherToken + " token for " + getDisplayBalance(otherTokenAmount) + " tokens");

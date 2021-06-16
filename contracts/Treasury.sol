@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "./interfaces/IOracle.sol";
 import "./interfaces/IBoardroom.sol";
-import "./interfaces/IAntAsset.sol";
+import "./interfaces/IBaseToken.sol";
 import "./interfaces/ISimpleERCFund.sol";
 import "./owner/Operator.sol";
 import "./utils/Epoch.sol";
@@ -24,32 +24,28 @@ contract Treasury is ContractGuard, Epoch {
     using Address for address;
     using SafeMath for uint256;
     
-    /* ========== STATE VARIABLES ========== */
-
-    // ========== FLAGS
+    /* ========== STATE ========== */
+    // Flags
     bool public migrated = false;
     bool public initialized = false;
 
-    // ========== CORE
+    // Core
     address public fund;
     address public antToken;
     address public antBond;
     address public antShare;
     address public boardroom;
+    IOracle public oracle;
 
-    IOracle public antTokenOracle;
-
-    // ========== PARAMS
+    // Parameters
     uint256 private accumulatedSeigniorage = 0;
     uint256 public fundAllocationRate = 2; // %
-
-    /* ========== CONSTRUCTOR ========== */
 
     constructor(
         address _antToken,
         address _antBond,
         address _antShare,
-        IOracle _antTokenOracle,
+        IOracle _oracle,
         address _boardroom,
         address _fund,
         uint256 _startTime
@@ -61,13 +57,11 @@ contract Treasury is ContractGuard, Epoch {
         antToken = _antToken;
         antBond = _antBond;
         antShare = _antShare;
-        antTokenOracle = _antTokenOracle;
+        oracle = _oracle;
 
         boardroom = _boardroom;
         fund = _fund;
     }
-
-    /* =================== Modifier =================== */
 
     modifier checkMigration {
         require(!migrated, "Treasury: migrated");
@@ -77,10 +71,10 @@ contract Treasury is ContractGuard, Epoch {
 
     modifier checkOperator {
         require(
-            IAntAsset(antToken).operator() == address(this) &&
-                IAntAsset(antBond).operator() == address(this) &&
-                IAntAsset(antShare).operator() == address(this) &&
-                Operator(boardroom).operator() == address(this),
+            IBaseToken(antToken).operator() == address(this) &&
+            IBaseToken(antBond).operator() == address(this) &&
+            IBaseToken(antShare).operator() == address(this) &&
+            Operator(boardroom).operator() == address(this),
             "Treasury: need more permission"
         );
 
@@ -95,30 +89,21 @@ contract Treasury is ContractGuard, Epoch {
     }
 
     function getAntTokenPrice() public view returns (uint256) {
-        try antTokenOracle.price1Last() returns (uint256 price) {
+        try oracle.priceAverage(antToken) returns (uint256 price) {
             return price;
         } catch {
             revert("Treasury: failed to consult antToken price from the oracle");
         }
     }
 
+    /**
+        Calculates the ceiling for the token price. This is a 5% more on the actual
+        externally evaluated price of the token
+
+        @return The ceiling price multiplied by 1e18
+    */
     function antTokenPriceCeiling() public view returns (uint256) {
-        return antTokenOracle.antTokenPriceOne().mul(uint256(105)).div(100);
-    }
-
-    /* ========== GOVERNANCE ========== */
-
-    function initialize() public checkOperator {
-        require(!initialized, "Treasury: initialized");
-
-        // burn all of it's balance
-        IAntAsset(antToken).burn(IERC20(antToken).balanceOf(address(this)));
-
-        // set accumulatedSeigniorage to it's balance
-        accumulatedSeigniorage = IERC20(antToken).balanceOf(address(this));
-
-        initialized = true;
-        emit Initialized(msg.sender, block.number);
+        return oracle.priceExternal(antToken).mul(uint256(105)).div(100);
     }
 
     function migrate(address target) public onlyOperator checkOperator {
@@ -156,20 +141,24 @@ contract Treasury is ContractGuard, Epoch {
     /* ========== MUTABLE FUNCTIONS ========== */
 
     function _updateAntTokenPrice() internal {
-        try antTokenOracle.update() {} catch {}
+        try oracle.update() {
+        } catch {
+            revert("Error updating price from Oracle");
+        }
     }
 
     function buyAntBonds(uint256 amount, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
         require(amount > 0, "Treasury: cannot purchase antBonds with zero amount");
 
         uint256 antTokenPrice = getAntTokenPrice();
+        uint256 antTokenPriceExternal = oracle.priceExternal(antToken);
 
         require(antTokenPrice == targetPrice, "Treasury: antToken price moved");
-        require(antTokenPrice < antTokenOracle.antTokenPriceOne(), "Treasury: antTokenPrice not eligible for antBond purchase");
+        require(antTokenPrice < antTokenPriceExternal, "Treasury: antTokenPrice not eligible for antBond purchase");
 
-        uint256 priceRatio = antTokenPrice.mul(1e18).div(antTokenOracle.antTokenPriceOne());
-        IAntAsset(antToken).burnFrom(msg.sender, amount);
-        IAntAsset(antBond).mint(msg.sender, amount.mul(1e18).div(priceRatio));
+        uint256 priceRatio = antTokenPrice.mul(1e18).div(antTokenPriceExternal);
+        IBaseToken(antToken).burnFrom(msg.sender, amount);
+        IBaseToken(antBond).mint(msg.sender, amount.mul(1e18).div(priceRatio));
         _updateAntTokenPrice();
 
         emit BoughtAntBonds(msg.sender, amount);
@@ -191,54 +180,70 @@ contract Treasury is ContractGuard, Epoch {
 
         accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amount));
 
-        IAntAsset(antBond).burnFrom(msg.sender, amount);
+        IBaseToken(antBond).burnFrom(msg.sender, amount);
         IERC20(antToken).safeTransfer(msg.sender, amount);
         _updateAntTokenPrice();
 
         emit RedeemedAntBonds(msg.sender, amount);
     }
 
+    /**
+        Calculates how many new Ant Tokens must be minted to bring the price down to the target price:
+            - If the price is lower than the price celing (target price * 1.05) it does nothing
+            - Fetches the price variation percentage and multiplies the current total supply minus
+              the Treasury allocated tokens by the percentage to obtain the new extra supply to mint
+            - From the new supply a 2% is removed for the Contribution Pool
+            - The Treasury itself gets an amount calculated from the minimum of the new supply and
+              the circulating bonds minus the Treasury current accumulated Seigniorage
+            - Finally the Boardroom gets the rest of the new supply
+     */
     function allocateSeigniorage() external onlyOneBlock checkMigration checkStartTime checkEpoch checkOperator {
         _updateAntTokenPrice();
-        uint256 antTokenPrice = getAntTokenPrice();
-        if (antTokenPrice <= antTokenPriceCeiling()) {
-            return; // just advance epoch instead revert
+
+        uint256 antTokenPriceSwap = getAntTokenPrice();
+
+        if (antTokenPriceSwap <= antTokenPriceCeiling()) {
+            return; // Just advance epoch instead revert
         }
+      
+        // Calculate current circulating supply and new supply to be minted
+        uint256 currentSupply = IERC20(antToken).totalSupply().sub(accumulatedSeigniorage);
+        uint256 percentage = oracle.priceVariationPercentage(antToken);
+        uint256 additionalAntTokenSupply = currentSupply.mul(percentage).div(1e18);
 
-        // circulating supply
-        uint256 antTokenSupply = IERC20(antToken).totalSupply().sub(accumulatedSeigniorage);
-        uint256 percentage = (antTokenPrice.mul(1e18).div(antTokenOracle.antTokenPriceOne())).sub(1e18);
-        uint256 seigniorage = antTokenSupply.mul(percentage).div(1e18);
-        IAntAsset(antToken).mint(address(this), seigniorage);
+        IBaseToken(antToken).mint(address(this), additionalAntTokenSupply);
 
-        // ======================== BIP-3
-        uint256 fundReserve = seigniorage.mul(fundAllocationRate).div(100);
+        // Contribution Pool Reserve: allocate fundAllocationRate% from the new extra supply to the fund
+        uint256 fundReserve = additionalAntTokenSupply.mul(fundAllocationRate).div(100);
         if (fundReserve > 0) {
             IERC20(antToken).safeApprove(fund, fundReserve);
             ISimpleERCFund(fund).deposit(antToken, fundReserve, "Treasury: Seigniorage Allocation");
+            
+            additionalAntTokenSupply = additionalAntTokenSupply.sub(fundReserve);
+
             emit ContributionPoolFunded(block.timestamp, fundReserve);
         }
 
-        seigniorage = seigniorage.sub(fundReserve);
-
-        // ======================== BIP-4
-        uint256 treasuryReserve = Math.min(seigniorage, IERC20(antBond).totalSupply().sub(accumulatedSeigniorage));
+        // Treasury Reserve
+        uint256 availableBondSupply = IERC20(antBond).totalSupply().sub(accumulatedSeigniorage);
+        uint256 treasuryReserve = Math.min(additionalAntTokenSupply, availableBondSupply);
         if (treasuryReserve > 0) {
             accumulatedSeigniorage = accumulatedSeigniorage.add(treasuryReserve);
+
             emit TreasuryFunded(block.timestamp, treasuryReserve);
         }
 
-        // boardroom
-        uint256 boardroomReserve = seigniorage.sub(treasuryReserve);
+        // Boardroom Reserve: the rest of the new supply is allocated to the Boardroom
+        uint256 boardroomReserve = additionalAntTokenSupply.sub(treasuryReserve);
         if (boardroomReserve > 0) {
             IERC20(antToken).safeApprove(boardroom, boardroomReserve);
             IBoardroom(boardroom).allocateSeigniorage(boardroomReserve);
+
             emit BoardroomFunded(block.timestamp, boardroomReserve);
         }
     }
 
     // GOV
-    event Initialized(address indexed executor, uint256 at);
     event Migration(address indexed target);
     event ContributionPoolChanged(address indexed operator, address newFund);
     event ContributionPoolRateChanged(address indexed operator, uint256 newRate);

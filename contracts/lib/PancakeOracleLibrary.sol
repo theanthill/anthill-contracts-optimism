@@ -2,12 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "../interfaces/IPancakePair.sol";
-import "prb-math/contracts/PRBMathUD60x18.sol";
+import "./FixedPoint.sol";
 
 // library with helper methods for oracles that are concerned with computing average prices
 library PancakeOracleLibrary {
-    using PRBMathUD60x18 for uint256;
-
     // helper function that returns the current block timestamp within the range of uint32, i.e. [0, 2**32 - 1]
     function currentBlockTimestamp() internal view returns (uint32) {
         return uint32(block.timestamp % 2**32);
@@ -34,9 +32,9 @@ library PancakeOracleLibrary {
             uint32 timeElapsed = blockTimestamp - blockTimestampLast;
             // addition overflow is desired
             // counterfactual
-            price0Cumulative += uint256(reserve1).div(reserve0).mul(timeElapsed);
+            price0Cumulative += uint256(FixedPoint.fraction(reserve1, reserve0)._x) * timeElapsed;
             // counterfactual
-            price1Cumulative += uint256(reserve0).div(reserve1).mul(timeElapsed);
+            price1Cumulative += uint256(FixedPoint.fraction(reserve0, reserve1)._x) * timeElapsed;
         }
     }
 }
