@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./owner/Operator.sol";
 import "./utils/ContractGuard.sol";
-import "./interfaces/IAntAsset.sol";
 
 contract AntShareWrapper {
     using SafeMath for uint256;
@@ -165,6 +164,7 @@ contract Boardroom is AntShareWrapper, ContractGuard, Operator {
         boardHistory.push(newSnapshot);
 
         ant.safeTransferFrom(msg.sender, address(this), amount);
+        
         emit RewardAdded(msg.sender, amount);
     }
 

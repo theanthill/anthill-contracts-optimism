@@ -11,10 +11,7 @@ const INITIAL_BNB_SUPPLY = 1000;
 // Amount of Ant Tokens allocated for the ANTBUSD liquidity pool
 const POOLS_INITIAL_ANT_ALLOCATION = 50000;
 
-// Amount of Ant Tokens allocated for Treasury at deploy
-const TREASURY_INITIAL_ANT_ALLOCATION = 100000;
-
-// Amount of Ant Tokens allocated as rewards for the ANTBUSD liquidity pool stake holders
+    // Amount of Ant Tokens allocated as rewards for the ANTBUSD liquidity pool stake holders
 const ANTBUSD_POOL_ANT_REWARD_ALLOCATION = 100000;
 
 // Maximum total amount of Ant Shares to be pre-minted
@@ -41,7 +38,6 @@ module.exports = {
     INITIAL_ANT_SUPPLY,
     INITIAL_BNB_SUPPLY,
     POOLS_INITIAL_ANT_ALLOCATION,
-    TREASURY_INITIAL_ANT_ALLOCATION,
     ANTBUSD_POOL_ANT_REWARD_ALLOCATION,
     MAX_ANTS_SUPPLY,
     TREASURY_ANTS_ALLOCATION,

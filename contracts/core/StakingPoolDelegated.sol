@@ -14,6 +14,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
     balances of the tokens are shown for the origin account. This allows for a helper
     contract to add liquidity and stake all in one transaction
 */
+
+// [workerant] This should be operator, Owner must be either Timelock or Deployer
 contract StakingPoolDelegated is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
