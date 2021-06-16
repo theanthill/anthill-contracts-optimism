@@ -27,7 +27,7 @@
   "homepage": "https://github.com/rhlsthrm/solidity-ts-dev-stack-example#readme",
   "devDependencies": {
     "@truffle/artifactor": "^4.0.101",
-    "@truffle/contract": "^4.3.13",
+    "@truffle/contract": "^4.3.20",
     "@truffle/hdwallet-provider": "^1.2.2",
     "@typechain/ethers-v5": "^6.0.2",
     "@typechain/hardhat": "^1.0.0",
@@ -38,7 +38,7 @@
     "bignumber.js": "^9.0.0",
     "dotenv": "^8.2.0",
     "ethereum-waffle": "^3.3.0",
-    "ethers": "^5.0.31",
+    "ethers": "^5.3.1",
     "prettier": "^2.2.1",
     "prettier-plugin-solidity": "1.0.0-beta.10",
     "solhint-plugin-prettier": "^0.0.5",
@@ -55,6 +55,6 @@
     "@openzeppelin/contracts": "^4.0.0",
     "@pancakeswap2/pancake-swap-core": "^0.1.0",
     "@theanthill/pancake-swap-periphery": "^1.1.0-beta.1",
-    "prb-math": "^1.1.0"
+    "solc": "^0.8.3"
   }
 }
