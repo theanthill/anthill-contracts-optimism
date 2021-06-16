@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "@theanthill/pancake-swap-periphery/contracts/interfaces/IPancakeRouter02.sol";
 
-import "./StakingPoolDelegated.sol";
+import "../interfaces/IStakingPoolDelegated.sol";
 
 contract LiquidityStakingHelper is Context {
     using SafeMath for uint256;
@@ -24,14 +24,14 @@ contract LiquidityStakingHelper is Context {
     IERC20 _token0;
     IERC20 _token1;
     IERC20 _lptoken;
-    StakingPoolDelegated _lpTokenPool;
+    IStakingPoolDelegated _lpTokenPool;
     IPancakeRouter02 _pancakeRouter;
 
     constructor(
         IERC20 token0,
         IERC20 token1,
         IERC20 lptoken,
-        StakingPoolDelegated lpTokenPool,
+        IStakingPoolDelegated lpTokenPool,
         IPancakeRouter02 pancakeRouter
     ) {
         _token0 = token0;

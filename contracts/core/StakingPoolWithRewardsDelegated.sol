@@ -98,9 +98,11 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardDistrib
         @param amount Amount of LP tokens to be withdrawn
         @param origin_account Account on which behalf the LP tokens are withdrawn
     */
-    function withdraw(uint256 amount, address origin_account) public override updateReward(origin_account) checkStart {
+    // [workerant] Review if we need onlyOwner
+    function withdraw(uint256 amount, address origin_account) public override updateReward(origin_account) checkStart  {
         require(amount > 0, "BaseStakingPool: Cannot withdraw 0");
         super.withdraw(amount, origin_account);
+
         emit Withdrawn(origin_account, amount);
     }
 
