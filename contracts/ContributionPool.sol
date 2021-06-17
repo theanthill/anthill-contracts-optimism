@@ -4,10 +4,30 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "./owner/Operator.sol";
-import "./interfaces/ISimpleERCFund.sol";
+import "./access/OperatorController.sol";
 
-contract SimpleERCFund is ISimpleERCFund, Operator {
+/**
+    Interface
+ */
+interface IContributionPool {
+    function deposit(
+        address token,
+        uint256 amount,
+        string memory reason
+    ) external;
+
+    function withdraw(
+        address token,
+        uint256 amount,
+        address to,
+        string memory reason
+    ) external;
+}
+
+/**
+    Simple ERC fund to use as a contribution pool
+ */
+contract ContributionPool is IContributionPool, OperatorController {
     using SafeERC20 for IERC20;
 
     function deposit(

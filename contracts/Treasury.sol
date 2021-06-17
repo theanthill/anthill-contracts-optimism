@@ -217,7 +217,7 @@ contract Treasury is ContractGuard, Epoch {
         uint256 fundReserve = additionalAntTokenSupply.mul(fundAllocationRate).div(100);
         if (fundReserve > 0) {
             IERC20(antToken).safeApprove(fund, fundReserve);
-            ISimpleERCFund(fund).deposit(antToken, fundReserve, "Treasury: Seigniorage Allocation");
+            IContributionPool(fund).deposit(antToken, fundReserve, "Treasury: Seigniorage Allocation");
             
             additionalAntTokenSupply = additionalAntTokenSupply.sub(fundReserve);
 
