@@ -7,6 +7,15 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
+    Interface
+*/
+interface IStakingPoolDelegated  {
+    function stake(uint256 amount, address origin_account) external;
+    function withdraw(uint256 amount, address origin_account) external;
+    function exit(address origin_account) external returns (uint256);
+}
+
+/**
     Generic LP Token Pool with delegated access
 
     It allows for delegated staking/withdraw on behalf of an origin account. The LP

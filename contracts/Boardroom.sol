@@ -8,6 +8,13 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./access/OperatorController.sol";
 import "./utils/ContractGuard.sol";
 
+/**
+    Interface
+ */
+interface IBoardroom {
+    function allocateSeigniorage(uint256 amount) external;
+}
+
 contract AntShareWrapper is Context {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;

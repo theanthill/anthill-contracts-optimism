@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "@theanthill/pancake-swap-periphery/contracts/interfaces/IPancakeRouter02.sol";
 
-import "../interfaces/IStakingPoolDelegated.sol";
+import "./StakingPoolDelegated.sol";
 
 contract LiquidityStakingHelper is Context {
     using SafeMath for uint256;
