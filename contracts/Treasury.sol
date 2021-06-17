@@ -5,11 +5,14 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "./interfaces/IOracle.sol";
-import "./interfaces/IBoardroom.sol";
-import "./interfaces/IBaseToken.sol";
-import "./interfaces/ISimpleERCFund.sol";
-import "./owner/Operator.sol";
+import "./Boardroom.sol";
+import "./Oracle.sol";
+import "./ContributionPool.sol";
+
+import "./core/BaseToken.sol";
+
+import "./access/OperatorController.sol";
+
 import "./utils/Epoch.sol";
 import "./utils/ContractGuard.sol";
 
@@ -70,10 +73,10 @@ contract Treasury is ContractGuard, Epoch {
 
     modifier checkOperator {
         require(
-            IBaseToken(antToken).operator() == address(this) &&
-            IBaseToken(antBond).operator() == address(this) &&
-            IBaseToken(antShare).operator() == address(this) &&
-            Operator(boardroom).operator() == address(this),
+            IOperatorController(antToken).isOperator(address(this)) &&
+            IOperatorController(antBond).isOperator(address(this)) &&
+            IOperatorController(antShare).isOperator(address(this)) &&
+            IOperatorController(boardroom).isOperator(address(this)),
             "Treasury: need more permission"
         );
 
@@ -109,18 +112,15 @@ contract Treasury is ContractGuard, Epoch {
         require(!migrated, "Treasury: migrated");
 
         // Ant Token
-        Operator(antToken).transferOperator(target);
-        Operator(antToken).transferOwnership(target);
+        IOperatorController(antToken).transferOperator(target);
         IERC20(antToken).transfer(target, IERC20(antToken).balanceOf(address(this)));
 
         // Ant Bond
-        Operator(antBond).transferOperator(target);
-        Operator(antBond).transferOwnership(target);
+        IOperatorController(antBond).transferOperator(target);
         IERC20(antBond).transfer(target, IERC20(antBond).balanceOf(address(this)));
 
         // share
-        Operator(antShare).transferOperator(target);
-        Operator(antShare).transferOwnership(target);
+        IOperatorController(antShare).transferOperator(target);
         IERC20(antShare).transfer(target, IERC20(antShare).balanceOf(address(this)));
 
         migrated = true;
