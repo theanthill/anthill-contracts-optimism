@@ -9,12 +9,12 @@ import "./Boardroom.sol";
 import "./Oracle.sol";
 import "./ContributionPool.sol";
 
-import "./core/BaseToken.sol";
+import "../core/BaseToken.sol";
 
-import "./access/OperatorController.sol";
+import "../access/OperatorController.sol";
 
-import "./utils/Epoch.sol";
-import "./utils/ContractGuard.sol";
+import "../utils/Epoch.sol";
+import "../utils/ContractGuard.sol";
 
 /**
  * @title Ant Token Treasury contract
@@ -90,11 +90,19 @@ contract Treasury is ContractGuard, Epoch {
         return accumulatedSeigniorage;
     }
 
-    function getAntTokenPrice() public view returns (uint256) {
+    function getAntTokenPriceSwap() public view returns (uint256) {
         try oracle.priceAverage(antToken) returns (uint256 price) {
             return price;
         } catch {
-            revert("Treasury: failed to consult antToken price from the oracle");
+            revert("Treasury: failed to consult Ant Token swap price from the oracle");
+        }
+    }
+
+    function getAntTokenPriceExternal() public view returns (uint256) {
+        try oracle.priceExternal(antToken) returns (uint256 price) {
+            return price;
+        } catch {
+            revert("Treasury: failed to consult Ant Token external price from the oracle");
         }
     }
 
@@ -139,52 +147,71 @@ contract Treasury is ContractGuard, Epoch {
 
     /* ========== MUTABLE FUNCTIONS ========== */
 
+    /**
+        Calls the orable to update the latest price
+    */
     function _updateAntTokenPrice() internal {
         try oracle.update() {
         } catch {
-            revert("Error updating price from Oracle");
+            revert("Treasury: Error updating price from Oracle");
         }
     }
 
-    function buyAntBonds(uint256 amount, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
-        require(amount > 0, "Treasury: cannot purchase antBonds with zero amount");
+    /**
+        Buys Ant Bonds with Ant Tokens
 
-        uint256 antTokenPrice = getAntTokenPrice();
-        uint256 antTokenPriceExternal = oracle.priceExternal(antToken);
+        Ant Tokens are burned and Ant Bonds are minted to the sender's account in a
+        ratio of 1:(targetPrice/externalPrice)
 
-        require(antTokenPrice == targetPrice, "Treasury: antToken price moved");
-        require(antTokenPrice < antTokenPriceExternal, "Treasury: antTokenPrice not eligible for antBond purchase");
+        @param amountAntToken Amount of Ant Tokens to burn in order to get the bonds
+        @param targetPrice Target price at which the bonds will be purchased
+    */
+    function buyAntBonds(uint256 amountAntToken, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
+        require(amountAntToken > 0, "Treasury: cannot purchase antBonds with zero amount");
 
-        uint256 priceRatio = antTokenPrice.mul(1e18).div(antTokenPriceExternal);
-        IBaseToken(antToken).burnFrom(_msgSender(), amount);
-        IBaseToken(antBond).mint(_msgSender(), amount.mul(1e18).div(priceRatio));
+        uint256 antTokenPriceSwap = getAntTokenPriceSwap();
+        uint256 antTokenPriceExternal = getAntTokenPriceExternal();
+
+        require(antTokenPriceSwap == targetPrice, "Treasury: Ant Token price moved");
+        require(antTokenPriceSwap < antTokenPriceExternal, "Treasury: Ant Token price not eligible for Ant Bond purchase");
+
+        // Price ratio with 1e18 decimals
+        uint256 priceRatio = antTokenPriceSwap.mul(1e18).div(antTokenPriceExternal);
+        uint256 amountBonds = amountAntToken.mul(1e18).div(priceRatio);
+
+        IBaseToken(antToken).burnFrom(_msgSender(), amountAntToken);
+        IBaseToken(antBond).mint(_msgSender(), amountBonds);
 
         _updateAntTokenPrice();
 
-        emit BoughtAntBonds(_msgSender(), amount);
+        emit BoughtAntBonds(_msgSender(), amountAntToken);
     }
 
-    function redeemAntBonds(
-        uint256 amount /* [workerant]: REVIEW, uint256 targetPrice*/
-    ) external onlyOneBlock checkMigration checkStartTime checkOperator {
-        require(amount > 0, "Treasury: cannot redeem antBonds with zero amount");
+    /**
+        Redeems Ant Bonds for Ant Tokens
 
-        uint256 antTokenPrice = getAntTokenPrice();
-        // [workerant] REVIEW
-        //require(antTokenPrice == targetPrice, "Treasury: antToken price moved");
-        require(
-            antTokenPrice > antTokenPriceCeiling(), // price > realAntTokenPrice * 1.05
-            "Treasury: antTokenPrice not eligible for antBond purchase"
-        );
-        require(IERC20(antToken).balanceOf(address(this)) >= amount, "Treasury: treasury has no more budget");
+        Ant Bonds are burned and Ant Tokens are transferred to the sender's account in a ratio of 1:1
 
-        accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amount));
+        @param amountAntBonds Amount of Ant Tokens to burn in order to get the bonds
+        @param targetPrice Target price at which the bonds will be redeemed
+    */
+    function redeemAntBonds(uint256 amountAntBonds, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
+        require(amountAntBonds > 0, "Treasury: cannot redeem antBonds with zero amount");
 
-        IBaseToken(antBond).burnFrom(_msgSender(), amount);
-        IERC20(antToken).safeTransfer(_msgSender(), amount);
+        uint256 antTokenPrice = getAntTokenPriceSwap();
+        
+        require(antTokenPrice == targetPrice, "Treasury: Ant Token price moved");
+        require(antTokenPrice > antTokenPriceCeiling(), "Treasury: Ant Token price not eligible for Ant Bond redemption");
+        require(IERC20(antToken).balanceOf(address(this)) >= amountAntBonds, "Treasury: treasury has no more budget for Ant Bonds redemption");
+
+        accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amountAntBonds));
+
+        IBaseToken(antBond).burnFrom(_msgSender(), amountAntBonds);
+        IERC20(antToken).safeTransfer(_msgSender(), amountAntBonds);
+
         _updateAntTokenPrice();
 
-        emit RedeemedAntBonds(_msgSender(), amount);
+        emit RedeemedAntBonds(_msgSender(), amountAntBonds);
     }
 
     /**
@@ -200,7 +227,7 @@ contract Treasury is ContractGuard, Epoch {
     function allocateSeigniorage() external onlyOneBlock checkMigration checkStartTime checkEpoch checkOperator {
         _updateAntTokenPrice();
 
-        uint256 antTokenPriceSwap = getAntTokenPrice();
+        uint256 antTokenPriceSwap = getAntTokenPriceSwap();
 
         if (antTokenPriceSwap <= antTokenPriceCeiling()) {
             return; // Just advance epoch instead revert

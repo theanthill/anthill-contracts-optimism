@@ -4,14 +4,14 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "./lib/PancakeLibrary.sol";
-import "./lib/PancakeOracleLibrary.sol";
-import "./lib/FixedPoint.sol";
-import "./utils/Epoch.sol";
+import "../libraries/PancakeLibrary.sol";
+import "../libraries/PancakeOracleLibrary.sol";
+import "../libraries/FixedPoint.sol";
+import "../utils/Epoch.sol";
 
-import "./interfaces/IERC20Extended.sol";
-import "./interfaces/IPancakePair.sol";
-import "./interfaces/IStdReference.sol";
+import "../interfaces/IERC20Extended.sol";
+import "../interfaces/IPancakePair.sol";
+import "../interfaces/IStdReference.sol";
 
 /** 
     Interface
