@@ -1,9 +1,7 @@
 const Artifactor = require('@truffle/artifactor');
 const artifactor = new Artifactor(`${__dirname}/../build/contracts`);
 
-const Migrations = artifacts.require('Migrations');
-
-const InitialArtifacts = {
+const ExternalArtifacts = {
     PancakeFactory: require('@pancakeswap2/pancake-swap-core/build/PancakeFactory.json'),
     PancakeRouter: require('@theanthill/pancake-swap-periphery/build/PancakeRouter.json'),
 };
@@ -14,12 +12,10 @@ module.exports = async function (deployer, network) {
     if (!LOCAL_NETWORKS.includes(network) && !TEST_NETWORKS.includes(network) && !MAIN_NETWORKS.includes(network)) {
         throw new Error(`Network:${network} is not a valid network for deployment`);
     }
-    for await ([contractName, legacyArtifact] of Object.entries(InitialArtifacts)) {
+    for await ([contractName, contractArtifact] of Object.entries(ExternalArtifacts)) {
         await artifactor.save({
             contractName,
-            ...legacyArtifact,
+            ...contractArtifact,
         });
     }
-
-    await deployer.deploy(Migrations);
 };
