@@ -16,16 +16,23 @@ module.exports = async (deployer, network, accounts) => {
     const antBond = await AntBond.deployed();
     const treasury = await Treasury.deployed();
     const boardroom = await Boardroom.deployed();
-    const timelock = await deployer.deploy(Timelock, accounts[0], 2 * DAY);
 
+    const admins = [accounts[0]];
+    const timelock = await deployer.deploy(Timelock, 2 * DAY, admins);
+
+    console.log(`Assigning Treasury as Owner and Operator of the protocol tokens`);
     for await (const contract of [antToken, antShare, antBond]) {
         await contract.transferOperator(treasury.address);
         await contract.transferOwnership(treasury.address);
     }
+    
+    console.log(`Assigning (${accounts[0]}) as Operator for Boardroom (${Boardroom.address})`);
     await boardroom.transferOperator(treasury.address);
+    console.log(`Transferring Ownership of Boardroom (${Boardroom.address}) to Timelock (${Timelock.address})`);
     await boardroom.transferOwnership(timelock.address);
+    
+    console.log(`Assigning (${accounts[0]}) as Operator for Treasury (${Treasury.address})`);
     await treasury.transferOperator(timelock.address);
+    console.log(`Transferring Ownership of Treasury (${Treasury.address}) to Timelock (${Timelock.address})`);
     await treasury.transferOwnership(timelock.address);
-
-    console.log(`Transferred the operator role from the deployer (${accounts[0]}) to Treasury (${Treasury.address})`);
 };
