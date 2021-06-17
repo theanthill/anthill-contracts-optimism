@@ -11,10 +11,10 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../interfaces/IRewardDistributionRecipient.sol";
+import "../distribution/RewardsDistributor.sol";
 import "./StakingPoolDelegated.sol";
 
-contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardDistributionRecipient {
+contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardsDistributorRecipient {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -38,7 +38,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardDistrib
         address rewardToken_,
         address token_,
         uint256 startTime_
-    ) StakingPoolDelegated(token_) {
+    ) StakingPoolDelegated(token_) IRewardsDistributorRecipient() {
         rewardToken = IERC20(rewardToken_);
         startTime = startTime_;
     }
@@ -156,11 +156,11 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, IRewardDistrib
         Called by the distribution script to allocate an amount of reward tokens
         to the pool, to be rewarded to the pool stake holders when calling getReward()
 
-        @dev Can only be called by the reward distributor set through IRewardDistributionRecipient::setRewardDistribution
+        @dev Can only be called by the reward distributor set through IRewardDistributionRecipient::setRewardDistributor
 
         @param reward  Amount of reward tokens allocated to the pool
      */
-    function notifyRewardAmount(uint256 reward) external override onlyRewardDistribution updateReward(address(0)) {
+    function notifyRewardAmount(uint256 reward) external override onlyRewardsDistributor updateReward(address(0)) {
         if (block.timestamp > startTime) {
             if (block.timestamp >= periodFinish) {
                 rewardRate = reward.div(DURATION);
