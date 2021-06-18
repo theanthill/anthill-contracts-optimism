@@ -1,10 +1,13 @@
 /**
  * Export external contracts addresses
  */
-const {getPancakeFactory, getPancakeRouter, getBUSD, getBNB, getBandOracle} = require('./external-contracts');
+const {getPancakeFactory, getPancakeRouter, getBUSD, getBNB,} = require('./external-contracts');
 const {exportContract, exportToken} = require('./export-contracts');
+
+// ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
 
+// ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
     const BUSD = await getBUSD(network);
     const BNB = await getBNB(network);

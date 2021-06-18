@@ -4,8 +4,9 @@
 const BigNumber = require('bignumber.js');
 
 const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
-const {INITIAL_ANT_SUPPLY, INITIAL_BNB_SUPPLY, FAUCET_MAX_REFILL, FAUCET_INITIAL_ALLOCATION} = require('../migrations/migration-config');
+const {TEST_INITIAL_BUSD_SUPPLY, TEST_INITIAL_BNB_SUPPLY, TEST_FAUCET_MAX_REFILL, TEST_FAUCET_INITIAL_ALLOCATION} = require('./migration-config');
 
+// ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
 const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
@@ -14,6 +15,7 @@ const TokenFaucet = artifacts.require('TokenFaucet');
 const PancakeFactory = artifacts.require('PancakeFactory');
 const PancakeRouter = artifacts.require('PancakeRouter');
 
+// ============ Main Migration ============
 async function migration(deployer, network, accounts) {
     // BUSD
     if (!MAIN_NETWORKS.includes(network)) {
@@ -21,7 +23,7 @@ async function migration(deployer, network, accounts) {
         const mockBUSD = await MockBUSD.deployed();
 
         const unit = BigNumber(10 ** 18);
-        const busdInitialAllocation = unit.times(INITIAL_ANT_SUPPLY);
+        const busdInitialAllocation = unit.times(TEST_INITIAL_BUSD_SUPPLY);
 
         await mockBUSD.mint(accounts[0], busdInitialAllocation);
     }
@@ -32,7 +34,7 @@ async function migration(deployer, network, accounts) {
         const mockBNB = await MockBNB.deployed();
 
         const unit = BigNumber(10 ** 18);
-        const bnbInitialAllocation = unit.times(INITIAL_BNB_SUPPLY);
+        const bnbInitialAllocation = unit.times(TEST_INITIAL_BNB_SUPPLY);
 
         await mockBNB.mint(accounts[0], bnbInitialAllocation);
     }
@@ -44,8 +46,8 @@ async function migration(deployer, network, accounts) {
 
     // Faucet
     if (!MAIN_NETWORKS.includes(network)) {
-        const faucetMaxRefill = BigNumber(10 ** 18).times(FAUCET_MAX_REFILL);
-        const faucetInitialAllocation = BigNumber(10 ** 18).times(FAUCET_INITIAL_ALLOCATION);
+        const faucetMaxRefill = BigNumber(10 ** 18).times(TEST_FAUCET_MAX_REFILL);
+        const faucetInitialAllocation = BigNumber(10 ** 18).times(TEST_FAUCET_INITIAL_ALLOCATION);
 
         const antToken = await AntToken.deployed();
         const mockBUSD = await MockBUSD.deployed();

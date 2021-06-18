@@ -8,6 +8,8 @@ const ExternalArtifacts = {
 
 const {LOCAL_NETWORKS, TEST_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
 
+const Migrations = artifacts.require("Migrations");
+
 module.exports = async function (deployer, network) {
     if (!LOCAL_NETWORKS.includes(network) && !TEST_NETWORKS.includes(network) && !MAIN_NETWORKS.includes(network)) {
         throw new Error(`Network:${network} is not a valid network for deployment`);
@@ -18,4 +20,6 @@ module.exports = async function (deployer, network) {
             ...contractArtifact,
         });
     }
+
+    await deployer.deploy(Migrations);
 };

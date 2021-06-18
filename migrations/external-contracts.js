@@ -10,6 +10,9 @@ const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
 const MockBandOracle = artifacts.require('MockStdReference');
 const IERC20 = artifacts.require('IERC20');
+const AntToken = artifacts.require('AntToken');
+const AntShare = artifacts.require('AntShare');
+const AntBond = artifacts.require('AntBond');
 
 async function getPancakeFactory(network) {
     return LOCAL_NETWORKS.includes(network) ? await PancakeFactory.deployed() : await PancakeFactory.at(knownContracts.PancakeFactory[network]);
@@ -35,10 +38,16 @@ async function getTokenContract(tokenName, network) {
      // function exists
     switch(tokenName)
     {
+        case "ANT":
+            return await AntToken.deployed();
+        case "ANTS":
+            return await AntShare.deployed();
+        case "ANTB":
+            return await AntBond.deployed();
         case "BUSD":
-            return getBUSD(network);
+            return await getBUSD(network);
         case "BNB":
-            return getBNB(network);
+            return await getBNB(network);
         default:
             throw "getTokenContract: Token contract not found: " + tokenName;
 

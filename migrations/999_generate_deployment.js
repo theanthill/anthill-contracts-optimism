@@ -1,3 +1,6 @@
+/**
+ * Generates a json file with all the deployments to connect the contracts to the frontend
+ */
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
@@ -26,6 +29,7 @@ const exportedContracts = [
 
 const externalTokens = ['ANT-BUSD', 'BUSD', 'ANT-BNB', 'BNB', 'PancakeRouter'];
 
+// ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
     // Deployments
     const deployments = {};

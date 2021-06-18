@@ -2,48 +2,84 @@
  * Configuration for the ANT token migration
  */
 
-// Amount of Ant Tokens to be minted at deploy
-const INITIAL_ANT_SUPPLY = 500000;
-
-// Amount of fake BNB tokens to be minted at deploy
-const INITIAL_BNB_SUPPLY = 1000;
-
-// Amount of Ant Tokens allocated for the ANTBUSD liquidity pool
-const POOLS_INITIAL_ANT_ALLOCATION = 50000;
-
-    // Amount of Ant Tokens allocated as rewards for the ANTBUSD liquidity pool stake holders
-const ANTBUSD_POOL_ANT_REWARD_ALLOCATION = 100000;
+// Amount of Ant Shares allocated for Treasury at deploy
+const TREASURY_ANT_ALLOCATION = 5000000;
 
 // Maximum total amount of Ant Shares to be pre-minted
 const MAX_ANTS_SUPPLY = 21000000;
 
-// Amount of Ant Shares allocated for Treasury at deploy
-const TREASURY_ANTS_ALLOCATION = 18900000;
-
-// Maximum amount of tokens to refill from faucet
-const FAUCET_MAX_REFILL = 100;
-
-// Maximum amount of tokens to refill from faucet
-const FAUCET_INITIAL_ALLOCATION = 500000;
-
 // ANT-BUSD LP Tokens pool that generate ANT Token rewards
-const ANTBUSDLPTokenPool = {contractName: 'BUSDANTLPTokenANTPool', otherToken: 'BUSD', lpToken: 'BUSD_ANT-LPv2'};
+const ANTBUSDLPTokenPool = {
+    contractName: 'BUSDANTLPTokenANTPool',
+    helperContract: 'BUSDANTLPHelper',
+    mainToken: 'ANT',
+    otherToken: 'BUSD',
+};
 
 // ANT-BNB LP Tokens pool that generate ANT Token rewards
-const ANTBNBLPTokenPool = {contractName: 'BNBANTLPTokenANTPool', otherToken: 'BNB', lpToken: 'WBNB_ANT-LPv2'};
+const ANTBNBLPTokenPool = {
+    contractName: 'BNBANTLPTokenANTPool',
+    helperContract: 'BNBANTLPHelper',
+    mainToken: 'ANT',
+    otherToken: 'BNB',
+};
 
 const INITIAL_DEPLOYMENT_POOLS = [ ANTBUSDLPTokenPool, ANTBNBLPTokenPool ];
 
+// System accounts
+const TREASURY_ACCOUNT = ""; // [workerant] TODO
+const ADMIN_ACCOUNT = "";    // [workerant] TODO
+
+/**
+ * Test configuration
+ */
+// HQ Account used for testing
+const TEST_TREASURY_ACCOUNT = "0xF9D5169aA864C1Ddda2Aba931Edf722f98B2D159";
+const TEST_ADMIN_ACCOUNT = "0xC113275EA7f3A4f221e9C8bF51C64E3B0C7F86c1";
+const TEST_HQ_ACCOUNT = "0x47Ce08590BdB1162EaDE736EfaAbf2aa2d5C8C92";
+
+// Amount of Ant Shares allocated for HQ at deploy
+const TEST_HQ_ANTS_ALLOCATION = 2100000;
+
+// Amount of Ant Tokens allocated for HQ at deploy
+const TEST_HQ_ANT_ALLOCATION = 100000;
+
+// Amount of fake BNB tokens to be minted at deploy
+const TEST_INITIAL_BNB_SUPPLY = 1000;
+
+// Amount of fake BUSD tokens to be minted at deploy
+const TEST_INITIAL_BUSD_SUPPLY = 300000;
+
+// Amount of Ant Tokens allocated for the ANTBUSD liquidity pool
+const TEST_ANT_LIQUIDITY_PER_POOL = 50000;
+
+// Maximum amount of tokens to refill from faucet
+const TEST_FAUCET_MAX_REFILL = 100;
+
+// Maximum amount of tokens to refill from faucet
+const TEST_FAUCET_INITIAL_ALLOCATION = 500000;
+
+// Initial Ant Token rewards allocation
+const TEST_REWARDS_DISTRIBUTOR_ALLOCATION = 100000;
+
 module.exports = {
-    INITIAL_ANT_SUPPLY,
-    INITIAL_BNB_SUPPLY,
-    POOLS_INITIAL_ANT_ALLOCATION,
-    ANTBUSD_POOL_ANT_REWARD_ALLOCATION,
+    TREASURY_ANT_ALLOCATION,
     MAX_ANTS_SUPPLY,
-    TREASURY_ANTS_ALLOCATION,
-    FAUCET_MAX_REFILL,
-    FAUCET_INITIAL_ALLOCATION,
     ANTBUSDLPTokenPool,
     ANTBNBLPTokenPool,
-    INITIAL_DEPLOYMENT_POOLS
+    INITIAL_DEPLOYMENT_POOLS,
+    TREASURY_ACCOUNT,
+    ADMIN_ACCOUNT,
+    // TEST
+    TEST_TREASURY_ACCOUNT,
+    TEST_ADMIN_ACCOUNT,
+    TEST_HQ_ACCOUNT,
+    TEST_INITIAL_BUSD_SUPPLY,
+    TEST_INITIAL_BNB_SUPPLY,
+    TEST_ANT_LIQUIDITY_PER_POOL,
+    TEST_HQ_ANT_ALLOCATION,
+    TEST_HQ_ANTS_ALLOCATION,
+    TEST_FAUCET_MAX_REFILL,
+    TEST_FAUCET_INITIAL_ALLOCATION,
+    TEST_REWARDS_DISTRIBUTOR_ALLOCATION
 };
