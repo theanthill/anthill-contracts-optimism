@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 /**
     Interfaces
  */
-interface IRewardsDistributor {
+interface IRewardsDistributor /* [workerant] Use Ownable or AccessControl */{
     function distribute() external;
 }
 
