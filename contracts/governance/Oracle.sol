@@ -100,14 +100,7 @@ contract Oracle is IOracle, Epoch {
         price0CumulativeLast = _pair.price0CumulativeLast();
         price1CumulativeLast = _pair.price1CumulativeLast();
 
-        uint112 reserve0;
-        uint112 reserve1;
-        (reserve0, reserve1, blockTimestampLast) = _pair.getReserves();
-
-        require(reserve0 != 0 && reserve1 != 0, "Oracle: NO_RESERVES");
-
-        price0Average = FixedPoint.fraction(reserve1, reserve0);
-        price1Average = FixedPoint.fraction(reserve0, reserve1);
+        (,, blockTimestampLast) = _pair.getReserves();
     }
 
     /** 
