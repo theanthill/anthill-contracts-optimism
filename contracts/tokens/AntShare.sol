@@ -7,10 +7,6 @@ pragma solidity ^0.8.0;
 import "../core/BaseToken.sol";
 
 contract AntShare is BaseToken {
-
     // [workerant] Use ERC20Capped to set the maximum amount
-    constructor(uint256 maxAmount) BaseToken("AntShare", "ANTS") {
-        // Pre-mints the max amount of shares that will ever exist
-        mint(_msgSender(), maxAmount);
-    }
+    constructor() BaseToken("AntShare", "ANTS") { }
 }
