@@ -1,22 +1,12 @@
 {
   "Oracle": {
-    "address": "0xEe41cBa764AB9BC46AEB072D8D4fD05d07515278",
+    "address": "0xC07bf40af6793bD3b78C824D1E1E7C7F8E682dF1",
     "abi": [
       {
         "inputs": [
           {
-            "internalType": "address",
-            "name": "_factory",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "_tokenA",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "_tokenB",
+            "internalType": "contract IPancakePair",
+            "name": "_pair",
             "type": "address"
           },
           {
@@ -131,6 +121,20 @@
         ],
         "name": "Updated",
         "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -296,6 +300,26 @@
           }
         ],
         "name": "hasRole",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isAdmin",
         "outputs": [
           {
             "internalType": "bool",
@@ -512,6 +536,19 @@
         "inputs": [
           {
             "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
             "name": "newOperator",
             "type": "address"
           }
@@ -646,7 +683,7 @@
     ]
   },
   "AntToken": {
-    "address": "0xF949B43B94749B1EEfA20E806eE5c7C3d2aC0897",
+    "address": "0x0ac579D21B683E50ce7fc414Cd2D02909DaC07CD",
     "abi": [
       {
         "inputs": [],
@@ -777,6 +814,20 @@
         ],
         "name": "Transfer",
         "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -1053,6 +1104,26 @@
             "type": "address"
           }
         ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
         "name": "isOperator",
         "outputs": [
           {
@@ -1202,6 +1273,19 @@
             "type": "bool"
           }
         ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
@@ -1250,7 +1334,7 @@
     ]
   },
   "AntBond": {
-    "address": "0xa9fD63872d7990553E5e4391FA5dD41862fb51F7",
+    "address": "0x66d09F328d50ED3826252907f52ccb50795C00E8",
     "abi": [
       {
         "inputs": [],
@@ -1381,6 +1465,20 @@
         ],
         "name": "Transfer",
         "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -1657,6 +1755,26 @@
             "type": "address"
           }
         ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
         "name": "isOperator",
         "outputs": [
           {
@@ -1806,6 +1924,19 @@
             "type": "bool"
           }
         ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
@@ -1854,7 +1985,7 @@
     ]
   },
   "AntShare": {
-    "address": "0xfaBaC8e19A63f28Af50A0EDfAE41Be42631e45a6",
+    "address": "0x9a7851F06517854A8eAa5B2a1BdD83E2313ED600",
     "abi": [
       {
         "inputs": [],
@@ -1985,6 +2116,20 @@
         ],
         "name": "Transfer",
         "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
       },
       {
         "inputs": [],
@@ -2261,6 +2406,26 @@
             "type": "address"
           }
         ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
         "name": "isOperator",
         "outputs": [
           {
@@ -2417,6 +2582,19 @@
         "inputs": [
           {
             "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
             "name": "sender",
             "type": "address"
           },
@@ -2458,7 +2636,7 @@
     ]
   },
   "Boardroom": {
-    "address": "0x9f18879B2548528F7CaC7d38064faD7A04f0655a",
+    "address": "0xf6fE2849DF514dCe0d07774365e7331A55665756",
     "abi": [
       {
         "inputs": [
@@ -2629,6 +2807,20 @@
       },
       {
         "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
         "name": "ADMIN_ROLE",
         "outputs": [
           {
@@ -2774,6 +2966,26 @@
             "type": "address"
           }
         ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
         "name": "isOperator",
         "outputs": [
           {
@@ -2855,6 +3067,19 @@
         "stateMutability": "view",
         "type": "function",
         "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
       },
       {
         "inputs": [
@@ -2993,7 +3218,7 @@
     ]
   },
   "Treasury": {
-    "address": "0x48a4D68b742BcCFe8D9C047140569e30C189bCFA",
+    "address": "0xcb575cd04a532EE76b183F21F26Ba66c5F4F6FE1",
     "abi": [
       {
         "inputs": [
@@ -3259,6 +3484,20 @@
       },
       {
         "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
         "name": "ADMIN_ROLE",
         "outputs": [
           {
@@ -3510,6 +3749,26 @@
             "type": "address"
           }
         ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
         "name": "isOperator",
         "outputs": [
           {
@@ -3632,6 +3891,19 @@
         "stateMutability": "view",
         "type": "function",
         "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
       },
       {
         "inputs": [
@@ -3787,7 +4059,7 @@
     ]
   },
   "BNBANTLPHelper": {
-    "address": "0x2A6CD85eDD84d34689956fFA053DD3BA92795108",
+    "address": "0x9cd10a624ec6e2f68a19A11BC8a33B6cc9C92626",
     "abi": [
       {
         "inputs": [
@@ -3897,7 +4169,7 @@
     ]
   },
   "BNBANTLPTokenANTPool": {
-    "address": "0x7Ef229C15dd2FFC0453DcbEC140A6D9C0c36Db1b",
+    "address": "0xcb9eFE58e76078921550aC799c17F23dB8184C3A",
     "abi": [
       {
         "inputs": [
@@ -3919,25 +4191,6 @@
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "previousOwner",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
       },
       {
         "anonymous": false,
@@ -4086,6 +4339,34 @@
       },
       {
         "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
         "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
           {
@@ -4114,7 +4395,7 @@
       },
       {
         "inputs": [],
-        "name": "REWARDS_ADMIN",
+        "name": "OPERATOR_ROLE",
         "outputs": [
           {
             "internalType": "bytes32",
@@ -4128,26 +4409,12 @@
       },
       {
         "inputs": [],
-        "name": "REWARDS_DISTRIBUTOR",
+        "name": "REWARDS_DISTRIBUTOR_ROLE",
         "outputs": [
           {
             "internalType": "bytes32",
             "name": "",
             "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "_rewardDistributor",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -4297,6 +4564,66 @@
         "constant": true
       },
       {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isOperator",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isRewardsDistributor",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
         "inputs": [],
         "name": "lastTimeRewardApplicable",
         "outputs": [
@@ -4339,20 +4666,6 @@
       },
       {
         "inputs": [],
-        "name": "owner",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
         "name": "periodFinish",
         "outputs": [
           {
@@ -4364,13 +4677,6 @@
         "stateMutability": "view",
         "type": "function",
         "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
       },
       {
         "inputs": [
@@ -4568,11 +4874,11 @@
         "inputs": [
           {
             "internalType": "address",
-            "name": "newOwner",
+            "name": "newAdmin",
             "type": "address"
           }
         ],
-        "name": "transferOwnership",
+        "name": "transferAdmin",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -4581,7 +4887,20 @@
         "inputs": [
           {
             "internalType": "address",
-            "name": "newRewardDistributor",
+            "name": "newOperator",
+            "type": "address"
+          }
+        ],
+        "name": "transferOperator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newRewardsDistributor",
             "type": "address"
           }
         ],
@@ -4631,7 +4950,7 @@
     ]
   },
   "BUSDANTLPHelper": {
-    "address": "0xcBB1Ef065D6f90dbB5dF6A4e1e6461b8C6c0B360",
+    "address": "0x9856a63Edb9DD112c313361Da4c665ba38C9d296",
     "abi": [
       {
         "inputs": [
@@ -4741,7 +5060,7 @@
     ]
   },
   "BUSDANTLPTokenANTPool": {
-    "address": "0x928f67f8BCa2fEfDdec5298e1Ae74B3E9C4ffca4",
+    "address": "0x680fF56377a90c8AECE4375332AD8E183A31817B",
     "abi": [
       {
         "inputs": [
@@ -4763,25 +5082,6 @@
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "previousOwner",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
       },
       {
         "anonymous": false,
@@ -4930,6 +5230,34 @@
       },
       {
         "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
         "name": "DEFAULT_ADMIN_ROLE",
         "outputs": [
           {
@@ -4958,7 +5286,7 @@
       },
       {
         "inputs": [],
-        "name": "REWARDS_ADMIN",
+        "name": "OPERATOR_ROLE",
         "outputs": [
           {
             "internalType": "bytes32",
@@ -4972,26 +5300,12 @@
       },
       {
         "inputs": [],
-        "name": "REWARDS_DISTRIBUTOR",
+        "name": "REWARDS_DISTRIBUTOR_ROLE",
         "outputs": [
           {
             "internalType": "bytes32",
             "name": "",
             "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "_rewardDistributor",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -5141,6 +5455,66 @@
         "constant": true
       },
       {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isOperator",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isRewardsDistributor",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
         "inputs": [],
         "name": "lastTimeRewardApplicable",
         "outputs": [
@@ -5183,20 +5557,6 @@
       },
       {
         "inputs": [],
-        "name": "owner",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
         "name": "periodFinish",
         "outputs": [
           {
@@ -5208,13 +5568,6 @@
         "stateMutability": "view",
         "type": "function",
         "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
       },
       {
         "inputs": [
@@ -5412,11 +5765,11 @@
         "inputs": [
           {
             "internalType": "address",
-            "name": "newOwner",
+            "name": "newAdmin",
             "type": "address"
           }
         ],
-        "name": "transferOwnership",
+        "name": "transferAdmin",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -5425,7 +5778,20 @@
         "inputs": [
           {
             "internalType": "address",
-            "name": "newRewardDistributor",
+            "name": "newOperator",
+            "type": "address"
+          }
+        ],
+        "name": "transferOperator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newRewardsDistributor",
             "type": "address"
           }
         ],
@@ -5475,7 +5841,7 @@
     ]
   },
   "RewardsDistributor": {
-    "address": "0x64E5995C4F8FA455EAd8A4318C80BF347F1bEa8E",
+    "address": "0xBF3025b8C10912FDb37DFD4cA52F1476F01A0f2F",
     "abi": [
       {
         "inputs": [
@@ -5513,6 +5879,137 @@
         "type": "event"
       },
       {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "previousAdminRole",
+            "type": "bytes32"
+          },
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "newAdminRole",
+            "type": "bytes32"
+          }
+        ],
+        "name": "RoleAdminChanged",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          }
+        ],
+        "name": "RoleGranted",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          }
+        ],
+        "name": "RoleRevoked",
+        "type": "event"
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ACCESS_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "ADMIN_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "DEFAULT_ADMIN_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "OPERATOR_ROLE",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -5547,6 +6044,191 @@
         "constant": true
       },
       {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          }
+        ],
+        "name": "getRoleAdmin",
+        "outputs": [
+          {
+            "internalType": "bytes32",
+            "name": "",
+            "type": "bytes32"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "grantRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "hasRole",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isAdmin",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "isOperator",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "renounceRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "role",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "address",
+            "name": "account",
+            "type": "address"
+          }
+        ],
+        "name": "revokeRole",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes4",
+            "name": "interfaceId",
+            "type": "bytes4"
+          }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "transferAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newOperator",
+            "type": "address"
+          }
+        ],
+        "name": "transferOperator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
         "inputs": [],
         "name": "getTotalRewards",
         "outputs": [
@@ -5570,7 +6252,7 @@
     ]
   },
   "TokenFaucet": {
-    "address": "0x434F6e935F8173a6F45073f0ebD6a4a6f963b70B",
+    "address": "0x5FAB7Abd45285bbac756949d44D6aCA6bbED34E8",
     "abi": [
       {
         "inputs": [
@@ -5608,7 +6290,7 @@
     ]
   },
   "MockStdReference": {
-    "address": "0x632BB06323b4A3cA7FCEEa2b1EFF345A64fbBF4f",
+    "address": "0xA8b2f1c8843f3F3010b8f86fF1d201073d517240",
     "abi": [
       {
         "inputs": [],
