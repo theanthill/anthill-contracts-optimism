@@ -7,7 +7,7 @@ pragma solidity ^0.8.0;
     All tokens are burnable and have an operator
  */
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "../access/OperatorController.sol";
+import "../access/OperatorAccessControl.sol";
 
 /**
     Interface
@@ -20,7 +20,7 @@ interface IBaseToken {
 /**
     Base implementation of a ERC20 burnable token with access control for an Operator
  */
-contract BaseToken is ERC20Burnable, OperatorController {
+contract BaseToken is ERC20Burnable, OperatorAccessControl {
     constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
 
     function mint(address recipient_, uint256 amount_) public onlyOperator {

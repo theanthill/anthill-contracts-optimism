@@ -6,52 +6,17 @@ pragma solidity ^0.8.0;
  */
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+
+import "../access/OperatorAccessControl.sol";
 
 /**
     Interfaces
  */
-interface IRewardsDistributor /* [workerant] Use Ownable or AccessControl */{
+interface IRewardsDistributor {
     function distribute() external;
 }
 
-abstract contract IRewardsDistributorRecipient is AccessControl {
-    // ======== CONSTANTS =======
-    bytes32 public constant REWARDS_ADMIN = keccak256("REWARDS_ADMIN");
-    bytes32 public constant REWARDS_DISTRIBUTOR = keccak256("REWARDS_DISTRIBUTOR");
-
-    // ======== STATE =======
-    address public _rewardDistributor;
-
-    // ======== CONSTRUCTOR =======
-    constructor() {
-        _setRoleAdmin(REWARDS_ADMIN, REWARDS_ADMIN);
-        _setRoleAdmin(REWARDS_DISTRIBUTOR, REWARDS_ADMIN);
-
-        _rewardDistributor = _msgSender();
-        
-        _setupRole(REWARDS_ADMIN, _msgSender());
-        _setupRole(REWARDS_DISTRIBUTOR, _msgSender());
-    }
-
-    // ======== MODIFIERS =======
-    modifier onlyRewardsAdmin() {
-        require(hasRole(REWARDS_ADMIN, _msgSender()), "IRewardsDistributorRecipient: sender requires permission");
-        _;
-    }
-
-    modifier onlyRewardsDistributor() {
-        require(hasRole(REWARDS_DISTRIBUTOR, _msgSender()), "IRewardsDistributorRecipient: Caller is not a reward distributor");
-        _;
-    }
-
-    // ======== ADMIN =======
-    function transferRewardsDistributor(address newRewardDistributor) external virtual onlyRewardsAdmin {
-        revokeRole(REWARDS_DISTRIBUTOR, _rewardDistributor);
-        _rewardDistributor = newRewardDistributor;
-        grantRole(REWARDS_DISTRIBUTOR, newRewardDistributor);
-    }
-
+abstract contract IRewardsDistributorRecipient {
     // ======== INTERFACE =======
     function notifyRewardAmount(uint256 reward) external virtual;
 }
@@ -59,7 +24,7 @@ abstract contract IRewardsDistributorRecipient is AccessControl {
 /**
     Helper contract to distribute rewards funds to different contracts in one single transaction
  */
-contract RewardsDistributor is IRewardsDistributor {
+contract RewardsDistributor is OperatorAccessControl {
     using SafeMath for uint256;
 
     // ====== STATE ======
@@ -82,7 +47,7 @@ contract RewardsDistributor is IRewardsDistributor {
     }
 
     // ====== MUTABLES ======
-    function distribute() public override {
+    function distribute() public onlyOperator {
         uint256 totalRewards = _rewardToken.balanceOf(address(this));
         uint256 amountPerRecipient = totalRewards.div(_rewardRecipients.length);
 

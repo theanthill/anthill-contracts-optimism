@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+ * Monetary policy logic to adjust supplies of Ant token assets
+ */
+
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -11,16 +15,12 @@ import "./ContributionPool.sol";
 
 import "../core/BaseToken.sol";
 
-import "../access/OperatorController.sol";
+import "../access/OperatorAccessControl.sol";
 
 import "../utils/Epoch.sol";
 import "../utils/ContractGuard.sol";
 
-/**
- * @title Ant Token Treasury contract
- * @notice Monetary policy logic to adjust supplies of ant token assets
- * @author Summer Smith & Rick Sanchez
- */
+
 contract Treasury is ContractGuard, Epoch {
     using SafeERC20 for IERC20;
     using Address for address;
@@ -52,7 +52,7 @@ contract Treasury is ContractGuard, Epoch {
         address _fund,
         uint256 _startTime
     )
-        // [workerant] REVIEW
+        // [workerant] TEST ONLY!!
         //Epoch(8 hours, _startTime, 0)
         Epoch(10 minutes, _startTime, 0)
     {
@@ -73,10 +73,10 @@ contract Treasury is ContractGuard, Epoch {
 
     modifier checkOperator {
         require(
-            IOperatorController(antToken).isOperator(address(this)) &&
-            IOperatorController(antBond).isOperator(address(this)) &&
-            IOperatorController(antShare).isOperator(address(this)) &&
-            IOperatorController(boardroom).isOperator(address(this)),
+            IOperatorAccessControl(antToken).isOperator(address(this)) &&
+            IOperatorAccessControl(antBond).isOperator(address(this)) &&
+            IOperatorAccessControl(antShare).isOperator(address(this)) &&
+            IOperatorAccessControl(boardroom).isOperator(address(this)),
             "Treasury: need more permission"
         );
 
@@ -120,15 +120,15 @@ contract Treasury is ContractGuard, Epoch {
         require(!migrated, "Treasury: migrated");
 
         // Ant Token
-        IOperatorController(antToken).transferOperator(target);
+        IOperatorAccessControl(antToken).transferOperator(target);
         IERC20(antToken).transfer(target, IERC20(antToken).balanceOf(address(this)));
 
         // Ant Bond
-        IOperatorController(antBond).transferOperator(target);
+        IOperatorAccessControl(antBond).transferOperator(target);
         IERC20(antBond).transfer(target, IERC20(antBond).balanceOf(address(this)));
 
         // share
-        IOperatorController(antShare).transferOperator(target);
+        IOperatorAccessControl(antShare).transferOperator(target);
         IERC20(antShare).transfer(target, IERC20(antShare).balanceOf(address(this)));
 
         migrated = true;

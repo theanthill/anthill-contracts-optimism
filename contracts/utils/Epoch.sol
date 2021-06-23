@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "../access/OperatorController.sol";
+import "../access/OperatorAccessControl.sol";
 
-contract Epoch is OperatorController {
+contract Epoch is OperatorAccessControl {
     using SafeMath for uint256;
 
     uint256 private period;
