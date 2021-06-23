@@ -18,4 +18,5 @@ module.exports = async (deployer, network, accounts) => {
 
     console.log(`Allocating first Seignorage`);
     await treasury.allocateSeigniorage();
+    await treasury.allocateSeigniorage(); // [workerant] Not sure why twice
 };

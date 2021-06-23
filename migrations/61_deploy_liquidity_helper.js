@@ -29,7 +29,7 @@ module.exports = async (deployer, network, accounts) => {
         console.log(`Deploying liquidity helper for pair ANT/${pool.otherToken}`);
         const liquidityHelper = await deployer.deploy(HelperContract, antToken.address, otherToken.address, LPToken, poolContract.address, pancakeRouter.address);
         
-        console.log(`Transferring ANT/${pool.otherToken} staking pool ownership to helper`);
-        await poolContract.transferOwnership(liquidityHelper.address);
+        console.log(`Assigning liquidity helper as ANT/${pool.otherToken} staking pool operator`);
+        await poolContract.transferOperator(liquidityHelper.address);
     }
 };
