@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+    Oracle to consult the current price of the token
+*/
+
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -79,17 +83,11 @@ contract Oracle is IOracle, Epoch {
     FixedPoint.uq112x112 public price1Average;
 
     constructor(
-        address _factory,
-        address _tokenA,
-        address _tokenB,
+        IPancakePair _pair,
         uint256 _period,
         uint256 _startTime,
         IStdReference _bandOracle
-    ) Epoch(_period, _startTime, 0) {
-        // [workerant] The pair could be passed directly to the constructor
-        //             so we can avoid having the PancakeLibrary contract
-        IPancakePair _pair = IPancakePair(PancakeLibrary.pairFor(_factory, _tokenA, _tokenB));
-        
+    ) Epoch(_period, _startTime, 0) {      
         pair = _pair;
 
         token0 = _pair.token0();
