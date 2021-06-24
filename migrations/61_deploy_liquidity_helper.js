@@ -6,12 +6,10 @@ const {INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
-const Oracle = artifacts.require('Oracle');
 
 // ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
     const antToken = await AntToken.deployed();
-    const oracle = await Oracle.deployed();
 
     const pancakeFactory = await getPancakeFactory(network);
     const pancakeRouter = await getPancakeRouter(network);
@@ -24,8 +22,8 @@ module.exports = async (deployer, network, accounts) => {
         const otherToken = await getTokenContract(pool.otherToken, network);
         const poolContract = await PoolContract.deployed();
 
-        const LPToken = await oracle.pairFor(pancakeFactory.address, antToken.address, otherToken.address);
-
+        const LPToken = await pancakeFactory.getPair(antToken.address, otherToken.address);
+        
         console.log(`Deploying liquidity helper for pair ANT/${pool.otherToken}`);
         const liquidityHelper = await deployer.deploy(HelperContract, antToken.address, otherToken.address, LPToken, poolContract.address, pancakeRouter.address);
         

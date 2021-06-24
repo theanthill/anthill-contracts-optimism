@@ -4,11 +4,9 @@ pragma solidity ^0.8.0;
 /**
     Oracle to consult the current price of the token
 */
-
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import "../libraries/PancakeLibrary.sol";
 import "../libraries/PancakeOracleLibrary.sol";
 import "../libraries/FixedPoint.sol";
 
@@ -177,15 +175,6 @@ contract Oracle is IOracle, EpochCounter {
             require(token == token1, 'ExampleOracleSimple: INVALID_TOKEN');
             amountOut = price1Average.mul(amountIn).decode144();
         }
-    }
-
-    // [workerant] This should not be here, we must use PancakeLibrary from js code
-    function pairFor(
-        address factory,
-        address tokenA,
-        address tokenB
-    ) external pure returns (address lpt) {
-        return PancakeLibrary.pairFor(factory, tokenA, tokenB);
     }
 
     /* ======= EVENTS ====== */
