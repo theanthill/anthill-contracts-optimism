@@ -13,7 +13,7 @@ import "../access/OperatorAccessControl.sol";
     Interface
  */
 interface IBaseToken {
-    function mint(address recipient, uint256 amount) external returns (bool);
+    function mint(address recipient, uint256 amount) external;
     function burnFrom(address from, uint256 amount) external;
 }
 
@@ -23,7 +23,7 @@ interface IBaseToken {
 contract BaseToken is ERC20Burnable, OperatorAccessControl {
     constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
 
-    function mint(address recipient_, uint256 amount_) public onlyOperator {
+    function mint(address recipient_, uint256 amount_) external onlyOperator {
         _mint(recipient_, amount_);
     }
 

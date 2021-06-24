@@ -152,7 +152,8 @@ contract Treasury is ContractGuard, EpochCounter {
     function _updateAntTokenPrice() internal {
         try oracle.update() {
         } catch {
-            revert("Treasury: Error updating price from Oracle");
+            // Update will revert if called twice in less than the allocated period, so
+            // just ignore the error if that happens
         }
     }
 
