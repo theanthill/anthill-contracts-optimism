@@ -25,7 +25,6 @@ interface IStakingPoolDelegated  {
     contract to add liquidity and stake all in one transaction
 */
 
-// [workerant] This should be operator, Owner must be either Timelock or Deployer
 contract StakingPoolDelegated is OperatorAccessControl {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;

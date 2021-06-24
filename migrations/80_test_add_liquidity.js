@@ -18,13 +18,13 @@ async function migration(deployer, network, accounts) {
         return;
     }
 
-    const pancakeswapRouter = await getPancakeRouter(network);
+    const pancakeRouter = await getPancakeRouter(network);
     const bandOracle = await getBandOracle(network);  
 
     for (let pool of INITIAL_DEPLOYMENT_POOLS)
     {
         console.log(`Liquidity for the ${pool.mainToken}/${pool.otherToken} staking pool`)
-        await addLiquidity(network, accounts[0], pool, pancakeswapRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
+        await addLiquidity(network, accounts[0], pool, pancakeRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
     }
 }
 

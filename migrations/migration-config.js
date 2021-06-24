@@ -27,9 +27,11 @@ const ANTBNBLPTokenPool = {
 const INITIAL_DEPLOYMENT_POOLS = [ ANTBUSDLPTokenPool, ANTBNBLPTokenPool ];
 
 // System accounts
-const TREASURY_ACCOUNT = ""; // [workerant] TODO
-const OPERATOR_ACCOUNT = ""; // [workerant] TODO
-const ADMIN_ACCOUNT = "";    // [workerant] TODO
+//
+// [workerant] Set the final values before mainnet deployment
+const TREASURY_ACCOUNT = "";
+const OPERATOR_ACCOUNT = "";
+const ADMIN_ACCOUNT = "";
 
 /**
  * Test configuration
