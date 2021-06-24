@@ -5,24 +5,28 @@ pragma solidity ^0.8.0;
     Generic staking pool. LP tokens staked here will generate ANT Token rewards
     to the holder
  */
-
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import "../access/RewardsDistributorControl.sol";
+
 import "../distribution/RewardsDistributor.sol";
+
+import "../utils/StartTimeLock.sol";
+
 import "./StakingPoolDelegated.sol";
 
-contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistributorControl, IRewardsDistributorRecipient {
+contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistributorControl,
+                                            IRewardsDistributorRecipient, StartTimeLock {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     IERC20 public rewardToken;
     uint256 public DURATION = 365 days;
 
-    uint256 public startTime;
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
     uint256 public lastUpdateTime;
@@ -39,15 +43,8 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         address rewardToken_,
         address token_,
         uint256 startTime_
-    ) StakingPoolDelegated(token_) IRewardsDistributorRecipient() {
+    ) StakingPoolDelegated(token_) IRewardsDistributorRecipient() StartTimeLock(startTime_) {
         rewardToken = IERC20(rewardToken_);
-        startTime = startTime_;
-    }
-
-    // [workerant] Use TokenTimelock to control this?
-    modifier checkStart() {
-        require(block.timestamp >= startTime, "BaseStakingPool: not start");
-        _;
     }
 
     modifier updateReward(address account) {
@@ -84,7 +81,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         @param origin_account Account that originally owned the LP tokens and on which
                               behalf the tokens are staked
     */
-    function stake(uint256 amount, address origin_account) public override updateReward(origin_account) checkStart onlyOperator {
+    function stake(uint256 amount, address origin_account) public override updateReward(origin_account) checkStartTime onlyOperator {
         require(amount > 0, "BaseStakingPool: Cannot stake 0");
         super.stake(amount, origin_account);
         emit Staked(origin_account, amount);
@@ -99,8 +96,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         @param amount Amount of LP tokens to be withdrawn
         @param origin_account Account on which behalf the LP tokens are withdrawn
     */
-    // [workerant] Review if we need onlyOwner
-    function withdraw(uint256 amount, address origin_account) public override updateReward(origin_account) checkStart onlyOperator {
+    function withdraw(uint256 amount, address origin_account) public override updateReward(origin_account) checkStartTime onlyOperator {
         require(amount > 0, "BaseStakingPool: Cannot withdraw 0");
         super.withdraw(amount, origin_account);
 
@@ -130,7 +126,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         
         @param origin_account Account on which behalf the LP tokens are withdrawn
     */
-    function getReward(address origin_account) public updateReward(origin_account) checkStart onlyOperator {
+    function getReward(address origin_account) public updateReward(origin_account) checkStartTime onlyOperator {
         uint256 reward = earned(origin_account);
         if (reward > 0) {
             rewards[origin_account] = 0;
@@ -144,7 +140,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
 
         This method can only be called by the contract owner
     */
-     function getMyReward() public updateReward(_msgSender()) checkStart {
+     function getMyReward() public updateReward(_msgSender()) checkStartTime {
         uint256 reward = earned(_msgSender());
         if (reward > 0) {
             rewards[_msgSender()] = 0;

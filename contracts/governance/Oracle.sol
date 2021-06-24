@@ -11,11 +11,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../libraries/PancakeLibrary.sol";
 import "../libraries/PancakeOracleLibrary.sol";
 import "../libraries/FixedPoint.sol";
-import "../utils/Epoch.sol";
 
 import "../interfaces/IERC20Extended.sol";
 import "../interfaces/IPancakePair.sol";
 import "../interfaces/IStdReference.sol";
+
+import "../utils/EpochCounter.sol";
 
 /** 
     Interface
@@ -59,7 +60,7 @@ interface IOracle {
     Fixed window oracle that recomputes the average price for the entire period once every period
     note that the price average is only guaranteed to be over at least 1 period, but may be over a longer period
  */
-contract Oracle is IOracle, Epoch {
+contract Oracle is IOracle, EpochCounter {
     /* ========== STATE ======== */
     using SafeMath for uint256;
     using FixedPoint for *;
@@ -87,7 +88,7 @@ contract Oracle is IOracle, Epoch {
         uint256 _period,
         uint256 _startTime,
         IStdReference _bandOracle
-    ) Epoch(_period, _startTime, 0) {      
+    ) EpochCounter(_period, _startTime, 0) {      
         pair = _pair;
 
         token0 = _pair.token0();

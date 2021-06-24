@@ -17,11 +17,11 @@ import "../core/BaseToken.sol";
 
 import "../access/OperatorAccessControl.sol";
 
-import "../utils/Epoch.sol";
+import "../utils/EpochCounter.sol";
 import "../utils/ContractGuard.sol";
 
 
-contract Treasury is ContractGuard, Epoch {
+contract Treasury is ContractGuard, EpochCounter {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
@@ -50,11 +50,10 @@ contract Treasury is ContractGuard, Epoch {
         IOracle _oracle,
         address _boardroom,
         address _fund,
-        uint256 _startTime
+        uint256 _startTime,
+        uint256 _period
     )
-        // [workerant] TEST ONLY!!
-        //Epoch(8 hours, _startTime, 0)
-        Epoch(10 minutes, _startTime, 0)
+        EpochCounter(_period, _startTime, 0)
     {
         antToken = _antToken;
         antBond = _antBond;
