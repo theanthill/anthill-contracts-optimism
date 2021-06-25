@@ -230,7 +230,7 @@ contract Treasury is ContractGuard, EpochCounter {
         uint256 antTokenPriceSwap = getAntTokenPriceSwap();
 
         if (antTokenPriceSwap <= antTokenPriceCeiling()) {
-            return; // Just advance epoch instead revert
+            return; // Just advance epoch instead of revert
         }
       
         // Calculate current circulating supply and new supply to be minted
@@ -243,6 +243,7 @@ contract Treasury is ContractGuard, EpochCounter {
         // Contribution Pool Reserve: allocate fundAllocationRate% from the new extra supply to the fund
         uint256 fundReserve = additionalAntTokenSupply.mul(fundAllocationRate).div(100);
         if (fundReserve > 0) {
+            // [workerant] Unsafe approval, use safeIncreaseAllowance instead
             IERC20(antToken).safeApprove(fund, fundReserve);
             IContributionPool(fund).deposit(antToken, fundReserve, "Treasury: Seigniorage Allocation");
             
@@ -263,6 +264,7 @@ contract Treasury is ContractGuard, EpochCounter {
         // Boardroom Reserve: the rest of the new supply is allocated to the Boardroom
         uint256 boardroomReserve = additionalAntTokenSupply.sub(treasuryReserve);
         if (boardroomReserve > 0) {
+            // [workerant] Unsafe approval, use safeIncreaseAllowance instead
             IERC20(antToken).safeApprove(boardroom, boardroomReserve);
             IBoardroom(boardroom).allocateSeigniorage(boardroomReserve);
 

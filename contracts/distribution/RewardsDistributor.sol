@@ -17,7 +17,6 @@ interface IRewardsDistributor {
 }
 
 abstract contract IRewardsDistributorRecipient {
-    // ======== INTERFACE =======
     function notifyRewardAmount(uint256 reward) external virtual;
 }
 

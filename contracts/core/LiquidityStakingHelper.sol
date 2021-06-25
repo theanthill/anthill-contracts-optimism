@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 /**
-    Helper for providing liquidity to a pair pool
+    Helps providing liquidity to PancakeSwap and staking the LP tokens into a staking pool all
+    in one operation
  */
 
 import "@openzeppelin/contracts/utils/Context.sol";
@@ -27,6 +28,7 @@ contract LiquidityStakingHelper is Context {
     IStakingPoolDelegated _lpTokenPool;
     IPancakeRouter02 _pancakeRouter;
 
+    /* ========== CONSTRUCTOR ========== */
     constructor(
         IERC20 token0,
         IERC20 token1,
@@ -46,6 +48,7 @@ contract LiquidityStakingHelper is Context {
         _lptoken.approve(address(_pancakeRouter), type(uint256).max);
     }
 
+    /* ========== MUTABLES ========== */
     function stake(uint amount0Desired, uint amount1Desired, uint amount0Min, uint amount1Min, uint deadline) public {
         _token0.safeTransferFrom(_msgSender(), address(this), amount0Desired);
         _token1.safeTransferFrom(_msgSender(), address(this), amount1Desired);

@@ -10,8 +10,8 @@ import "../core/StakingPoolWithRewardsDelegated.sol";
 
 contract BUSDANTLPTokenANTPool is StakingPoolWithRewardsDelegated {
     constructor(
-        address antToken_,
-        address lpToken_,
+        IERC20 antToken_,
+        IERC20 lpToken_,
         uint256 startTime_
     ) StakingPoolWithRewardsDelegated(antToken_, lpToken_, startTime_) {
     }

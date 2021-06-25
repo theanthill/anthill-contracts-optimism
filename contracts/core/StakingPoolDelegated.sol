@@ -1,6 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+/**
+    Generic LP Token Pool with delegated access
+
+    It allows for delegated staking/withdraw on behalf of an origin account. The LP
+    tokens transfers are always done between the caller and this contract, but the
+    balances of the tokens are shown for the origin account. This allows for a helper
+    contract to add liquidity and stake all in one transaction
+*/
+
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -17,14 +26,8 @@ interface IStakingPoolDelegated  {
 }
 
 /**
-    Generic LP Token Pool with delegated access
-
-    It allows for delegated staking/withdraw on behalf of an origin account. The LP
-    tokens transfers are always done between the caller and this contract, but the
-    balances of the tokens are shown for the origin account. This allows for a helper
-    contract to add liquidity and stake all in one transaction
-*/
-
+    Contract
+ */
 contract StakingPoolDelegated is OperatorAccessControl {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -34,9 +37,12 @@ contract StakingPoolDelegated is OperatorAccessControl {
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
 
-    constructor(address token_) {
-        token = IERC20(token_);
+    /* ========== CONSTRUCTOR ========== */
+    constructor(IERC20 token_) {
+        token = token_;
     }
+
+    /* ========== VIEWS ========== */
 
     /**
         Returns the total supply of LP tokens staked in the contract
@@ -53,6 +59,8 @@ contract StakingPoolDelegated is OperatorAccessControl {
     function balanceOf(address account) public view returns (uint256) {
         return _balances[account];
     }
+
+    /* ========== MUTABLES ========== */
 
     /**
         Delegated staking on behalf of an origin account. The caller holds the

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /**
-    Generic staking pool. LP tokens staked here will generate ANT Token rewards
+    Generic staking pool with delegated access. LP tokens staked here will generate ANT Token rewards
     to the holder
  */
 import "@openzeppelin/contracts/utils/math/Math.sol";
@@ -39,14 +39,16 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
     event Withdrawn(address indexed user, uint256 amount);
     event RewardPaid(address indexed user, uint256 reward);
 
+    /* ========== CONSTRUCTOR ========== */
     constructor(
-        address rewardToken_,
-        address token_,
+        IERC20 rewardToken_,
+        IERC20 stakingToken_,
         uint256 startTime_
-    ) StakingPoolDelegated(token_) IRewardsDistributorRecipient() StartTimeLock(startTime_) {
-        rewardToken = IERC20(rewardToken_);
+    ) StakingPoolDelegated(stakingToken_) IRewardsDistributorRecipient() StartTimeLock(startTime_) {
+        rewardToken = rewardToken_;
     }
 
+    /* ========== MODIFIERS ========== */
     modifier updateReward(address account) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
@@ -57,6 +59,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         _;
     }
 
+    /* ========== VIEWS ========== */
     function lastTimeRewardApplicable() public view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }
@@ -71,6 +74,8 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
     function earned(address account) public view returns (uint256) {
         return balanceOf(account).mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
+
+    /* ========== MUTABLES ========== */
 
     /**
         Updates rewards for origin account and caller parent for delegated staking

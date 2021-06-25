@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /**
-    Pool accumulating a defined percetnage of the new minted tokens each seigniorage
+    Reserve pool that receives a defined percentage of the new minted tokens for each Seigniorage
 */
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
