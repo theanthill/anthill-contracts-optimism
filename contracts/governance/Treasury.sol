@@ -173,7 +173,7 @@ contract Treasury is ContractGuard, EpochCounter {
         uint256 antTokenPriceExternal = getAntTokenPriceExternal();
 
         require(antTokenPriceSwap == targetPrice, "Treasury: Ant Token price moved");
-        require(antTokenPriceSwap < antTokenPriceExternal, "Treasury: Ant Token price not eligible for Ant Bond purchase");
+        require(antTokenPriceSwap < antTokenPriceExternal, "Treasury: Ant Token price not eligible for Ant Bond redemption");
 
         // Price ratio with 1e18 decimals
         uint256 priceRatio = antTokenPriceSwap.mul(1e18).div(antTokenPriceExternal);
