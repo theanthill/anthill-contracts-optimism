@@ -165,7 +165,7 @@ contract Oracle is IOracle, EpochCounter {
         uint256 averageExternal = priceExternal(token);
         uint256 averageInternal = priceAverage(token);
         
-        percentage =  averageInternal.div(averageExternal).sub(1e18);
+        percentage =  averageInternal.mul(1e18).div(averageExternal).sub(1e18);
     }
 
     function consult(address token, uint amountIn) external view override returns (uint256 amountOut) {
