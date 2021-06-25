@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 /**
-    Boardroom for staking of the AntShares and earning rewards during inflationary periods
+    Boardroom for staking of the _tokenShares and earning rewards during inflationary periods
  */
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "../access/OperatorAccessControl.sol";
 import "../utils/ContractGuard.sol";
+import "../core/StakingPool.sol";
 
 /**
     Interface
@@ -19,43 +20,11 @@ interface IBoardroom {
     function allocateSeigniorage(uint256 amount) external;
 }
 
-contract AntShareWrapper is Context {
-    using SafeMath for uint256;
-    using SafeERC20 for IERC20;
-
-    IERC20 public antShare;
-
-    uint256 private _totalSupply;
-    mapping(address => uint256) private _balances;
-
-    function totalSupply() public view returns (uint256) {
-        return _totalSupply;
-    }
-
-    function balanceOf(address account) public view returns (uint256) {
-        return _balances[account];
-    }
-
-    function stake(uint256 amount) public virtual {
-        _totalSupply = _totalSupply.add(amount);
-        _balances[_msgSender()] = _balances[_msgSender()].add(amount);
-        antShare.safeTransferFrom(_msgSender(), address(this), amount);
-    }
-
-    function withdraw(uint256 amount) public virtual {
-        uint256 directorAntShare = _balances[_msgSender()];
-        require(directorAntShare >= amount, "Boardroom: withdraw request greater than staked amount");
-        _totalSupply = _totalSupply.sub(amount);
-        _balances[_msgSender()] = directorAntShare.sub(amount);
-        antShare.safeTransfer(_msgSender(), amount);
-    }
-}
-
 /**
-    Baordroom contract where the share holders can stake their Ant Shares in exchange of
-    rewards in Ant Tokens
+    Baordroom contract where the share holders can stake their _token Shares in exchange of
+    rewards in _token Tokens
  */
-contract Boardroom is AntShareWrapper, ContractGuard, OperatorAccessControl {
+contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
@@ -70,23 +39,22 @@ contract Boardroom is AntShareWrapper, ContractGuard, OperatorAccessControl {
     struct BoardSnapshot {
         uint256 time;
         uint256 rewardReceived;
-        uint256 rewardPerAntShare;
+        uint256 rewardPer_tokenShare;
     }
 
     /* ========== STATE VARIABLES ========== */
 
-    IERC20 private ant;
+    IERC20 private _token;
 
     mapping(address => Boardseat) private directors;
     BoardSnapshot[] private boardHistory;
 
     /* ========== CONSTRUCTOR ========== */
 
-    constructor(IERC20 _ant, IERC20 _antShare) {
-        ant = _ant;
-        antShare = _antShare;
+    constructor(IERC20 token, IERC20 stakingToken) StakingPool(stakingToken) {
+        _token = token;
 
-        BoardSnapshot memory genesisSnapshot = BoardSnapshot({time: block.number, rewardReceived: 0, rewardPerAntShare: 0});
+        BoardSnapshot memory genesisSnapshot = BoardSnapshot({time: block.number, rewardReceived: 0, rewardPer_tokenShare: 0});
         boardHistory.push(genesisSnapshot);
     }
 
@@ -128,19 +96,18 @@ contract Boardroom is AntShareWrapper, ContractGuard, OperatorAccessControl {
 
     // =========== Director getters
 
-    function rewardPerAntShare() public view returns (uint256) {
-        return getLatestSnapshot().rewardPerAntShare;
+    function rewardPer_tokenShare() public view returns (uint256) {
+        return getLatestSnapshot().rewardPer_tokenShare;
     }
 
     function earned(address director) public view returns (uint256) {
-        uint256 latestRPS = getLatestSnapshot().rewardPerAntShare;
-        uint256 storedRPS = getLastSnapshotOf(director).rewardPerAntShare;
+        uint256 latestRPS = getLatestSnapshot().rewardPer_tokenShare;
+        uint256 storedRPS = getLastSnapshotOf(director).rewardPer_tokenShare;
 
         return balanceOf(director).mul(latestRPS.sub(storedRPS)).div(1e18).add(directors[director].rewardEarned);
     }
 
     /* ========== MUTATIVE FUNCTIONS ========== */
-
     function stake(uint256 amount) public override onlyOneBlock updateReward(_msgSender()) {
         require(amount > 0, "Boardroom: Cannot stake 0");
         super.stake(amount);
@@ -153,16 +120,17 @@ contract Boardroom is AntShareWrapper, ContractGuard, OperatorAccessControl {
         emit Withdrawn(_msgSender(), amount);
     }
 
-    function exit() external {
-        withdraw(balanceOf(_msgSender()));
+    function exit() public override onlyOneBlock directorExists updateReward(_msgSender()) returns (uint256) {
+        uint256 lpTokensAmount = super.exit();
         claimReward();
+        return lpTokensAmount;
     }
 
     function claimReward() public updateReward(_msgSender()) {
         uint256 reward = directors[_msgSender()].rewardEarned;
         if (reward > 0) {
             directors[_msgSender()].rewardEarned = 0;
-            ant.safeTransfer(_msgSender(), reward);
+            _token.safeTransfer(_msgSender(), reward);
             emit RewardPaid(_msgSender(), reward);
         }
     }
@@ -172,13 +140,13 @@ contract Boardroom is AntShareWrapper, ContractGuard, OperatorAccessControl {
         require(totalSupply() > 0, "Boardroom: Cannot allocate when totalSupply is 0");
 
         // Create & add new snapshot
-        uint256 prevRPS = getLatestSnapshot().rewardPerAntShare;
+        uint256 prevRPS = getLatestSnapshot().rewardPer_tokenShare;
         uint256 nextRPS = prevRPS.add(amount.mul(1e18).div(totalSupply()));
 
-        BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPerAntShare: nextRPS});
+        BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPer_tokenShare: nextRPS});
         boardHistory.push(newSnapshot);
 
-        ant.safeTransferFrom(_msgSender(), address(this), amount);
+        _token.safeTransferFrom(_msgSender(), address(this), amount);
 
         emit RewardAdded(_msgSender(), amount);
     }
