@@ -54,7 +54,7 @@ module.exports = async (deployer, network, accounts) => {
         adminContracts.push(artifacts.require(pool.contractName));
     }
 
-    await assignAdmin("Admin Account", adminAccount,adminContracts);
+    await assignAdmin("Admin Account", adminAccount, adminContracts);
 };
 
 // ============ Helper Functions ============

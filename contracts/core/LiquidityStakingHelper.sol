@@ -20,8 +20,6 @@ contract LiquidityStakingHelper is Context {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    mapping (address => uint256) private _balances;
-
     IERC20 _token0;
     IERC20 _token1;
     IERC20 _lptoken;
