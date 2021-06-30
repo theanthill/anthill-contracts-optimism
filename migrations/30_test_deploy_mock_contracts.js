@@ -4,7 +4,8 @@
 const BigNumber = require('bignumber.js');
 
 const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
-const {TEST_INITIAL_BUSD_SUPPLY, TEST_INITIAL_BNB_SUPPLY, TEST_FAUCET_MAX_REFILL, TEST_FAUCET_INITIAL_ALLOCATION} = require('./migration-config');
+const {TEST_INITIAL_BUSD_SUPPLY, TEST_INITIAL_BNB_SUPPLY, TEST_FAUCET_MAX_REFILL, TEST_FAUCET_INITIAL_ALLOCATION,
+       TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT, TEST_ADMIN_ACCOUNT, TEST_HQ_ACCOUNT} = require('./migration-config');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
@@ -53,7 +54,9 @@ async function migration(deployer, network, accounts) {
         const mockBUSD = await MockBUSD.deployed();
         const mockBNB = await MockBNB.deployed();
 
-        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, mockBNB.address, faucetMaxRefill);
+        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, mockBNB.address,
+                              faucetMaxRefill,
+                              [TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT, TEST_ADMIN_ACCOUNT, TEST_HQ_ACCOUNT]);
         const tokenFaucet = await TokenFaucet.deployed();
 
         await mockBUSD.mint(tokenFaucet.address, faucetInitialAllocation);
