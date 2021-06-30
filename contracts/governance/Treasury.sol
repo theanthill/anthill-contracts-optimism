@@ -89,16 +89,16 @@ contract Treasury is ContractGuard, EpochCounter {
         return accumulatedSeigniorage;
     }
 
-    function getAntTokenPriceSwap() public view returns (uint256) {
-        try oracle.priceAverage(antToken) returns (uint256 price) {
+    function tokenPriceTWAP() public view returns (uint256) {
+        try oracle.priceTWAP(antToken) returns (uint256 price) {
             return price;
         } catch {
             revert("Treasury: failed to consult Ant Token swap price from the oracle");
         }
     }
 
-    function getAntTokenPriceExternal() public view returns (uint256) {
-        try oracle.priceExternal(antToken) returns (uint256 price) {
+    function priceDollar() public view returns (uint256) {
+        try oracle.priceDollar() returns (uint256 price) {
             return price;
         } catch {
             revert("Treasury: failed to consult Ant Token external price from the oracle");
@@ -111,8 +111,8 @@ contract Treasury is ContractGuard, EpochCounter {
 
         @return The ceiling price multiplied by 1e18
     */
-    function antTokenPriceCeiling() public view returns (uint256) {
-        return oracle.priceExternal(antToken).mul(uint256(105)).div(100);
+    function tokenPriceCeiling() public view returns (uint256) {
+        return oracle.priceDollar().mul(uint256(105)).div(100);
     }
 
     function migrate(address target) public onlyOperator checkOperator {
@@ -169,14 +169,14 @@ contract Treasury is ContractGuard, EpochCounter {
     function buyAntBonds(uint256 amountAntToken, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
         require(amountAntToken > 0, "Treasury: cannot purchase antBonds with zero amount");
 
-        uint256 antTokenPriceSwap = getAntTokenPriceSwap();
-        uint256 antTokenPriceExternal = getAntTokenPriceExternal();
+        uint256 antTokenPrice = tokenPriceTWAP();
+        uint256 dollarPrice = priceDollar();
 
-        require(antTokenPriceSwap == targetPrice, "Treasury: Ant Token price moved");
-        require(antTokenPriceSwap < antTokenPriceExternal, "Treasury: Ant Token price not eligible for Ant Bond redemption");
+        require(antTokenPrice == targetPrice, "Treasury: Ant Token price moved");
+        require(antTokenPrice < dollarPrice, "Treasury: Ant Token price not eligible for Ant Bond redemption");
 
         // Price ratio with 1e18 decimals
-        uint256 priceRatio = antTokenPriceSwap.mul(1e18).div(antTokenPriceExternal);
+        uint256 priceRatio = antTokenPrice.mul(1e18).div(dollarPrice);
         uint256 amountBonds = amountAntToken.mul(1e18).div(priceRatio);
 
         IBaseToken(antToken).burnFrom(_msgSender(), amountAntToken);
@@ -198,10 +198,10 @@ contract Treasury is ContractGuard, EpochCounter {
     function redeemAntBonds(uint256 amountAntBonds, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
         require(amountAntBonds > 0, "Treasury: cannot redeem antBonds with zero amount");
 
-        uint256 antTokenPrice = getAntTokenPriceSwap();
+        uint256 tokenPrice = tokenPriceTWAP();
         
-        require(antTokenPrice == targetPrice, "Treasury: Ant Token price moved");
-        require(antTokenPrice > antTokenPriceCeiling(), "Treasury: Ant Token price not eligible for Ant Bond redemption");
+        require(tokenPrice == targetPrice, "Treasury: Ant Token price moved");
+        require(tokenPrice > tokenPriceCeiling(), "Treasury: Ant Token price not eligible for Ant Bond redemption");
         require(IERC20(antToken).balanceOf(address(this)) >= amountAntBonds, "Treasury: treasury has no more budget for Ant Bonds redemption");
 
         accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amountAntBonds));
@@ -227,9 +227,9 @@ contract Treasury is ContractGuard, EpochCounter {
     function allocateSeigniorage() external onlyOneBlock checkMigration checkStartTime checkEpoch checkOperator {
         _updateAntTokenPrice();
 
-        uint256 antTokenPriceSwap = getAntTokenPriceSwap();
+        uint256 tokenPrice = tokenPriceTWAP();
 
-        if (antTokenPriceSwap <= antTokenPriceCeiling()) {
+        if (tokenPrice <= tokenPriceCeiling()) {
             return; // Just advance epoch instead of revert
         }
       

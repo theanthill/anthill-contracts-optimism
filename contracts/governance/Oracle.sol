@@ -22,35 +22,9 @@ import "../utils/EpochCounter.sol";
 interface IOracle {
     
     function update() external;
-
-    /**
-        Returns the latest updated average price for the given token
-
-        @param token   Address of the token to get the average price for
-
-        @return price  Average price of the token multiplied by 1e18
-    */
-    function priceAverage(address token) external view returns (uint256);
-
-    /**
-        Returns the latest known price from the external oracle for the given token
-
-        @param token   Address of the token to get the latest external price for
-
-        @return price  Latest external price of the token multiplied by 1e18
-    */
-    function priceExternal(address token) external view returns (uint256);
-
-     /**
-        Calculates the percentage of the price variation between the internal liquidity price
-        and the external Oracle price
-
-        @param token   Address of the token to get price variation for
-
-        @return percentage  Price variation percentage multiplied by 1e18
-    */
+    function priceTWAP(address token) external view returns (uint256);
+    function priceDollar() external view returns (uint256);
     function priceVariationPercentage(address token) external view returns(uint256);
-    
     function consult(address token, uint amountIn) external view returns (uint256);
 }
 
@@ -64,7 +38,8 @@ contract Oracle is IOracle, EpochCounter {
     using FixedPoint for *;
 
     // Constants
-    string constant ExternalOraclePair = "BUSD";
+    string constant EXTERNAL_ORACLE_BASE = "BUSD";
+    string constant EXTERNAL_ORACLE_QUOTE = "USDT";
 
     // Immutables
     IPancakePair public immutable pair;
@@ -131,7 +106,7 @@ contract Oracle is IOracle, EpochCounter {
 
         @return price  Average price of the token multiplied by 1e18
     */
-    function priceAverage(address token) public view override returns (uint256 price)
+    function priceTWAP(address token) public view override returns (uint256 price)
     {
         if (token == token0) {
             price = price0Average.mul(1e18).decode144();
@@ -142,14 +117,12 @@ contract Oracle is IOracle, EpochCounter {
     }
 
     /**
-        Returns the latest known price from the external oracle for the given token
-
-        @param token   Address of the token to get the latest external price for
+        Returns the latest known price from the external oracle for the BUSD/USDT pair
 
         @return price  Latest external price of the token multiplied by 1e18
     */
-    function priceExternal(address token) public view override returns (uint256 price) {
-        price = bandOracle.getReferenceData(IERC20Extended(token).symbol(), ExternalOraclePair).rate;
+    function priceDollar() public view override returns (uint256 price) {
+        price = bandOracle.getReferenceData(EXTERNAL_ORACLE_BASE, EXTERNAL_ORACLE_QUOTE).rate;
     }
 
     /**
@@ -161,11 +134,8 @@ contract Oracle is IOracle, EpochCounter {
         @return percentage  Price variation percentage multiplied by 1e18
     */
     function priceVariationPercentage(address token) external view override returns(uint256 percentage)
-    {
-        uint256 averageExternal = priceExternal(token);
-        uint256 averageInternal = priceAverage(token);
-        
-        percentage =  averageInternal.mul(1e18).div(averageExternal).sub(1e18);
+    {       
+        percentage =  priceTWAP(token).mul(1e18).div(priceDollar()).sub(1e18);
     }
 
     function consult(address token, uint amountIn) external view override returns (uint256 amountOut) {
