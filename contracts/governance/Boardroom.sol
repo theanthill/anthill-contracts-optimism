@@ -28,7 +28,7 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
-    
+
     /* ========== DATA STRUCTURES ========== */
 
     struct Boardseat {
@@ -39,7 +39,7 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
     struct BoardSnapshot {
         uint256 time;
         uint256 rewardReceived;
-        uint256 rewardPer_tokenShare;
+        uint256 rewardPerShare;
     }
 
     /* ========== STATE VARIABLES ========== */
@@ -54,7 +54,7 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
     constructor(IERC20 token, IERC20 stakingToken) StakingPool(stakingToken) {
         _token = token;
 
-        BoardSnapshot memory genesisSnapshot = BoardSnapshot({time: block.number, rewardReceived: 0, rewardPer_tokenShare: 0});
+        BoardSnapshot memory genesisSnapshot = BoardSnapshot({time: block.number, rewardReceived: 0, rewardPerShare: 0});
         boardHistory.push(genesisSnapshot);
     }
 
@@ -96,13 +96,13 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
 
     // =========== Director getters
 
-    function rewardPer_tokenShare() public view returns (uint256) {
-        return getLatestSnapshot().rewardPer_tokenShare;
+    function rewardPerShare() public view returns (uint256) {
+        return getLatestSnapshot().rewardPerShare;
     }
 
     function earned(address director) public view returns (uint256) {
-        uint256 latestRPS = getLatestSnapshot().rewardPer_tokenShare;
-        uint256 storedRPS = getLastSnapshotOf(director).rewardPer_tokenShare;
+        uint256 latestRPS = getLatestSnapshot().rewardPerShare;
+        uint256 storedRPS = getLastSnapshotOf(director).rewardPerShare;
 
         return balanceOf(director).mul(latestRPS.sub(storedRPS)).div(1e18).add(directors[director].rewardEarned);
     }
@@ -140,10 +140,10 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
         require(totalSupply() > 0, "Boardroom: Cannot allocate when totalSupply is 0");
 
         // Create & add new snapshot
-        uint256 prevRPS = getLatestSnapshot().rewardPer_tokenShare;
+        uint256 prevRPS = getLatestSnapshot().rewardPerShare;
         uint256 nextRPS = prevRPS.add(amount.mul(1e18).div(totalSupply()));
 
-        BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPer_tokenShare: nextRPS});
+        BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPerShare: nextRPS});
         boardHistory.push(newSnapshot);
 
         _token.safeTransferFrom(_msgSender(), address(this), amount);
