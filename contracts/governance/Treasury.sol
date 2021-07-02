@@ -20,12 +20,11 @@ import "../access/OperatorAccessControl.sol";
 import "../utils/EpochCounter.sol";
 import "../utils/ContractGuard.sol";
 
-
 contract Treasury is ContractGuard, EpochCounter {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
-    
+
     /* ========== STATE ========== */
     // Flags
     bool public migrated = false;
@@ -52,9 +51,7 @@ contract Treasury is ContractGuard, EpochCounter {
         address _fund,
         uint256 _startTime,
         uint256 _period
-    )
-        EpochCounter(_period, _startTime, 0)
-    {
+    ) EpochCounter(_period, _startTime, 0) {
         antToken = _antToken;
         antBond = _antBond;
         antShare = _antShare;
@@ -73,9 +70,9 @@ contract Treasury is ContractGuard, EpochCounter {
     modifier checkOperator {
         require(
             IOperatorAccessControl(antToken).isOperator(address(this)) &&
-            IOperatorAccessControl(antBond).isOperator(address(this)) &&
-            IOperatorAccessControl(antShare).isOperator(address(this)) &&
-            IOperatorAccessControl(boardroom).isOperator(address(this)),
+                IOperatorAccessControl(antBond).isOperator(address(this)) &&
+                IOperatorAccessControl(antShare).isOperator(address(this)) &&
+                IOperatorAccessControl(boardroom).isOperator(address(this)),
             "Treasury: need more permission"
         );
 
@@ -150,8 +147,7 @@ contract Treasury is ContractGuard, EpochCounter {
         Calls the orable to update the latest price
     */
     function _updateAntTokenPrice() internal {
-        try oracle.update() {
-        } catch {
+        try oracle.update() {} catch {
             // Update will revert if called twice in less than the allocated period, so
             // just ignore the error if that happens
         }
@@ -199,7 +195,7 @@ contract Treasury is ContractGuard, EpochCounter {
         require(amountAntBonds > 0, "Treasury: cannot redeem antBonds with zero amount");
 
         uint256 tokenPrice = tokenPriceTWAP();
-        
+
         require(tokenPrice == targetPrice, "Treasury: Ant Token price moved");
         require(tokenPrice > tokenPriceCeiling(), "Treasury: Ant Token price not eligible for Ant Bond redemption");
         require(IERC20(antToken).balanceOf(address(this)) >= amountAntBonds, "Treasury: treasury has no more budget for Ant Bonds redemption");
@@ -232,7 +228,7 @@ contract Treasury is ContractGuard, EpochCounter {
         if (tokenPrice <= tokenPriceCeiling()) {
             return; // Just advance epoch instead of revert
         }
-      
+
         // Calculate current circulating supply and new supply to be minted
         uint256 currentSupply = IERC20(antToken).totalSupply().sub(accumulatedSeigniorage);
         uint256 percentage = oracle.priceVariationPercentage(antToken);
@@ -243,10 +239,9 @@ contract Treasury is ContractGuard, EpochCounter {
         // Contribution Pool Reserve: allocate fundAllocationRate% from the new extra supply to the fund
         uint256 fundReserve = additionalAntTokenSupply.mul(fundAllocationRate).div(100);
         if (fundReserve > 0) {
-            // [workerant] Unsafe approval, use safeIncreaseAllowance instead
-            IERC20(antToken).safeApprove(fund, fundReserve);
+            IERC20(antToken).safeIncreaseAllowance(fund, fundReserve);
             IContributionPool(fund).deposit(antToken, fundReserve, "Treasury: Seigniorage Allocation");
-            
+
             additionalAntTokenSupply = additionalAntTokenSupply.sub(fundReserve);
 
             emit ContributionPoolFunded(block.timestamp, fundReserve);
@@ -264,8 +259,7 @@ contract Treasury is ContractGuard, EpochCounter {
         // Boardroom Reserve: the rest of the new supply is allocated to the Boardroom
         uint256 boardroomReserve = additionalAntTokenSupply.sub(treasuryReserve);
         if (boardroomReserve > 0) {
-            // [workerant] Unsafe approval, use safeIncreaseAllowance instead
-            IERC20(antToken).safeApprove(boardroom, boardroomReserve);
+            IERC20(antToken).safeIncreaseAllowance(boardroom, boardroomReserve);
             IBoardroom(boardroom).allocateSeigniorage(boardroomReserve);
 
             emit BoardroomFunded(block.timestamp, boardroomReserve);
