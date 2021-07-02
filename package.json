@@ -25,6 +25,9 @@
     "url": "https://github.com/rhlsthrm/solidity-ts-dev-stack-example/issues"
   },
   "homepage": "https://github.com/rhlsthrm/solidity-ts-dev-stack-example#readme",
+  "engines": {
+      "node": "14.17"
+  },
   "devDependencies": {
     "@truffle/artifactor": "^4.0.101",
     "@truffle/contract": "^4.3.20",
