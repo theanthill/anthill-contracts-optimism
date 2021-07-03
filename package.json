@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/theanthill/anthill-contracts#readme",
   "engines": {
-      "node": "14.17"
+    "node": "14.17"
   },
   "devDependencies": {
     "@truffle/artifactor": "^4.0.111",
@@ -34,7 +34,6 @@
     "@truffle/hdwallet-provider": "^1.4.1",
     "@types/node": "^16.0.0",
     "bignumber.js": "^9.0.1",
-    "ethers": "^5.4.1",
     "prettier": "^2.3.2",
     "prettier-plugin-solidity": "1.0.0-beta.13",
     "solhint": "^3.3.6",
@@ -42,7 +41,6 @@
     "solidity-coverage": "^0.7.16",
     "truffle": "^5.3.14",
     "truffle-contract-size": "^2.0.1",
-    "typechain": "^5.1.1",
     "yargs": "^17.0.1"
   },
   "dependencies": {
