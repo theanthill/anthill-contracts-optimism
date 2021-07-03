@@ -1,6 +1,6 @@
 {
-  "name": "solidity-ts-dev-stack-example",
-  "version": "0.0.2",
+  "name": "anthill-contracts",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rhlsthrm/solidity-ts-dev-stack-example.git"
+    "url": "git+https://github.com/theanthill/anthill-contracts"
   },
   "author": "rhlsthrm",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rhlsthrm/solidity-ts-dev-stack-example/issues"
+    "url": "https://github.com/theanthill/anthill-contracts/issues"
   },
-  "homepage": "https://github.com/rhlsthrm/solidity-ts-dev-stack-example#readme",
+  "homepage": "https://github.com/theanthill/anthill-contracts#readme",
   "devDependencies": {
     "@truffle/artifactor": "^4.0.101",
     "@truffle/contract": "^4.3.20",
