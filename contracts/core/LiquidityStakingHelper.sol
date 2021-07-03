@@ -47,13 +47,28 @@ contract LiquidityStakingHelper is Context {
     }
 
     /* ========== MUTABLES ========== */
-    function stake(uint amount0Desired, uint amount1Desired, uint amount0Min, uint amount1Min, uint deadline) public {
+    function stake(
+        uint256 amount0Desired,
+        uint256 amount1Desired,
+        uint256 amount0Min,
+        uint256 amount1Min,
+        uint256 deadline
+    ) public {
         _token0.safeTransferFrom(_msgSender(), address(this), amount0Desired);
         _token1.safeTransferFrom(_msgSender(), address(this), amount1Desired);
 
-        (uint amount0, uint amount1, uint liquidity) = _pancakeRouter.addLiquidity(address(_token0), address(_token1), amount0Desired, amount1Desired, amount0Min, amount1Min, address(this), deadline);
+        (uint256 amount0, uint256 amount1, uint256 liquidity) = _pancakeRouter.addLiquidity(
+            address(_token0),
+            address(_token1),
+            amount0Desired,
+            amount1Desired,
+            amount0Min,
+            amount1Min,
+            address(this),
+            deadline
+        );
         require(liquidity > 0, "Received 0 liquidity from Router");
-        
+
         // Returned unused tokens
         if (amount0 != amount0Desired) {
             _token0.safeTransfer(_msgSender(), amount0Desired - amount0);
@@ -65,12 +80,25 @@ contract LiquidityStakingHelper is Context {
         _lpTokenPool.stake(liquidity, _msgSender());
     }
 
-    function withdraw(uint liquidity, uint amount0Min, uint amount1Min, uint deadline) public {
+    function withdraw(
+        uint256 liquidity,
+        uint256 amount0Min,
+        uint256 amount1Min,
+        uint256 deadline
+    ) public {
         _lpTokenPool.withdraw(liquidity, _msgSender());
-        _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, amount0Min, amount1Min, _msgSender(), deadline);
+        _pancakeRouter.removeLiquidity(
+            address(_token0),
+            address(_token1),
+            liquidity,
+            amount0Min,
+            amount1Min,
+            _msgSender(),
+            deadline
+        );
     }
 
-    function exit(uint deadline) external {
+    function exit(uint256 deadline) external {
         uint256 liquidity = _lpTokenPool.exit(_msgSender());
         _pancakeRouter.removeLiquidity(address(_token0), address(_token1), liquidity, 0, 0, _msgSender(), deadline);
     }

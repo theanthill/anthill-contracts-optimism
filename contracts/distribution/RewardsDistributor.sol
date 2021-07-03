@@ -31,17 +31,14 @@ contract RewardsDistributor is OperatorAccessControl {
     IRewardsDistributorRecipient[] public _rewardRecipients;
 
     // ====== CONSTRUCTOR ======
-    constructor(
-        IERC20 rewardToken,
-        IRewardsDistributorRecipient[] memory rewardRecipients
-    ) {
+    constructor(IERC20 rewardToken, IRewardsDistributorRecipient[] memory rewardRecipients) {
         require(rewardRecipients.length != 0, "RewardsDistributor: recipients list is empty");
 
         _rewardToken = rewardToken;
         _rewardRecipients = rewardRecipients;
     }
 
-    function getTotalRewards() external view returns(uint256) {
+    function getTotalRewards() external view returns (uint256) {
         return _rewardToken.balanceOf(address(this));
     }
 

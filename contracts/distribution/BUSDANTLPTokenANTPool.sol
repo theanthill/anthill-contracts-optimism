@@ -13,6 +13,5 @@ contract BUSDANTLPTokenANTPool is StakingPoolWithRewardsDelegated {
         IERC20 antToken_,
         IERC20 lpToken_,
         uint256 startTime_
-    ) StakingPoolWithRewardsDelegated(antToken_, lpToken_, startTime_) {
-    }
+    ) StakingPoolWithRewardsDelegated(antToken_, lpToken_, startTime_) {}
 }

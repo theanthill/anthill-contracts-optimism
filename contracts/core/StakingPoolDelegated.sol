@@ -19,9 +19,11 @@ import "../access/OperatorAccessControl.sol";
 /**
     Interface
 */
-interface IStakingPoolDelegated  {
+interface IStakingPoolDelegated {
     function stake(uint256 amount, address origin_account) external;
+
     function withdraw(uint256 amount, address origin_account) external;
+
     function exit(address origin_account) external returns (uint256);
 }
 
@@ -72,10 +74,9 @@ contract StakingPoolDelegated is OperatorAccessControl {
         @param origin_account Account that originally owned the LP tokens and on which
                               behalf the tokens are staked
     */
-     function stake(uint256 amount, address origin_account) public virtual onlyOperator {
+    function stake(uint256 amount, address origin_account) public virtual onlyOperator {
         _totalSupply = _totalSupply.add(amount);
         _balances[origin_account] = _balances[origin_account].add(amount);
-
 
         token.safeTransferFrom(_msgSender(), address(this), amount);
     }

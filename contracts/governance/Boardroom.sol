@@ -54,7 +54,11 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
     constructor(IERC20 token, IERC20 stakingToken) StakingPool(stakingToken) {
         _token = token;
 
-        BoardSnapshot memory genesisSnapshot = BoardSnapshot({time: block.number, rewardReceived: 0, rewardPerShare: 0});
+        BoardSnapshot memory genesisSnapshot = BoardSnapshot({
+            time: block.number,
+            rewardReceived: 0,
+            rewardPerShare: 0
+        });
         boardHistory.push(genesisSnapshot);
     }
 
@@ -143,7 +147,11 @@ contract Boardroom is StakingPool, OperatorAccessControl, ContractGuard {
         uint256 prevRPS = getLatestSnapshot().rewardPerShare;
         uint256 nextRPS = prevRPS.add(amount.mul(1e18).div(totalSupply()));
 
-        BoardSnapshot memory newSnapshot = BoardSnapshot({time: block.number, rewardReceived: amount, rewardPerShare: nextRPS});
+        BoardSnapshot memory newSnapshot = BoardSnapshot({
+            time: block.number,
+            rewardReceived: amount,
+            rewardPerShare: nextRPS
+        });
         boardHistory.push(newSnapshot);
 
         _token.safeTransferFrom(_msgSender(), address(this), amount);

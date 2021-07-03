@@ -4,7 +4,7 @@
  */
 const BigNumber = require('bignumber.js');
 
-const {MAIN_NETWORKS} = require('../deploy.config.ts');
+const {MAIN_NETWORKS} = require('../deploy.config.js');
 const {TEST_REWARDS_DISTRIBUTOR_ALLOCATION} = require('./migration-config');
 
 // ============ Contracts ============
@@ -29,7 +29,7 @@ module.exports = async (deployer, network, accounts) => {
 
     console.log(`Depositing ${TEST_REWARDS_DISTRIBUTOR_ALLOCATION} Ant Tokens to RewardsDistributor.`);
     await antToken.transfer(distributor.address, antRewardAllocationAmount);
-    
+
     console.log(`Distributing rewards to all staking pools.`);
     await distributor.distribute();
 };

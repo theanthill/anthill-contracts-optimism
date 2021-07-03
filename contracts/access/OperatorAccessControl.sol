@@ -8,10 +8,11 @@ import "./AdminAccessControl.sol";
 /**
     Interface
  */
-interface IOperatorAccessControl
-{
+interface IOperatorAccessControl {
     function isOperator(address account) external view returns (bool);
+
     function transferOperator(address newOperator) external;
+
     function transferAdmin(address newAdmin) external;
 }
 
@@ -26,7 +27,7 @@ abstract contract OperatorAccessControl is AdminAccessControl {
 
     address private _operator;
 
-    // ==== CONSTRUCTOR ==== 
+    // ==== CONSTRUCTOR ====
     constructor() {
         _setRoleAdmin(OPERATOR_ROLE, ADMIN_ROLE);
 
@@ -35,23 +36,23 @@ abstract contract OperatorAccessControl is AdminAccessControl {
         _setupRole(OPERATOR_ROLE, _operator);
     }
 
-    // ==== MODIFIERS ==== 
+    // ==== MODIFIERS ====
     modifier onlyOperator() {
         require(hasRole(OPERATOR_ROLE, _msgSender()), "OperatorAccessControl: sender requires permission");
         _;
     }
 
-    // ==== VIEWS ==== 
+    // ==== VIEWS ====
     function isOperator(address account) external view returns (bool) {
         return hasRole(OPERATOR_ROLE, account);
     }
 
-    // ==== MUTABLES ==== 
-    function transferOperator(address newOperator) onlyAdmin external {
+    // ==== MUTABLES ====
+    function transferOperator(address newOperator) external onlyAdmin {
         require(newOperator != address(0), "OperatorAccessControl: zero address given for new operator");
-        
+
         revokeRole(OPERATOR_ROLE, _operator);
-        
+
         _operator = newOperator;
 
         grantRole(OPERATOR_ROLE, newOperator);

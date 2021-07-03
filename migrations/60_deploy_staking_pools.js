@@ -1,8 +1,8 @@
 /**
  * Creation of the LP Token Staking pools for the supported pairs
  */
-const { getTokenContract, getPancakeFactory } = require('./external-contracts');
-const {POOL_START_DATE} = require('../deploy.config.ts');
+const {getTokenContract, getPancakeFactory} = require('./external-contracts');
+const {POOL_START_DATE} = require('../deploy.config.js');
 const {INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
 
 // ============ Contracts ============
@@ -13,8 +13,7 @@ module.exports = async (deployer, network, accounts) => {
     const pancakeFactory = await getPancakeFactory(network);
     const antToken = await AntToken.deployed();
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS)
-    {
+    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
         const otherToken = await getTokenContract(pool.otherToken, network);
         const poolContract = artifacts.require(pool.contractName);
 

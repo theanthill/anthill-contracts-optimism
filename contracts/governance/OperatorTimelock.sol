@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/governance/TimelockController.sol";
 import "../access/AdminAccessControl.sol";
 
 contract OperatorTimelock is TimelockController, AdminAccessControlHelper {
-    constructor(uint256 minDelay, address[] memory admins) 
+    constructor(uint256 minDelay, address[] memory admins)
         TimelockController(minDelay, admins, admins)
-        AdminAccessControlHelper(TIMELOCK_ADMIN_ROLE, _msgSender()) {
-    }
+        AdminAccessControlHelper(TIMELOCK_ADMIN_ROLE, _msgSender())
+    {}
 }

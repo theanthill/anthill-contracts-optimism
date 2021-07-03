@@ -2,7 +2,7 @@
  * Accessor functions for external contracts that may be mocked depending on the deployment network
  */
 const knownContracts = require('./known-contracts');
-const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
+const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
 
 const PancakeFactory = artifacts.require('PancakeFactory');
 const PancakeRouter = artifacts.require('PancakeRouter');

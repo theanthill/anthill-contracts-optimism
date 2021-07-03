@@ -10,9 +10,9 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 /**
     Interface
  */
-interface IAdminAccessControl
-{
+interface IAdminAccessControl {
     function isAdmin(address account) external view returns (bool);
+
     function transferAdmin(address newAdmin) external;
 }
 
@@ -20,14 +20,12 @@ interface IAdminAccessControl
     Helper to provide some utils for contracts using an admin role,
     like TimelockController
  */
-abstract contract AdminAccessControlHelper is AccessControl
-{
+abstract contract AdminAccessControlHelper is AccessControl {
     bytes32 public immutable ADMIN_ACCESS_ROLE;
 
     address private _admin;
 
-    constructor(bytes32 adminRoleID, address adminAddress)
-    {
+    constructor(bytes32 adminRoleID, address adminAddress) {
         ADMIN_ACCESS_ROLE = adminRoleID;
 
         _admin = adminAddress;
@@ -45,9 +43,9 @@ abstract contract AdminAccessControlHelper is AccessControl
     }
 
     // ==== MUTABLES ====
-    function transferAdmin(address newAdmin) onlyAdmin external {
+    function transferAdmin(address newAdmin) external onlyAdmin {
         require(newAdmin != address(0), "AdminAccessControlHelper: zero address given for new operator");
-        
+
         grantRole(ADMIN_ACCESS_ROLE, newAdmin);
         revokeRole(ADMIN_ACCESS_ROLE, _admin);
 
@@ -58,12 +56,10 @@ abstract contract AdminAccessControlHelper is AccessControl
 /**
     Access control contract with pre-defined admin role
  */
-abstract contract AdminAccessControl is AdminAccessControlHelper
-{
+abstract contract AdminAccessControl is AdminAccessControlHelper {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-    constructor() AdminAccessControlHelper(ADMIN_ROLE, _msgSender())
-    {
+    constructor() AdminAccessControlHelper(ADMIN_ROLE, _msgSender()) {
         _setRoleAdmin(ADMIN_ROLE, ADMIN_ROLE);
 
         _setupRole(ADMIN_ROLE, _msgSender());

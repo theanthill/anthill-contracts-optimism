@@ -2,7 +2,7 @@
  * Transfer operator and ownership of the deployed contracts
  */
 
- const {MAIN_NETWORKS} = require('../deploy.config.ts');
+const {MAIN_NETWORKS} = require('../deploy.config.js');
 
 // ============ Contracts ============
 const Treasury = artifacts.require('Treasury');

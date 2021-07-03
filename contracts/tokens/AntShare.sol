@@ -7,5 +7,5 @@ pragma solidity ^0.8.0;
 import "../core/BaseToken.sol";
 
 contract AntShare is BaseToken {
-    constructor() BaseToken("AntShare", "ANTS") { }
+    constructor() BaseToken("AntShare", "ANTS") {}
 }

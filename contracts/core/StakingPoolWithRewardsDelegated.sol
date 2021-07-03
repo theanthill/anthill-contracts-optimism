@@ -19,8 +19,12 @@ import "../utils/StartTimeLock.sol";
 
 import "./StakingPoolDelegated.sol";
 
-contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistributorControl,
-                                            IRewardsDistributorRecipient, StartTimeLock {
+contract StakingPoolWithRewardsDelegated is
+    StakingPoolDelegated,
+    RewardsDistributorControl,
+    IRewardsDistributorRecipient,
+    StartTimeLock
+{
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -68,11 +72,17 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         if (totalSupply() == 0) {
             return rewardPerTokenStored;
         }
-        return rewardPerTokenStored.add(lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(totalSupply()));
+        return
+            rewardPerTokenStored.add(
+                lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(totalSupply())
+            );
     }
 
     function earned(address account) public view returns (uint256) {
-        return balanceOf(account).mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
+        return
+            balanceOf(account).mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(
+                rewards[account]
+            );
     }
 
     /* ========== MUTABLES ========== */
@@ -86,7 +96,13 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         @param origin_account Account that originally owned the LP tokens and on which
                               behalf the tokens are staked
     */
-    function stake(uint256 amount, address origin_account) public override updateReward(origin_account) checkStartTime onlyOperator {
+    function stake(uint256 amount, address origin_account)
+        public
+        override
+        updateReward(origin_account)
+        checkStartTime
+        onlyOperator
+    {
         require(amount > 0, "BaseStakingPool: Cannot stake 0");
         super.stake(amount, origin_account);
         emit Staked(origin_account, amount);
@@ -101,7 +117,13 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
         @param amount Amount of LP tokens to be withdrawn
         @param origin_account Account on which behalf the LP tokens are withdrawn
     */
-    function withdraw(uint256 amount, address origin_account) public override updateReward(origin_account) checkStartTime onlyOperator {
+    function withdraw(uint256 amount, address origin_account)
+        public
+        override
+        updateReward(origin_account)
+        checkStartTime
+        onlyOperator
+    {
         require(amount > 0, "BaseStakingPool: Cannot withdraw 0");
         super.withdraw(amount, origin_account);
 
@@ -145,7 +167,7 @@ contract StakingPoolWithRewardsDelegated is StakingPoolDelegated, RewardsDistrib
 
         This method can only be called by the contract owner
     */
-     function getMyReward() public updateReward(_msgSender()) checkStartTime {
+    function getMyReward() public updateReward(_msgSender()) checkStartTime {
         uint256 reward = earned(_msgSender());
         if (reward > 0) {
             rewards[_msgSender()] = 0;

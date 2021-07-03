@@ -85,7 +85,8 @@ contract Oracle is IOracle, EpochCounter {
     */
     function update() external override checkEpoch {
         // Obtain the TWAP for the latest block
-        (uint256 price0Cumulative, uint256 price1Cumulative, uint32 blockTimestamp) = PancakeOracleLibrary.currentCumulativePrices(address(pair));
+        (uint256 price0Cumulative, uint256 price1Cumulative, uint32 blockTimestamp) = PancakeOracleLibrary
+        .currentCumulativePrices(address(pair));
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
 
         // overflow is desired, casting never truncates

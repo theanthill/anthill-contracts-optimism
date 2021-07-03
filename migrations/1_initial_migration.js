@@ -6,9 +6,9 @@ const ExternalArtifacts = {
     PancakeRouter: require('@theanthill/pancake-swap-periphery/build/PancakeRouter.json'),
 };
 
-const {LOCAL_NETWORKS, TEST_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
+const {LOCAL_NETWORKS, TEST_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
 
-const Migrations = artifacts.require("Migrations");
+const Migrations = artifacts.require('Migrations');
 
 module.exports = async function (deployer, network) {
     if (!LOCAL_NETWORKS.includes(network) && !TEST_NETWORKS.includes(network) && !MAIN_NETWORKS.includes(network)) {

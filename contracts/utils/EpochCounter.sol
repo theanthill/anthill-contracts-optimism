@@ -46,7 +46,7 @@ contract EpochCounter is OperatorAccessControl, StartTimeLock {
     function getPeriod() public view returns (uint256) {
         return _period;
     }
-    
+
     function nextEpochPoint() public view returns (uint256) {
         return startTime.add(_epoch.mul(_period));
     }

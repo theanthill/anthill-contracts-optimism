@@ -1,10 +1,8 @@
 /**
  * Deploys all governance contracts
  */
-const {TREASURY_ACCOUNT, OPERATOR_ACCOUNT,
-       TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT} = require('./migration-config');
-const {ORACLE_START_DATE, TREASURY_START_DATE, MAIN_NETWORKS,
-       ORACLE_PERIOD, TREASURY_PERIOD, TREASURY_TIMELOCK_PERIOD, OPERATOR_TIMELOCK_PERIOD } = require('../deploy.config.ts');
+const {TREASURY_ACCOUNT, OPERATOR_ACCOUNT, TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT} = require('./migration-config');
+const {ORACLE_START_DATE, TREASURY_START_DATE, MAIN_NETWORKS, ORACLE_PERIOD, TREASURY_PERIOD, TREASURY_TIMELOCK_PERIOD, OPERATOR_TIMELOCK_PERIOD} = require('../deploy.config.js');
 const {getPancakeFactory, getBUSD, getBandOracle} = require('./external-contracts');
 
 // ============ Contracts ============
@@ -26,7 +24,7 @@ async function migration(deployer, network, accounts) {
     const pancakeFactory = await getPancakeFactory(network);
     const bandOracle = await getBandOracle(network);
     const BUSD = await getBUSD(network);
-    
+
     // Get the ANT/BUSD pair
     const ANTBUSDPair = await pancakeFactory.getPair(antToken.address, BUSD.address);
 
@@ -34,9 +32,7 @@ async function migration(deployer, network, accounts) {
     await deployer.deploy(Boardroom, antToken.address, antShare.address);
     await deployer.deploy(Oracle, ANTBUSDPair, ORACLE_PERIOD, ORACLE_START_DATE, bandOracle.address);
     await deployer.deploy(ContributionPool);
-    await deployer.deploy(Treasury, antToken.address, antBond.address, antShare.address, 
-                                    Oracle.address, Boardroom.address, ContributionPool.address,
-                                    TREASURY_START_DATE, TREASURY_PERIOD);
+    await deployer.deploy(Treasury, antToken.address, antBond.address, antShare.address, Oracle.address, Boardroom.address, ContributionPool.address, TREASURY_START_DATE, TREASURY_PERIOD);
 
     // Timelocks
     let adminAccount = network.includes(MAIN_NETWORKS) ? TREASURY_ACCOUNT : TEST_TREASURY_ACCOUNT;

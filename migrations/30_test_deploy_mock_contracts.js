@@ -3,7 +3,7 @@
  */
 const BigNumber = require('bignumber.js');
 
-const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.ts');
+const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
 const {
     TEST_INITIAL_BUSD_SUPPLY,
     TEST_INITIAL_BNB_SUPPLY,

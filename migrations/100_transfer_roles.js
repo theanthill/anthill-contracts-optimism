@@ -1,10 +1,9 @@
 /**
  * Transfer operator and ownership of the deployed contracts
  */
- 
-const {TREASURY_ACCOUNT, TEST_TREASURY_ACCOUNT,
-       ADMIN_ACCOUNT, TEST_ADMIN_ACCOUNT, INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
-const {MAIN_NETWORKS} = require('../deploy.config.ts');
+
+const {TREASURY_ACCOUNT, TEST_TREASURY_ACCOUNT, ADMIN_ACCOUNT, TEST_ADMIN_ACCOUNT, INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
+const {MAIN_NETWORKS} = require('../deploy.config.js');
 
 // ============ Contracts ============
 const Boardroom = artifacts.require('Boardroom');
@@ -19,15 +18,13 @@ const RewardsDistributor = artifacts.require('RewardsDistributor');
 
 // ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
-
     treasury = await Treasury.deployed();
     treasuryTimelock = await TreasuryTimelock.deployed();
     operatorTimelock = await OperatorTimelock.deployed();
 
     // Operator
     console.log(`Assigning Treasury contract governance roles`);
-    await assignOperator(Treasury.contractName, treasury.address, 
-                         [AntToken, AntShare, AntBond, Boardroom]);
+    await assignOperator(Treasury.contractName, treasury.address, [AntToken, AntShare, AntBond, Boardroom]);
 
     console.log(`Assigning Treasury Timelock contract governance roles`);
     await assignOperator(TreasuryTimelock.contractName, treasuryTimelock.address, [ContributionPool, RewardsDistributor]);
@@ -37,29 +34,25 @@ module.exports = async (deployer, network, accounts) => {
 
     console.log(`Assigning Treasury account governance roles`);
     if (network.includes(MAIN_NETWORKS)) {
-        await assignOperator("Treasury account", TREASURY_ACCOUNT, [RewardsDistributor]);
+        await assignOperator('Treasury account', TREASURY_ACCOUNT, [RewardsDistributor]);
     } else {
-        await assignOperator("Treasury account", TEST_TREASURY_ACCOUNT, [RewardsDistributor]);
+        await assignOperator('Treasury account', TEST_TREASURY_ACCOUNT, [RewardsDistributor]);
     }
 
     // Admin
     console.log(`Assigning Admin role`);
     const adminAccount = network.includes(MAIN_NETWORKS) ? ADMIN_ACCOUNT : TEST_ADMIN_ACCOUNT;
-    let adminContracts = [AntToken, AntShare, AntBond, Treasury, 
-                          Boardroom, TreasuryTimelock, ContributionPool,
-                          RewardsDistributor];
+    let adminContracts = [AntToken, AntShare, AntBond, Treasury, Boardroom, TreasuryTimelock, ContributionPool, RewardsDistributor];
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS)
-    {
+    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
         adminContracts.push(artifacts.require(pool.contractName));
     }
 
-    await assignAdmin("Admin Account", adminAccount, adminContracts);
+    await assignAdmin('Admin Account', adminAccount, adminContracts);
 };
 
 // ============ Helper Functions ============
-async function assignOperator(operatorName, operatorAddress, contracts)
-{  
+async function assignOperator(operatorName, operatorAddress, contracts) {
     for await (const Contract of contracts) {
         const contract = await Contract.deployed();
 
@@ -68,8 +61,7 @@ async function assignOperator(operatorName, operatorAddress, contracts)
     }
 }
 
-async function assignAdmin(accountName, accountAddress, contracts)
-{  
+async function assignAdmin(accountName, accountAddress, contracts) {
     for await (const Contract of contracts) {
         const contract = await Contract.deployed();
 

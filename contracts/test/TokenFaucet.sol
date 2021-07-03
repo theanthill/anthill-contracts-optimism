@@ -13,28 +13,30 @@ contract TokenFaucet is Context {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-     IERC20 public token0;
-     IERC20 public token1;
-     IERC20 public token2;
-     uint256 public maxAmount;
-     mapping (address => bool) public admins;
+    IERC20 public token0;
+    IERC20 public token1;
+    IERC20 public token2;
+    uint256 public maxAmount;
+    mapping(address => bool) public admins;
 
-    constructor(IERC20 _token0, IERC20 _token1, IERC20 _token2, 
-                uint256 _maxAmount,
-                address[] memory _admins)
-    {
+    constructor(
+        IERC20 _token0,
+        IERC20 _token1,
+        IERC20 _token2,
+        uint256 _maxAmount,
+        address[] memory _admins
+    ) {
         token0 = _token0;
         token1 = _token1;
         token2 = _token2;
         maxAmount = _maxAmount;
-        
-        for(uint i=0; i<_admins.length; ++i) {
+
+        for (uint256 i = 0; i < _admins.length; ++i) {
             admins[_admins[i]] = true;
         }
     }
 
-    function refill() public
-    {
+    function refill() public {
         uint256 refillAmount = maxAmount;
 
         if (admins[_msgSender()]) {
@@ -42,17 +44,17 @@ contract TokenFaucet is Context {
         }
 
         uint256 currentAmount = token0.balanceOf(_msgSender());
-        if (currentAmount<refillAmount) {
+        if (currentAmount < refillAmount) {
             token0.safeTransfer(_msgSender(), refillAmount.sub(currentAmount));
         }
 
         currentAmount = token1.balanceOf(_msgSender());
-        if (currentAmount<refillAmount) {
+        if (currentAmount < refillAmount) {
             token1.safeTransfer(_msgSender(), refillAmount.sub(currentAmount));
         }
 
         currentAmount = token2.balanceOf(_msgSender());
-        if (currentAmount<refillAmount) {
+        if (currentAmount < refillAmount) {
             token2.safeTransfer(_msgSender(), refillAmount.sub(currentAmount));
         }
     }

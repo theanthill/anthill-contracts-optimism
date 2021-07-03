@@ -1,10 +1,10 @@
 /**
-* Add liquidity to PancakeSwap only if we are on the Testnet. On the Mainnet the liquidity
-* will be added manually by HQ
-*/
+ * Add liquidity to PancakeSwap only if we are on the Testnet. On the Mainnet the liquidity
+ * will be added manually by HQ
+ */
 const BigNumber = require('bignumber.js');
 
-const {MAIN_NETWORKS} = require('../deploy.config.ts');
+const {MAIN_NETWORKS} = require('../deploy.config.js');
 const {TEST_ANT_LIQUIDITY_PER_POOL, INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
 const {getTokenContract, getPancakeRouter, getBandOracle} = require('./external-contracts');
 
@@ -19,23 +19,21 @@ async function migration(deployer, network, accounts) {
     }
 
     const pancakeRouter = await getPancakeRouter(network);
-    const bandOracle = await getBandOracle(network);  
+    const bandOracle = await getBandOracle(network);
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS)
-    {
-        console.log(`Liquidity for the ${pool.mainToken}/${pool.otherToken} staking pool`)
+    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
+        console.log(`Liquidity for the ${pool.mainToken}/${pool.otherToken} staking pool`);
         await addLiquidity(network, accounts[0], pool, pancakeRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
     }
 }
 
 // ============ Helper Functions ============
-async function addLiquidity(network, account, pool, router, oracle, initialAllocation)
-{
+async function addLiquidity(network, account, pool, router, oracle, initialAllocation) {
     const mainToken = await getTokenContract(pool.mainToken, network);
     const otherToken = await getTokenContract(pool.otherToken, network);
 
     // Get the price rate
-    const otherTokenRate = await oracle.getReferenceData(pool.otherToken, "BUSD");
+    const otherTokenRate = await oracle.getReferenceData(pool.otherToken, 'BUSD');
     const priceOtherToken = BigNumber(otherTokenRate.rate);
 
     const unit = BigNumber(10 ** 18);
@@ -50,14 +48,10 @@ async function addLiquidity(network, account, pool, router, oracle, initialAlloc
     // Approve the expense for the router
     console.log(`  - Approving ${pool.mainToken} token for ${getDisplayBalance(mainTokenAmount)} tokens`);
     console.log(`  - Approving ${pool.otherToken} token for ${getDisplayBalance(otherTokenAmount)} tokens`);
-    await Promise.all([approveIfNot(mainToken, account, router.address, mainTokenAmount),
-                       approveIfNot(otherToken, account, router.address, otherTokenAmount)]);
+    await Promise.all([approveIfNot(mainToken, account, router.address, mainTokenAmount), approveIfNot(otherToken, account, router.address, otherTokenAmount)]);
 
     console.log(`  - Adding liquidity for the ${pool.mainToken}/${pool.otherToken} pool (${getDisplayBalance(mainTokenAmount)}/${getDisplayBalance(otherTokenAmount)})`);
-    await router.addLiquidity(mainToken.address, otherToken.address,
-                              mainTokenAmount, otherTokenAmount,
-                              mainTokenAmount, otherTokenAmount,
-                              account, deadline());
+    await router.addLiquidity(mainToken.address, otherToken.address, mainTokenAmount, otherTokenAmount, mainTokenAmount, otherTokenAmount, account, deadline());
 }
 
 async function approveIfNot(token, owner, spender, amount) {
@@ -74,8 +68,7 @@ function deadline() {
     return Math.floor(new Date().getTime() / 1000) + 1800;
 }
 
-function getDisplayBalance(amount)
-{
+function getDisplayBalance(amount) {
     const unit = BigNumber(10 ** 18);
     return amount.div(unit).toFormat(2);
 }

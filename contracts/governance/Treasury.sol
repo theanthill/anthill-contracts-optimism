@@ -162,7 +162,13 @@ contract Treasury is ContractGuard, EpochCounter {
         @param amountAntToken Amount of Ant Tokens to burn in order to get the bonds
         @param targetPrice Target price at which the bonds will be purchased
     */
-    function buyAntBonds(uint256 amountAntToken, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
+    function buyAntBonds(uint256 amountAntToken, uint256 targetPrice)
+        external
+        onlyOneBlock
+        checkMigration
+        checkStartTime
+        checkOperator
+    {
         require(amountAntToken > 0, "Treasury: cannot purchase antBonds with zero amount");
 
         uint256 antTokenPrice = tokenPriceTWAP();
@@ -191,14 +197,23 @@ contract Treasury is ContractGuard, EpochCounter {
         @param amountAntBonds Amount of Ant Tokens to burn in order to get the bonds
         @param targetPrice Target price at which the bonds will be redeemed
     */
-    function redeemAntBonds(uint256 amountAntBonds, uint256 targetPrice) external onlyOneBlock checkMigration checkStartTime checkOperator {
+    function redeemAntBonds(uint256 amountAntBonds, uint256 targetPrice)
+        external
+        onlyOneBlock
+        checkMigration
+        checkStartTime
+        checkOperator
+    {
         require(amountAntBonds > 0, "Treasury: cannot redeem antBonds with zero amount");
 
         uint256 tokenPrice = tokenPriceTWAP();
 
         require(tokenPrice == targetPrice, "Treasury: Ant Token price moved");
         require(tokenPrice > tokenPriceCeiling(), "Treasury: Ant Token price not eligible for Ant Bond redemption");
-        require(IERC20(antToken).balanceOf(address(this)) >= amountAntBonds, "Treasury: treasury has no more budget for Ant Bonds redemption");
+        require(
+            IERC20(antToken).balanceOf(address(this)) >= amountAntBonds,
+            "Treasury: treasury has no more budget for Ant Bonds redemption"
+        );
 
         accumulatedSeigniorage = accumulatedSeigniorage.sub(Math.min(accumulatedSeigniorage, amountAntBonds));
 

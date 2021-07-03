@@ -15,6 +15,7 @@ import "../access/OperatorAccessControl.sol";
  */
 interface IBaseToken {
     function mint(address recipient, uint256 amount) external;
+
     function burnFrom(address from, uint256 amount) external;
 }
 

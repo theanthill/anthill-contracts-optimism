@@ -3,15 +3,8 @@
  */
 const BigNumber = require('bignumber.js');
 
-const {MAIN_NETWORKS} = require('../deploy.config.ts');
-const {TREASURY_ACCOUNT,
-    TREASURY_ANT_ALLOCATION, 
-    MAX_ANTS_SUPPLY,
-    TEST_TREASURY_ACCOUNT,
-    TEST_HQ_ACCOUNT,
-    TEST_HQ_ANT_ALLOCATION,
-    TEST_HQ_ANTS_ALLOCATION
-} = require('./migration-config');
+const {MAIN_NETWORKS} = require('../deploy.config.js');
+const {TREASURY_ACCOUNT, TREASURY_ANT_ALLOCATION, MAX_ANTS_SUPPLY, TEST_TREASURY_ACCOUNT, TEST_HQ_ACCOUNT, TEST_HQ_ANT_ALLOCATION, TEST_HQ_ANTS_ALLOCATION} = require('./migration-config');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
@@ -25,27 +18,25 @@ async function migration(deployer, network, accounts) {
     const unit = BigNumber(10 ** 18);
 
     // Mainnet
-    if (network.includes(MAIN_NETWORKS))
-    {   
-        console.log(`[Using Mainnet configuration]`)
+    if (network.includes(MAIN_NETWORKS)) {
+        console.log(`[Using Mainnet configuration]`);
         const treasuryANTAllocation = unit.times(TREASURY_ANT_ALLOCATION);
         const treasuryANTSAllocation = unit.times(MAX_ANTS_SUPPLY);
-        
+
         console.log('Minting ' + TREASURY_ANT_ALLOCATION + ' Ant Tokens to Treasury Account');
         await antToken.mint(TREASURY_ACCOUNT, treasuryANTAllocation);
 
         console.log('Minting ' + MAX_ANTS_SUPPLY + ' Ant Shares to Treasury Account');
         await antShare.mint(TREASURY_ACCOUNT, treasuryANTSAllocation);
-    }
-    else // Testnet
-    {
-        console.log(`[Using Testnet configuration]`)
+    } // Testnet
+    else {
+        console.log(`[Using Testnet configuration]`);
         const ANTAllocation = TREASURY_ANT_ALLOCATION - TEST_HQ_ANT_ALLOCATION;
         const ANTSAllocation = MAX_ANTS_SUPPLY - TEST_HQ_ANTS_ALLOCATION;
 
         const treasuryANTAllocation = unit.times(ANTAllocation);
         const treasuryANTSAllocation = unit.times(ANTSAllocation);
-        
+
         console.log('Minting ' + ANTAllocation + ' Ant Tokens to Treasury Account');
         await antToken.mint(TEST_TREASURY_ACCOUNT, treasuryANTAllocation);
 

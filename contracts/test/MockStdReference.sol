@@ -22,27 +22,22 @@ contract MockStdReference is IStdReference {
         string memory /*_quote*/
     ) public view override returns (ReferenceData memory) {
         ReferenceData memory data;
-        
+
         bytes32 encodedBase = keccak256(abi.encodePacked(_base));
 
-        if (encodedBase == encodedANT)
-        {
+        if (encodedBase == encodedANT) {
             data.rate = testRate;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
-        } else if (encodedBase == encodedBNB)
-        {
+        } else if (encodedBase == encodedBNB) {
             data.rate = 300 * 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
-        } else if (encodedBase == encodedBUSD)
-        {
+        } else if (encodedBase == encodedBUSD) {
             data.rate = 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
-        }
-        else
-        {
+        } else {
             data.rate = 1e18;
             data.lastUpdatedBase = 0;
             data.lastUpdatedQuote = 0;
@@ -52,10 +47,12 @@ contract MockStdReference is IStdReference {
     }
 
     /// Similar to getReferenceData, but with multiple base/quote pairs at once.
-    function getReferenceDataBulk(
-        string[] memory _bases,
-        string[] memory _quotes
-    ) external view override returns (ReferenceData[] memory) {
+    function getReferenceDataBulk(string[] memory _bases, string[] memory _quotes)
+        external
+        view
+        override
+        returns (ReferenceData[] memory)
+    {
         ReferenceData[] memory data = new ReferenceData[](_bases.length);
 
         for (uint256 i = 0; i < data.length; ++i) {

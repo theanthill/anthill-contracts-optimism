@@ -8,9 +8,9 @@ import "./OperatorAccessControl.sol";
 /**
     Interface
  */
-interface IRewardsDistributorControl
-{
+interface IRewardsDistributorControl {
     function isOperator(address account) external view returns (bool);
+
     function transferOperator(address newOperator) external;
 }
 
@@ -25,7 +25,7 @@ abstract contract RewardsDistributorControl is OperatorAccessControl {
 
     address private _rewardsDistributor;
 
-    // ==== CONSTRUCTOR ==== 
+    // ==== CONSTRUCTOR ====
     constructor() {
         _setRoleAdmin(REWARDS_DISTRIBUTOR_ROLE, ADMIN_ROLE);
 
@@ -34,23 +34,26 @@ abstract contract RewardsDistributorControl is OperatorAccessControl {
         _setupRole(REWARDS_DISTRIBUTOR_ROLE, _rewardsDistributor);
     }
 
-    // ==== MODIFIERS ==== 
+    // ==== MODIFIERS ====
     modifier onlyRewardsDistributor() {
-        require(hasRole(REWARDS_DISTRIBUTOR_ROLE, _msgSender()), "RewardsDistributorControl: sender requires permission");
+        require(
+            hasRole(REWARDS_DISTRIBUTOR_ROLE, _msgSender()),
+            "RewardsDistributorControl: sender requires permission"
+        );
         _;
     }
 
-    // ==== VIEWS ==== 
+    // ==== VIEWS ====
     function isRewardsDistributor(address account) external view returns (bool) {
         return hasRole(REWARDS_DISTRIBUTOR_ROLE, account);
     }
 
-    // ==== MUTABLES ==== 
-    function transferRewardsDistributor(address newRewardsDistributor) onlyAdmin external {
+    // ==== MUTABLES ====
+    function transferRewardsDistributor(address newRewardsDistributor) external onlyAdmin {
         require(newRewardsDistributor != address(0), "RewardsDistributorControl: zero address given for new operator");
-        
+
         revokeRole(REWARDS_DISTRIBUTOR_ROLE, _rewardsDistributor);
-        
+
         _rewardsDistributor = newRewardsDistributor;
 
         grantRole(REWARDS_DISTRIBUTOR_ROLE, newRewardsDistributor);

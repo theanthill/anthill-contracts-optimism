@@ -13,9 +13,11 @@ import "@openzeppelin/contracts/utils/Context.sol";
 /**
     Interface
 */
-interface IStakingPool  {
+interface IStakingPool {
     function stake(uint256 amount) external;
+
     function withdraw(uint256 amount) external;
+
     function exit() external returns (uint256);
 }
 
@@ -64,7 +66,7 @@ contract StakingPool is Context {
 
         @param amount Amount of LP tokens to stake
     */
-     function stake(uint256 amount) public virtual {
+    function stake(uint256 amount) public virtual {
         _totalSupply = _totalSupply.add(amount);
         _balances[_msgSender()] = _balances[_msgSender()].add(amount);
 

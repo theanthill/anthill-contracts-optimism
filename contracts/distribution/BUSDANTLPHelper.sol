@@ -13,6 +13,5 @@ contract BUSDANTLPHelper is LiquidityStakingHelper {
         IERC20 lpToken,
         IStakingPoolDelegated lpTokenPool,
         IPancakeRouter02 pancakeRouter
-    ) LiquidityStakingHelper(token0, token1, lpToken, lpTokenPool, pancakeRouter) {
-    }
+    ) LiquidityStakingHelper(token0, token1, lpToken, lpTokenPool, pancakeRouter) {}
 }
