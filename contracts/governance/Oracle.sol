@@ -20,12 +20,15 @@ import "../utils/EpochCounter.sol";
     Interface
  */
 interface IOracle {
-    
     function update() external;
+
     function priceTWAP(address token) external view returns (uint256);
+
     function priceDollar() external view returns (uint256);
-    function priceVariationPercentage(address token) external view returns(uint256);
-    function consult(address token, uint amountIn) external view returns (uint256);
+
+    function priceVariationPercentage(address token) external view returns (uint256);
+
+    function consult(address token, uint256 amountIn) external view returns (uint256);
 }
 
 /**
@@ -39,7 +42,7 @@ contract Oracle is IOracle, EpochCounter {
 
     // Constants
     string constant EXTERNAL_ORACLE_BASE = "BUSD";
-    string constant EXTERNAL_ORACLE_QUOTE = "USDT";
+    string constant EXTERNAL_ORACLE_QUOTE = "USDC";
 
     // Immutables
     IPancakePair public immutable pair;
@@ -61,7 +64,7 @@ contract Oracle is IOracle, EpochCounter {
         uint256 _period,
         uint256 _startTime,
         IStdReference _bandOracle
-    ) EpochCounter(_period, _startTime, 0) {      
+    ) EpochCounter(_period, _startTime, 0) {
         pair = _pair;
 
         token0 = _pair.token0();
@@ -72,7 +75,7 @@ contract Oracle is IOracle, EpochCounter {
         price0CumulativeLast = _pair.price0CumulativeLast();
         price1CumulativeLast = _pair.price1CumulativeLast();
 
-        (,, blockTimestampLast) = _pair.getReserves();
+        (, , blockTimestampLast) = _pair.getReserves();
     }
 
     /** 
@@ -81,10 +84,8 @@ contract Oracle is IOracle, EpochCounter {
         @dev Updates 1-day EMA price from PancakeSwap
     */
     function update() external override checkEpoch {
-
         // Obtain the TWAP for the latest block
-        (uint256 price0Cumulative, uint256 price1Cumulative, uint32 blockTimestamp) = 
-            PancakeOracleLibrary.currentCumulativePrices(address(pair));
+        (uint256 price0Cumulative, uint256 price1Cumulative, uint32 blockTimestamp) = PancakeOracleLibrary.currentCumulativePrices(address(pair));
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
 
         // overflow is desired, casting never truncates
@@ -106,12 +107,11 @@ contract Oracle is IOracle, EpochCounter {
 
         @return price  Average price of the token multiplied by 1e18
     */
-    function priceTWAP(address token) public view override returns (uint256 price)
-    {
+    function priceTWAP(address token) public view override returns (uint256 price) {
         if (token == token0) {
             price = price0Average.mul(1e18).decode144();
         } else {
-            require(token == token1, 'ExampleOracleSimple: INVALID_TOKEN');
+            require(token == token1, "ExampleOracleSimple: INVALID_TOKEN");
             price = price1Average.mul(1e18).decode144();
         }
     }
@@ -133,16 +133,15 @@ contract Oracle is IOracle, EpochCounter {
 
         @return percentage  Price variation percentage multiplied by 1e18
     */
-    function priceVariationPercentage(address token) external view override returns(uint256 percentage)
-    {       
-        percentage =  priceTWAP(token).mul(1e18).div(priceDollar()).sub(1e18);
+    function priceVariationPercentage(address token) external view override returns (uint256 percentage) {
+        percentage = priceTWAP(token).mul(1e18).div(priceDollar()).sub(1e18);
     }
 
-    function consult(address token, uint amountIn) external view override returns (uint256 amountOut) {
+    function consult(address token, uint256 amountIn) external view override returns (uint256 amountOut) {
         if (token == token0) {
             amountOut = price0Average.mul(amountIn).decode144();
         } else {
-            require(token == token1, 'ExampleOracleSimple: INVALID_TOKEN');
+            require(token == token1, "ExampleOracleSimple: INVALID_TOKEN");
             amountOut = price1Average.mul(amountIn).decode144();
         }
     }

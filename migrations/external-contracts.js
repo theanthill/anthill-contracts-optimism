@@ -31,26 +31,24 @@ async function getBNB(network) {
 }
 
 async function getBandOracle(network) {
-    return MAIN_NETWORKS.includes(network) ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network]) : await MockBandOracle.deployed();
+    return !LOCAL_NETWORKS.includes(network) ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network]) : await MockBandOracle.deployed();
 }
 
 async function getTokenContract(tokenName, network) {
-     // function exists
-    switch(tokenName)
-    {
-        case "ANT":
+    // function exists
+    switch (tokenName) {
+        case 'ANT':
             return await AntToken.deployed();
-        case "ANTS":
+        case 'ANTS':
             return await AntShare.deployed();
-        case "ANTB":
+        case 'ANTB':
             return await AntBond.deployed();
-        case "BUSD":
+        case 'BUSD':
             return await getBUSD(network);
-        case "BNB":
+        case 'BNB':
             return await getBNB(network);
         default:
-            throw "getTokenContract: Token contract not found: " + tokenName;
-
+            throw 'getTokenContract: Token contract not found: ' + tokenName;
     }
 }
 
@@ -60,5 +58,5 @@ module.exports = {
     getBUSD,
     getBNB,
     getBandOracle,
-    getTokenContract
+    getTokenContract,
 };

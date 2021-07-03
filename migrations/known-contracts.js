@@ -30,6 +30,6 @@ module.exports = {
 
     BNB: {
         'local-mainnet': '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-        mainnet: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-    }
+        mainnet: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    },
 };
