@@ -1,44 +1,43 @@
 # 🐜 The Anthill Contracts
 
-This is the contracts repository of the Anthill.
+This is the repository for The Anthill protocol smart-contracts.
 
 The Anthill contracts is a lightweight implementation of the [Basis Protocol](basis.io), based on [Basis Gold](https://basis.gold/) but ported to Binance Smart Chain. You can find us at [theanthill.io](http://www.theanthill.io).
 
 ## 🚄🐜 TLDR
 
 ```
- $ yarn
- $ ganache-cli -f https://bsc-dataseed1.binance.org --chainId 56
- $ yarn build
+ $ npm install
+ $ npm run ganache:local-testnet
+ $ yarn migrate:local-testnet
 ```
 
 ## 💻🐜 Set Up Environment
 
-To begin, you need to install dependencies with Yarn.
+To begin, you need to install dependencies with npm:
 
 ```
- $ yarn
+ $ npm install
 ```
 
 ## 💻🐜 Compiling the contracts
 
 ```
- $ yarn compile
+ $ truffle compile
 ```
 
 ## 🖧🐜 Deploying the contracts
 
-First you need to start a local blockchain. We'll do this using `ganache-cli` and
-forking the BSC `mainnet`. Open a new terminal and run:
+First you need to start a local blockchain branching off the current testnet:
 
 ```
- $ ganache-cli -f https://bsc-dataseed1.binance.org --chainId 56
+ $ npm ganache:local-testnet
 ```
 
 Then you can deploy the contracts with:
 
 ```
-$ yarn migrate
+$ npm migrate:local-testnet
 ```
 
 ## 🗺 History of Basis
