@@ -47,27 +47,44 @@ module.exports = {
             port: 8545,
             network_id: '*',
         },
-        'local-testnet': {
+        'bsc-local-testnet': {
             host: '127.0.0.1',
             port: 8545,
             network_id: '97',
         },
-        'local-mainnet': {
+        'bsc-local-mainnet': {
             host: '127.0.0.1',
             port: 8545,
             network_id: '56',
         },
-        testnet: {
+        'bsc-testnet': {
             provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
             network_id: 97,
             confirmations: 10,
             timeoutBlocks: 200,
             skipDryRun: true,
         },
-        mainnet: {
+        'bsc-mainnet': {
             provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed.binance.org/`),
             network_id: 56,
             confirmations: 10,
+            timeoutBlocks: 200,
+            skipDryRun: true,
+        },
+        'eth-local-testnet': {
+            host: '127.0.0.1',
+            port: 8545,
+            network_id: 3,
+            gas: 5500000,
+            timeoutBlocks: 200,
+            skipDryRun: true,
+        },
+        'eth-testnet': {
+            provider: () =>
+                new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/6e5d84ddfd044f44b7b6ae6ec167f3f1`),
+            network_id: 3,
+            gas: 5500000,
+            confirmations: 2,
             timeoutBlocks: 200,
             skipDryRun: true,
         },

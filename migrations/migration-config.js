@@ -21,26 +21,26 @@ const ANTBNBLPTokenPool = {
     contractName: 'BNBANTLPTokenANTPool',
     helperContract: 'BNBANTLPHelper',
     mainToken: 'ANT',
-    otherToken: 'BNB',
+    otherToken: 'ETH',
 };
 
-const INITIAL_DEPLOYMENT_POOLS = [ ANTBUSDLPTokenPool, ANTBNBLPTokenPool ];
+const INITIAL_DEPLOYMENT_POOLS = [ANTBUSDLPTokenPool, ANTBNBLPTokenPool];
 
 // System accounts
 //
 // [workerant] Set the final values before mainnet deployment
-const TREASURY_ACCOUNT = "";
-const OPERATOR_ACCOUNT = "";
-const ADMIN_ACCOUNT = "";
+const TREASURY_ACCOUNT = '';
+const OPERATOR_ACCOUNT = '';
+const ADMIN_ACCOUNT = '';
 
 /**
  * Test configuration
  */
 // HQ Account used for testing
-const TEST_TREASURY_ACCOUNT = "0xF9D5169aA864C1Ddda2Aba931Edf722f98B2D159";
-const TEST_OPERATOR_ACCOUNT = "0x8a612956aBAF09C37e4372d7890835294080eb30";
-const TEST_ADMIN_ACCOUNT = "0xF9D5169aA864C1Ddda2Aba931Edf722f98B2D159";
-const TEST_HQ_ACCOUNT = "0x47Ce08590BdB1162EaDE736EfaAbf2aa2d5C8C92";
+const TEST_TREASURY_ACCOUNT = '0xF9D5169aA864C1Ddda2Aba931Edf722f98B2D159';
+const TEST_OPERATOR_ACCOUNT = '0x8a612956aBAF09C37e4372d7890835294080eb30';
+const TEST_ADMIN_ACCOUNT = '0xF9D5169aA864C1Ddda2Aba931Edf722f98B2D159';
+const TEST_HQ_ACCOUNT = '0x47Ce08590BdB1162EaDE736EfaAbf2aa2d5C8C92';
 
 // Amount of Ant Shares allocated for HQ at deploy
 const TEST_HQ_ANTS_ALLOCATION = 2100000;
@@ -87,5 +87,5 @@ module.exports = {
     TEST_HQ_ANTS_ALLOCATION,
     TEST_FAUCET_MAX_REFILL,
     TEST_FAUCET_INITIAL_ALLOCATION,
-    TEST_REWARDS_DISTRIBUTOR_ALLOCATION
+    TEST_REWARDS_DISTRIBUTOR_ALLOCATION,
 };

@@ -23,8 +23,8 @@ const UNI_FACTORY = '0x6725F303b657a9451d8BA641348b6761A6CC7a17';
 
 // Real networks with already deployed Swaps and BUSD
 const LOCAL_NETWORKS = ['dev'];
-const TEST_NETWORKS = ['testnet', 'local-testnet'];
-const MAIN_NETWORKS = ['mainnet', 'local-mainnet'];
+const TEST_NETWORKS = ['bsc-testnet', 'bsc-local-testnet', 'eth-testnet', 'eth-local-testnet'];
+const MAIN_NETWORKS = ['bsc-mainnet', 'bsc-local-mainnet', 'eth-mainnet', 'eth-local-mainnet'];
 
 module.exports = {
     POOL_START_DATE,

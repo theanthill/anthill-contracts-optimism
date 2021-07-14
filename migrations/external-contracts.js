@@ -15,11 +15,15 @@ const AntShare = artifacts.require('AntShare');
 const AntBond = artifacts.require('AntBond');
 
 async function getPancakeFactory(network) {
-    return LOCAL_NETWORKS.includes(network) ? await PancakeFactory.deployed() : await PancakeFactory.at(knownContracts.PancakeFactory[network]);
+    return LOCAL_NETWORKS.includes(network)
+        ? await PancakeFactory.deployed()
+        : await PancakeFactory.at(knownContracts.PancakeFactory[network]);
 }
 
 async function getPancakeRouter(network) {
-    return LOCAL_NETWORKS.includes(network) ? await PancakeRouter.deployed() : await PancakeRouter.at(knownContracts.PancakeRouter[network]);
+    return LOCAL_NETWORKS.includes(network)
+        ? await PancakeRouter.deployed()
+        : await PancakeRouter.at(knownContracts.PancakeRouter[network]);
 }
 
 async function getBUSD(network) {
@@ -31,7 +35,9 @@ async function getBNB(network) {
 }
 
 async function getBandOracle(network) {
-    return !LOCAL_NETWORKS.includes(network) ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network]) : await MockBandOracle.deployed();
+    return !LOCAL_NETWORKS.includes(network)
+        ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network])
+        : await MockBandOracle.deployed();
 }
 
 async function getTokenContract(tokenName, network) {
@@ -46,6 +52,7 @@ async function getTokenContract(tokenName, network) {
         case 'BUSD':
             return await getBUSD(network);
         case 'BNB':
+        case 'ETH':
             return await getBNB(network);
         default:
             throw 'getTokenContract: Token contract not found: ' + tokenName;
