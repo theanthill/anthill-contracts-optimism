@@ -12,7 +12,7 @@ const MAX_ANTS_SUPPLY = 21000000;
 const ANTBUSDLPTokenPool = {
     contractName: 'BUSDANTLPTokenANTPool',
     helperContract: 'BUSDANTLPHelper',
-    mainToken: 'ANT',
+    mainToken: 'AntToken',
     otherToken: 'BUSD',
 };
 
@@ -20,11 +20,20 @@ const ANTBUSDLPTokenPool = {
 const ANTBNBLPTokenPool = {
     contractName: 'BNBANTLPTokenANTPool',
     helperContract: 'BNBANTLPHelper',
-    mainToken: 'ANT',
+    mainToken: 'AntToken',
+    otherToken: 'BNB',
+};
+
+// ANT-ETH LP Tokens pool that generate ANT Token rewards
+const ANTETHLPTokenPool = {
+    contractName: 'ETHANTLPTokenANTPool',
+    helperContract: 'ETHANTLPHelper',
+    mainToken: 'AntToken',
     otherToken: 'ETH',
 };
 
-const INITIAL_DEPLOYMENT_POOLS = [ANTBUSDLPTokenPool, ANTBNBLPTokenPool];
+const INITIAL_BSC_DEPLOYMENT_POOLS = [ANTBUSDLPTokenPool, ANTBNBLPTokenPool];
+const INITIAL_ETH_DEPLOYMENT_POOLS = [ANTBUSDLPTokenPool, ANTETHLPTokenPool];
 
 // System accounts
 //
@@ -51,6 +60,9 @@ const TEST_HQ_ANT_ALLOCATION = 100000;
 // Amount of fake BNB tokens to be minted at deploy
 const TEST_INITIAL_BNB_SUPPLY = 1000;
 
+// Amount of fake ETH tokens to be minted at deploy
+const TEST_INITIAL_ETH_SUPPLY = 1000;
+
 // Amount of fake BUSD tokens to be minted at deploy
 const TEST_INITIAL_BUSD_SUPPLY = 300000;
 
@@ -71,7 +83,8 @@ module.exports = {
     MAX_ANTS_SUPPLY,
     ANTBUSDLPTokenPool,
     ANTBNBLPTokenPool,
-    INITIAL_DEPLOYMENT_POOLS,
+    INITIAL_BSC_DEPLOYMENT_POOLS,
+    INITIAL_ETH_DEPLOYMENT_POOLS,
     TREASURY_ACCOUNT,
     OPERATOR_ACCOUNT,
     ADMIN_ACCOUNT,
@@ -82,6 +95,7 @@ module.exports = {
     TEST_HQ_ACCOUNT,
     TEST_INITIAL_BUSD_SUPPLY,
     TEST_INITIAL_BNB_SUPPLY,
+    TEST_INITIAL_ETH_SUPPLY,
     TEST_ANT_LIQUIDITY_PER_POOL,
     TEST_HQ_ANT_ALLOCATION,
     TEST_HQ_ANTS_ALLOCATION,

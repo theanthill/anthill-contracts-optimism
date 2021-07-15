@@ -16,20 +16,6 @@ async function onExit(childProcess) {
     });
 }
 
-async function runOpenEthereum(network) {
-    var openethArgs = [];
-
-    // Network option
-    switch (network) {
-        case 'eth-local-testnet':
-            openethArgs.push(...['--chain', 'ropsten', '--jsonrpc-port', '9545']);
-            break;
-    }
-
-    var openeth = spawn('openethereum', openethArgs, {stdio: [process.stdin, process.stdout, process.stderr]});
-    return onExit(openeth);
-}
-
 async function runGanache(network, blocktime) {
     var ganacheArgs = ['ganache-cli'];
 
@@ -41,8 +27,10 @@ async function runGanache(network, blocktime) {
         case 'bsc-local-mainnet':
             ganacheArgs.push(...['-f', 'https://bsc-dataseed.binance.org/', '--chainId', '56']);
             break;
-        case 'eth-local-testnet':
-            ganacheArgs.push(...['-f', 'http://localhost:9545', '--chainId', '3', '--networkId', '3']);
+        case 'eth-local-ropsten':
+            ganacheArgs.push(
+                ...['-f', 'https://ropsten.infura.io/v3/6e5d84ddfd044f44b7b6ae6ec167f3f1', '--chainId', '3']
+            );
             break;
     }
 
@@ -71,19 +59,7 @@ async function main() {
         .help()
         .alias('help', 'h').argv;
 
-    let promises = [];
-
-    switch (argv.network) {
-        case 'eth-local-testnet':
-            const openeth = runOpenEthereum(argv.network);
-            promises.push(openeth);
-            break;
-    }
-
-    const ganache = runGanache(argv.network, argv.blocktime);
-    promises.push(ganache);
-
-    await Promise.all(promises);
+    await runGanache(argv.network, argv.blocktime);
 }
 
 main();

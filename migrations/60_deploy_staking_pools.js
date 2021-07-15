@@ -3,7 +3,8 @@
  */
 const {getTokenContract, getPancakeFactory} = require('./external-contracts');
 const {POOL_START_DATE} = require('../deploy.config.js');
-const {INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
+const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
+const {BSC_NETWORKS} = require('../deploy.config');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
@@ -13,7 +14,11 @@ module.exports = async (deployer, network, accounts) => {
     const pancakeFactory = await getPancakeFactory(network);
     const antToken = await AntToken.deployed();
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    for (let pool of initialDeploymentPools) {
         const otherToken = await getTokenContract(pool.otherToken, network);
         const poolContract = artifacts.require(pool.contractName);
 

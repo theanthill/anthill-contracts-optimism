@@ -2,9 +2,8 @@
  * Creates the pairs contracts for the liquidity pools. This is needed because the Oracle will need
  * the pair contract already existing when its constructor is executed
  */
-const BigNumber = require('bignumber.js');
-
-const {INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
+const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
+const {BSC_NETWORKS} = require('../deploy.config');
 const {getTokenContract, getPancakeFactory} = require('./external-contracts');
 
 // ============ Contracts ============
@@ -15,8 +14,11 @@ async function migration(deployer, network, accounts) {
     const antToken = await AntToken.deployed();
     const pancakeFactory = await getPancakeFactory(network);
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS)
-    {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    for (let pool of initialDeploymentPools) {
         const otherToken = await getTokenContract(pool.otherToken, network);
 
         console.log(`Creating pair for the pool ANT/${pool.otherToken}`);

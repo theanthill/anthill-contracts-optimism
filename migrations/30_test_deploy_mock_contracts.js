@@ -7,6 +7,7 @@ const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
 const {
     TEST_INITIAL_BUSD_SUPPLY,
     TEST_INITIAL_BNB_SUPPLY,
+    TEST_INITIAL_ETH_SUPPLY,
     TEST_FAUCET_MAX_REFILL,
     TEST_FAUCET_INITIAL_ALLOCATION,
     TEST_TREASURY_ACCOUNT,
@@ -19,6 +20,7 @@ const {
 const AntToken = artifacts.require('AntToken');
 const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
+const MockETH = artifacts.require('MockETH');
 const MockBandOracle = artifacts.require('MockStdReference');
 const TokenFaucet = artifacts.require('TokenFaucet');
 const PancakeFactory = artifacts.require('PancakeFactory');
@@ -48,6 +50,17 @@ async function migration(deployer, network, accounts) {
         await mockBNB.mint(accounts[0], bnbInitialAllocation);
     }
 
+    // ETH
+    if (!MAIN_NETWORKS.includes(network)) {
+        await deployer.deploy(MockETH);
+        const mockETH = await MockETH.deployed();
+
+        const unit = BigNumber(10 ** 18);
+        const ethInitialAllocation = unit.times(TEST_INITIAL_ETH_SUPPLY);
+
+        await mockETH.mint(accounts[0], ethInitialAllocation);
+    }
+
     // Band Oracle
     if (!LOCAL_NETWORKS.includes(network)) {
         await deployer.deploy(MockBandOracle);
@@ -62,7 +75,12 @@ async function migration(deployer, network, accounts) {
         const mockBUSD = await MockBUSD.deployed();
         const mockBNB = await MockBNB.deployed();
 
-        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, mockBNB.address, faucetMaxRefill, [TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT, TEST_ADMIN_ACCOUNT, TEST_HQ_ACCOUNT]);
+        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, mockBNB.address, faucetMaxRefill, [
+            TEST_TREASURY_ACCOUNT,
+            TEST_OPERATOR_ACCOUNT,
+            TEST_ADMIN_ACCOUNT,
+            TEST_HQ_ACCOUNT,
+        ]);
         const tokenFaucet = await TokenFaucet.deployed();
 
         await mockBUSD.mint(tokenFaucet.address, faucetInitialAllocation);

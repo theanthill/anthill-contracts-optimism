@@ -5,12 +5,36 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
+const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
+const {BSC_NETWORKS} = require('../deploy.config');
+
 const writeFile = util.promisify(fs.writeFile);
 
-function distributionPoolContracts() {
-    return fs
-        .readdirSync(path.resolve(__dirname, '../contracts/distribution'))
-        .map((filename) => filename.replace('.sol', ''));
+function distributionPoolContracts(network) {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    let contracts = [];
+    for (let pool of initialDeploymentPools) {
+        contracts.push(pool.contractName);
+        contracts.push(pool.helperContract);
+    }
+
+    return contracts;
+}
+
+function externalPairs(network) {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    let pairs = [];
+    for (let pool of initialDeploymentPools) {
+        pairs.push(pool.mainToken + '-' + pool.otherToken);
+    }
+
+    return pairs;
 }
 
 // Deployment and ABI will be generated for contracts listed on here.
@@ -22,19 +46,22 @@ const exportedContracts = [
     'AntShare',
     'Boardroom',
     'Treasury',
-    ...distributionPoolContracts(),
     'TokenFaucet',
-    'MockStdReference'
+    'MockStdReference',
 ];
 
-const externalTokens = ['ANT-BUSD', 'BUSD', 'ANT-BNB', 'BNB', 'PancakeRouter'];
+const externalTokens = ['BUSD', 'BNB', 'ETH', 'PancakeRouter'];
 
 // ============ Main Migration ============
 module.exports = async (deployer, network, accounts) => {
+    exportedContracts.push(...distributionPoolContracts(network));
+    externalTokens.push(...externalPairs(network));
+
     // Deployments
     const deployments = {};
 
     for (const name of exportedContracts) {
+        console.log('Exporting artifact: ' + name);
         const contract = artifacts.require(name);
         deployments[name] = {
             address: contract.address,
@@ -49,6 +76,7 @@ module.exports = async (deployer, network, accounts) => {
     const externals = {};
 
     for (const name of externalTokens) {
+        console.log('Exporting artifact: ' + name);
         const token = require('../build/contracts/' + name + '.json');
         externals[name] = {
             address: token.address,

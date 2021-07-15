@@ -2,8 +2,16 @@
  * Transfer operator and ownership of the deployed contracts
  */
 
-const {TREASURY_ACCOUNT, TEST_TREASURY_ACCOUNT, ADMIN_ACCOUNT, TEST_ADMIN_ACCOUNT, INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
-const {MAIN_NETWORKS} = require('../deploy.config.js');
+const {
+    TREASURY_ACCOUNT,
+    TEST_TREASURY_ACCOUNT,
+    ADMIN_ACCOUNT,
+    TEST_ADMIN_ACCOUNT,
+    INITIAL_BSC_DEPLOYMENT_POOLS,
+    INITIAL_ETH_DEPLOYMENT_POOLS,
+} = require('./migration-config');
+
+const {MAIN_NETWORKS, BSC_NETWORKS} = require('../deploy.config');
 
 // ============ Contracts ============
 const Boardroom = artifacts.require('Boardroom');
@@ -27,7 +35,10 @@ module.exports = async (deployer, network, accounts) => {
     await assignOperator(Treasury.contractName, treasury.address, [AntToken, AntShare, AntBond, Boardroom]);
 
     console.log(`Assigning Treasury Timelock contract governance roles`);
-    await assignOperator(TreasuryTimelock.contractName, treasuryTimelock.address, [ContributionPool, RewardsDistributor]);
+    await assignOperator(TreasuryTimelock.contractName, treasuryTimelock.address, [
+        ContributionPool,
+        RewardsDistributor,
+    ]);
 
     console.log(`Assigning Operator Timelock contract governance roles`);
     await assignOperator(OperatorTimelock.contractName, operatorTimelock.address, [Treasury]);
@@ -42,9 +53,22 @@ module.exports = async (deployer, network, accounts) => {
     // Admin
     console.log(`Assigning Admin role`);
     const adminAccount = network.includes(MAIN_NETWORKS) ? ADMIN_ACCOUNT : TEST_ADMIN_ACCOUNT;
-    let adminContracts = [AntToken, AntShare, AntBond, Treasury, Boardroom, TreasuryTimelock, ContributionPool, RewardsDistributor];
+    let adminContracts = [
+        AntToken,
+        AntShare,
+        AntBond,
+        Treasury,
+        Boardroom,
+        TreasuryTimelock,
+        ContributionPool,
+        RewardsDistributor,
+    ];
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    for (let pool of initialDeploymentPools) {
         adminContracts.push(artifacts.require(pool.contractName));
     }
 
@@ -56,7 +80,9 @@ async function assignOperator(operatorName, operatorAddress, contracts) {
     for await (const Contract of contracts) {
         const contract = await Contract.deployed();
 
-        console.log(`  - ${operatorName} (${operatorAddress}) as ${Contract.contractName} (${contract.address}) Operator`);
+        console.log(
+            `  - ${operatorName} (${operatorAddress}) as ${Contract.contractName} (${contract.address}) Operator`
+        );
         await contract.transferOperator(operatorAddress);
     }
 }

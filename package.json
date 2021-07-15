@@ -6,16 +6,17 @@
   "scripts": {
     "build": "npm run compile && npm run migrate",
     "compile": "npx truffle compile",
+    "clean": "npx rimraf build/* deployments/*.log",
     "migrate:dev": "npx truffle migrate --network dev --reset | tee deployments/deploy.dev.log",
     "migrate:bsc-local-testnet": "npx truffle migrate --network bsc-local-testnet --reset | tee deployments/deploy.bsc-local-testnet.log",
     "migrate:bsc-local-mainnet": "npx truffle migrate --network bsc-local-mainnet --reset | tee deployments/deploy.bsc-local-mainnet.log",
     "migrate:bsc-testnet": "npx truffle migrate --network bsc-testnet --reset | tee deployments/deploy.bsc-testnet.log",
     "migrate:bsc-mainnet": "npx truffle migrate --network bsc-mainnet --reset | tee deployments/deploy.bsc-mainnet.log",
-    "migrate:eth-local-testnet": "npx truffle migrate --network eth-local-testnet --reset | tee deployments/deploy.eth-local-testnet.log",
-    "migrate:eth-testnet": "npx truffle migrate --network eth-testnet --reset | tee deployments/deploy.eth-testnet.log",
+    "migrate:eth-local-ropsten": "npx truffle migrate --network eth-local-ropsten --reset | tee deployments/deploy.eth-local-ropsten.log",
+    "migrate:eth-ropsten": "npx truffle migrate --network eth-ropsten --reset | tee deployments/deploy.eth-ropsten.log",
     "ganache:bsc-local-testnet": "node run-ganache --network bsc-local-testnet --blocktime 3",
     "ganache:bsc-local-mainnet": "node run-ganache --network bsc-local-mainnet --blocktime 3",
-    "ganache:eth-local-testnet": "node run-ganache --network eth-local-testnet --blocktime 3",
+    "ganache:eth-local-ropsten": "node run-ganache --network eth-local-ropsten --blocktime 3",
     "ganache:eth-local-mainnet": "node run-ganache --network eth-local-mainnet --blocktime 3",
     "ganache:dev": "node run-ganache --network dev"
   },
@@ -23,7 +24,7 @@
     "type": "git",
     "url": "git+https://github.com/theanthill/anthill-contracts"
   },
-  "author": "rhlsthrm",
+  "author": "workerant",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/theanthill/anthill-contracts/issues"
@@ -41,6 +42,7 @@
     "bignumber.js": "^9.0.1",
     "prettier": "^2.3.2",
     "prettier-plugin-solidity": "1.0.0-beta.13",
+    "rimraf": "^2.7.1",
     "solc": "^0.8.6",
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "^0.0.5",

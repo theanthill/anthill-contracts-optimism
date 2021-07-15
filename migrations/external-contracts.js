@@ -8,6 +8,7 @@ const PancakeFactory = artifacts.require('PancakeFactory');
 const PancakeRouter = artifacts.require('PancakeRouter');
 const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
+const MockETH = artifacts.require('MockETH');
 const MockBandOracle = artifacts.require('MockStdReference');
 const IERC20 = artifacts.require('IERC20');
 const AntToken = artifacts.require('AntToken');
@@ -34,6 +35,10 @@ async function getBNB(network) {
     return MAIN_NETWORKS.includes(network) ? await IERC20.at(knownContracts.BNB[network]) : await MockBNB.deployed();
 }
 
+async function getETH(network) {
+    return MAIN_NETWORKS.includes(network) ? await IERC20.at(knownContracts.ETH[network]) : await MockETH.deployed();
+}
+
 async function getBandOracle(network) {
     return !LOCAL_NETWORKS.includes(network)
         ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network])
@@ -43,11 +48,11 @@ async function getBandOracle(network) {
 async function getTokenContract(tokenName, network) {
     // function exists
     switch (tokenName) {
-        case 'ANT':
+        case 'AntToken':
             return await AntToken.deployed();
-        case 'ANTS':
+        case 'AntShare':
             return await AntShare.deployed();
-        case 'ANTB':
+        case 'AntBond':
             return await AntBond.deployed();
         case 'BUSD':
             return await getBUSD(network);
@@ -64,6 +69,7 @@ module.exports = {
     getPancakeRouter,
     getBUSD,
     getBNB,
+    getETH,
     getBandOracle,
     getTokenContract,
 };

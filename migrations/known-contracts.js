@@ -9,8 +9,8 @@ module.exports = {
         'bsc-local-mainnet': '0xBCfCcbde45cE874adCB698cC183deBcF17952812',
         'bsc-mainnet': '0xBCfCcbde45cE874adCB698cC183deBcF17952812',
         // Ethereum
-        'eth-local-testnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-        'eth-testnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+        'eth-local-ropsten': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+        'eth-ropsten': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         'eth-local-mainnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         'eth-mainnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
     },
@@ -22,8 +22,8 @@ module.exports = {
         'bsc-local-mainnet': '0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F',
         'bsc-mainnet': '0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F',
         // Ethereum
-        'eth-local-testnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
-        'eth-testnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        'eth-local-ropsten': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        'eth-ropsten': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
         'eth-local-mainnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
         'eth-mainnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
     },
@@ -35,8 +35,8 @@ module.exports = {
         'bsc-local-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         'bsc-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         // Ethereum
-        'eth-local-testnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
-        'eth-testnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
+        'eth-local-ropsten': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
+        'eth-ropsten': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         'eth-local-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         'eth-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
     },

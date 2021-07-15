@@ -5,7 +5,12 @@
 const BigNumber = require('bignumber.js');
 
 const {MAIN_NETWORKS} = require('../deploy.config.js');
-const {TEST_ANT_LIQUIDITY_PER_POOL, INITIAL_DEPLOYMENT_POOLS} = require('./migration-config');
+const {
+    TEST_ANT_LIQUIDITY_PER_POOL,
+    INITIAL_BSC_DEPLOYMENT_POOLS,
+    INITIAL_ETH_DEPLOYMENT_POOLS,
+} = require('./migration-config');
+const {BSC_NETWORKS} = require('../deploy.config');
 const {getTokenContract, getPancakeRouter, getBandOracle} = require('./external-contracts');
 
 // ============ Contracts ============
@@ -21,7 +26,11 @@ async function migration(deployer, network, accounts) {
     const pancakeRouter = await getPancakeRouter(network);
     const bandOracle = await getBandOracle(network);
 
-    for (let pool of INITIAL_DEPLOYMENT_POOLS) {
+    const initialDeploymentPools = BSC_NETWORKS.includes(network)
+        ? INITIAL_BSC_DEPLOYMENT_POOLS
+        : INITIAL_ETH_DEPLOYMENT_POOLS;
+
+    for (let pool of initialDeploymentPools) {
         console.log(`Liquidity for the ${pool.mainToken}/${pool.otherToken} staking pool`);
         await addLiquidity(network, accounts[0], pool, pancakeRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
     }
@@ -48,10 +57,26 @@ async function addLiquidity(network, account, pool, router, oracle, initialAlloc
     // Approve the expense for the router
     console.log(`  - Approving ${pool.mainToken} token for ${getDisplayBalance(mainTokenAmount)} tokens`);
     console.log(`  - Approving ${pool.otherToken} token for ${getDisplayBalance(otherTokenAmount)} tokens`);
-    await Promise.all([approveIfNot(mainToken, account, router.address, mainTokenAmount), approveIfNot(otherToken, account, router.address, otherTokenAmount)]);
+    await Promise.all([
+        approveIfNot(mainToken, account, router.address, mainTokenAmount),
+        approveIfNot(otherToken, account, router.address, otherTokenAmount),
+    ]);
 
-    console.log(`  - Adding liquidity for the ${pool.mainToken}/${pool.otherToken} pool (${getDisplayBalance(mainTokenAmount)}/${getDisplayBalance(otherTokenAmount)})`);
-    await router.addLiquidity(mainToken.address, otherToken.address, mainTokenAmount, otherTokenAmount, mainTokenAmount, otherTokenAmount, account, deadline());
+    console.log(
+        `  - Adding liquidity for the ${pool.mainToken}/${pool.otherToken} pool (${getDisplayBalance(
+            mainTokenAmount
+        )}/${getDisplayBalance(otherTokenAmount)})`
+    );
+    await router.addLiquidity(
+        mainToken.address,
+        otherToken.address,
+        mainTokenAmount,
+        otherTokenAmount,
+        mainTokenAmount,
+        otherTokenAmount,
+        account,
+        deadline()
+    );
 }
 
 async function approveIfNot(token, owner, spender, amount) {
@@ -60,7 +85,9 @@ async function approveIfNot(token, owner, spender, amount) {
         return;
     }
     await token.approve(spender, amount);
-    console.log(`    - Approved ${token.symbol ? await token.symbol() : token.address} for ${getDisplayBalance(amount)} tokens`);
+    console.log(
+        `    - Approved ${token.symbol ? await token.symbol() : token.address} for ${getDisplayBalance(amount)} tokens`
+    );
 }
 
 function deadline() {

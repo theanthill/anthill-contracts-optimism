@@ -71,15 +71,13 @@ module.exports = {
             timeoutBlocks: 200,
             skipDryRun: true,
         },
-        'eth-local-testnet': {
+        'eth-local-ropsten': {
             host: '127.0.0.1',
             port: 8545,
             network_id: 3,
-            gas: 5500000,
-            timeoutBlocks: 200,
             skipDryRun: true,
         },
-        'eth-testnet': {
+        'eth-ropsten': {
             provider: () =>
                 new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/6e5d84ddfd044f44b7b6ae6ec167f3f1`),
             network_id: 3,
