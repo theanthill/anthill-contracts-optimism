@@ -22,7 +22,9 @@ async function migration(deployer, network, accounts) {
         const otherToken = await getTokenContract(pool.otherToken, network);
 
         console.log(`Creating pair for the pool ANT/${pool.otherToken}`);
-        await pancakeFactory.createPair(antToken.address, otherToken.address);
+        const pairAddress = await pancakeFactory.createPair(antToken.address, otherToken.address);
+
+        console.log(`  - Pair created at address ${pairAddress.address}`);
     }
 }
 

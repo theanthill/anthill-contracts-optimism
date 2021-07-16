@@ -57,8 +57,9 @@ async function getTokenContract(tokenName, network) {
         case 'BUSD':
             return await getBUSD(network);
         case 'BNB':
-        case 'ETH':
             return await getBNB(network);
+        case 'ETH':
+            return await getETH(network);
         default:
             throw 'getTokenContract: Token contract not found: ' + tokenName;
     }

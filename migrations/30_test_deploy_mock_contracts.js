@@ -3,7 +3,7 @@
  */
 const BigNumber = require('bignumber.js');
 
-const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
+const {LOCAL_NETWORKS, MAIN_NETWORKS, BSC_NETWORKS} = require('../deploy.config.js');
 const {
     TEST_INITIAL_BUSD_SUPPLY,
     TEST_INITIAL_BNB_SUPPLY,
@@ -62,7 +62,7 @@ async function migration(deployer, network, accounts) {
     }
 
     // Band Oracle
-    if (!LOCAL_NETWORKS.includes(network)) {
+    if (LOCAL_NETWORKS.includes(network)) {
         await deployer.deploy(MockBandOracle);
     }
 
@@ -73,9 +73,10 @@ async function migration(deployer, network, accounts) {
 
         const antToken = await AntToken.deployed();
         const mockBUSD = await MockBUSD.deployed();
-        const mockBNB = await MockBNB.deployed();
 
-        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, mockBNB.address, faucetMaxRefill, [
+        let nativeToken = BSC_NETWORKS.includes(network) ? await MockBNB.deployed() : await MockETH.deployed();
+
+        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, nativeToken.address, faucetMaxRefill, [
             TEST_TREASURY_ACCOUNT,
             TEST_OPERATOR_ACCOUNT,
             TEST_ADMIN_ACCOUNT,
@@ -84,7 +85,7 @@ async function migration(deployer, network, accounts) {
         const tokenFaucet = await TokenFaucet.deployed();
 
         await mockBUSD.mint(tokenFaucet.address, faucetInitialAllocation);
-        await mockBNB.mint(tokenFaucet.address, faucetInitialAllocation);
+        await nativeToken.mint(tokenFaucet.address, faucetInitialAllocation);
         await antToken.mint(tokenFaucet.address, faucetInitialAllocation);
     }
 

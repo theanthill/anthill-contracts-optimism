@@ -36,6 +36,7 @@ module.exports = async (deployer, network, accounts) => {
         const otherToken = await getTokenContract(pool.otherToken, network);
 
         const pairAddress = await pancakeFactory.getPair(mainToken.address, otherToken.address);
+        console.log(`${pool.mainToken}-${pool.otherToken} at ${pairAddress}`);
         exportToken(pool.mainToken + '-' + pool.otherToken, pairAddress, 18);
     }
 };

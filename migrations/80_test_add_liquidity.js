@@ -43,6 +43,7 @@ async function addLiquidity(network, account, pool, router, oracle, initialAlloc
 
     // Get the price rate
     const otherTokenRate = await oracle.getReferenceData(pool.otherToken, 'BUSD');
+    console.log(otherTokenRate.rate);
     const priceOtherToken = BigNumber(otherTokenRate.rate);
 
     const unit = BigNumber(10 ** 18);
