@@ -1,8 +1,21 @@
 /**
  * Deploys all governance contracts
  */
-const {TREASURY_ACCOUNT, OPERATOR_ACCOUNT, TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT} = require('./migration-config');
-const {ORACLE_START_DATE, TREASURY_START_DATE, MAIN_NETWORKS, ORACLE_PERIOD, TREASURY_PERIOD, TREASURY_TIMELOCK_PERIOD, OPERATOR_TIMELOCK_PERIOD} = require('../deploy.config.js');
+const {
+    TREASURY_ACCOUNT,
+    OPERATOR_ACCOUNT,
+    TEST_TREASURY_ACCOUNT,
+    TEST_OPERATOR_ACCOUNT,
+} = require('./migration-config');
+const {
+    ORACLE_START_DATE,
+    TREASURY_START_DATE,
+    MAIN_NETWORKS,
+    ORACLE_PERIOD,
+    TREASURY_PERIOD,
+    TREASURY_TIMELOCK_PERIOD,
+    OPERATOR_TIMELOCK_PERIOD,
+} = require('../deploy.config.js');
 const {getPancakeFactory, getBUSD, getBandOracle} = require('./external-contracts');
 
 // ============ Contracts ============
@@ -32,15 +45,29 @@ async function migration(deployer, network, accounts) {
     await deployer.deploy(Boardroom, antToken.address, antShare.address);
     await deployer.deploy(Oracle, ANTBUSDPair, ORACLE_PERIOD, ORACLE_START_DATE, bandOracle.address);
     await deployer.deploy(ContributionPool);
-    await deployer.deploy(Treasury, antToken.address, antBond.address, antShare.address, Oracle.address, Boardroom.address, ContributionPool.address, TREASURY_START_DATE, TREASURY_PERIOD);
+    await deployer.deploy(
+        Treasury,
+        antToken.address,
+        antBond.address,
+        antShare.address,
+        Oracle.address,
+        Boardroom.address,
+        ContributionPool.address,
+        TREASURY_START_DATE,
+        TREASURY_PERIOD
+    );
 
     // Timelocks
     let adminAccount = network.includes(MAIN_NETWORKS) ? TREASURY_ACCOUNT : TEST_TREASURY_ACCOUNT;
-    console.log(`Deploying ${TreasuryTimelock.contractName} for account Treasury (${adminAccount}) as both proposer and executor`);
+    console.log(
+        `Deploying ${TreasuryTimelock.contractName} for account Treasury (${adminAccount}) as both proposer and executor`
+    );
     await deployer.deploy(TreasuryTimelock, TREASURY_TIMELOCK_PERIOD, [adminAccount]);
 
     adminAccount = network.includes(MAIN_NETWORKS) ? OPERATOR_ACCOUNT : TEST_OPERATOR_ACCOUNT;
-    console.log(`Deploying ${OperatorTimelock.contractName} for account Operator (${adminAccount}) as both proposer and executor`);
+    console.log(
+        `Deploying ${OperatorTimelock.contractName} for account Operator (${adminAccount}) as both proposer and executor`
+    );
     await deployer.deploy(OperatorTimelock, OPERATOR_TIMELOCK_PERIOD, [adminAccount]);
 }
 
