@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.7.6;
 
 /**
     Counts epoch periods and defines a modifier to prevent operations if the next
@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
     @dev Calling the checkEpoch modifier will automatilly increase the epoch to the
     next period if the check succeeds
  */
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../access/OperatorAccessControl.sol";
 import "./StartTimeLock.sol";

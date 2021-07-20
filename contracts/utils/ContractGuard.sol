@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.3;
+pragma solidity 0.7.6;
 
 contract ContractGuard {
     mapping(uint256 => mapping(address => bool)) private _status;
 
-    function checkSameOriginReentranted() internal view returns (bool) {
-        return _status[block.number][tx.origin];
+    function checkSameOriginReentranted() internal pure returns (bool) {
+        //return _status[block.number][tx.origin];
+        return false;
     }
 
     function checkSameSenderReentranted() internal view returns (bool) {
@@ -18,7 +19,7 @@ contract ContractGuard {
 
         _;
 
-        _status[block.number][tx.origin] = true;
+        //_status[block.number][tx.origin] = true;
         _status[block.number][msg.sender] = true;
     }
 }

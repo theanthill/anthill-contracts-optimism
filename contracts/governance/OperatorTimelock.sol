@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
+pragma solidity 0.7.6;
+pragma abicoder v2;
 /**
     Timelock contract for all operations managed by the Operator account
  */
-import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "@openzeppelin/contracts/access/TimelockController.sol";
 
 import "../access/AdminAccessControl.sol";
 

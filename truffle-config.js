@@ -18,106 +18,94 @@
  *
  */
 
-const HDWalletProvider = require('@truffle/hdwallet-provider');
-//const infuraKey = "fj4jll3k.....";
+// create a file at the root of your project and name it .env -- there you can set process variables
+// like the mnemomic below. Note: .env is ignored by git in this project to keep your private information safe
+//require('dotenv').config();
+//const ganacheMnemonic = process.env['GANACHE_MNEMONIC'];
+//const kovanMnemonic = process.env['KOVAN_MNEMONIC'];
+const mnemonic = 'test test test test test test test test test test test junk'; // process.env["MNEMONIC"];
 
-const fs = require('fs');
-const mnemonic = fs.readFileSync('.secret').toString().trim();
+//const infuraKey = process.env['INFURA_KEY'];
+
+//uncomment to use mainnetMnemonic, be sure to set it in the .env file
+//const mainnetMnemonic = process.env["MAINNET_MNEMONIC"]
+
+//const {ganache} = require('@eth-optimism/plugins/ganache');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
-    /**
-     * Networks define how you connect to your ethereum client and let you set the
-     * defaults web3 uses to send transactions. If you don't specify one truffle
-     * will spin up a development blockchain for you on port 9545 when you
-     * run `develop` or `test`. You can ask a truffle command to use a specific
-     * network from the command line, e.g
-     *
-     * $ truffle test --network <network-name>
-     */
-
     networks: {
-        // Useful for testing. The `development` name is special - truffle uses it by default
-        // if it's defined here and no other network is specified at the command line.
-        // You should run a client (like ganache-cli, geth or parity) in a separate terminal
-        // tab if you use this network and you must also set the `host`, `port` and `network_id`
-        // options below to some value.
-        //
-        dev: {
-            host: '127.0.0.1',
-            port: 8545,
+        /*development: {
+            url: 'http://127.0.0.1:7545',
             network_id: '*',
         },
-        'bsc-local-testnet': {
-            host: '127.0.0.1',
-            port: 8545,
-            network_id: '97',
+        ganache: {
+            network_id: 108,
+            networkCheckTimeout: 100000,
+            provider: function () {
+                return ganache.provider({
+                    mnemonic: ganacheMnemonic,
+                    network_id: 108,
+                    default_balance_ether: 100,
+                });
+            },
+        },*/
+        //for use with local environment -- use `npm runLocalOptimism` to start
+        optimistic_ethereum: {
+            network_id: 420,
+            gas: 200000000,
+            gasPrice: 15000000,
+            provider: function () {
+                return new HDWalletProvider({
+                    mnemonic: {
+                        phrase: mnemonic,
+                    },
+                    providerOrUrl: 'http://127.0.0.1:8545/',
+                    addressIndex: 0,
+                    numberOfAddresses: 1,
+                    chainId: 420,
+                });
+            },
         },
-        'bsc-local-mainnet': {
-            host: '127.0.0.1',
-            port: 8545,
-            network_id: '56',
+        optimistic_kovan: {
+            network_id: 69,
+            chain_id: 69,
+            gas: 32970000,
+            provider: function () {
+                return new HDWalletProvider(kovanMnemonic, 'https://optimism-kovan.infura.io/v3/' + infuraKey, 0, 1);
+            },
         },
-        'bsc-testnet': {
-            provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
-            network_id: 97,
-            confirmations: 10,
-            timeoutBlocks: 200,
-            skipDryRun: true,
-        },
-        'bsc-mainnet': {
-            provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed.binance.org/`),
-            network_id: 56,
-            confirmations: 10,
-            timeoutBlocks: 200,
-            skipDryRun: true,
-        },
-        'eth-local-ropsten': {
-            host: '127.0.0.1',
-            port: 8545,
-            network_id: 3,
-            skipDryRun: true,
-        },
-        'eth-ropsten': {
-            provider: () =>
-                new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/6e5d84ddfd044f44b7b6ae6ec167f3f1`),
-            network_id: 3,
-            gas: 5500000,
-            gasPrice: 15000000000,
-            confirmations: 2,
-            timeoutBlocks: 200,
-            skipDryRun: true,
+        // requires a mainnet mnemonic; you can save this in .env or in whatever secure location
+        // you wish to use
+        optimistic_mainnet: {
+            network_id: 10,
+            chain_id: 10,
+            provider: function () {
+                return new HDWalletProvider(
+                    mainnetMnemonic,
+                    'https://optimism-mainnet.infura.io/v3/' + infuraKey,
+                    0,
+                    1
+                );
+            },
         },
     },
 
-    // Set default mocha options here, use special reporters etc.
     mocha: {
-        // timeout: 100000
+        timeout: 100000,
     },
-
-    // Configure your compilers
     compilers: {
         solc: {
-            version: '0.8.3', // Fetch exact version from solc-bin (default: truffle's version)
-            // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-            // settings: {          // See the solidity docs for advice about optimization and evmVersion
-            //  optimizer: {
-            //    enabled: false,
-            //    runs: 200
-            //  },
-            //  evmVersion: "byzantium"
-            // }
+            version: 'node_modules/@eth-optimism/solc',
+            settings: {
+                optimizer: {
+                    enabled: true,
+                    runs: 800,
+                },
+            },
         },
     },
-
-    // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
-    //
-    // Note: if you migrated your contracts prior to enabling this field in your Truffle project and want
-    // those previously migrated contracts available in the .db directory, you will need to run the following:
-    // $ truffle migrate --reset --compile-all
-
     db: {
         enabled: false,
     },
-
-    plugins: ['truffle-contract-size'],
 };

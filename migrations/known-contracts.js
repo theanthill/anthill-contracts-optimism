@@ -13,6 +13,7 @@ module.exports = {
         'eth-ropsten': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         'eth-local-mainnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
         'eth-mainnet': '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+        optimistic_ethereum: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
     },
 
     PancakeRouter: {
@@ -26,6 +27,7 @@ module.exports = {
         'eth-ropsten': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
         'eth-local-mainnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
         'eth-mainnet': '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
+        optimistic_ethereum: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
     },
 
     BAND_ORACLE: {
@@ -39,6 +41,7 @@ module.exports = {
         'eth-ropsten': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         'eth-local-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
         'eth-mainnet': '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
+        optimistic_ethereum: '0xDA7a001b254CD22e46d3eAB04d937489c93174C3',
     },
 
     BUSD: {

@@ -1,0 +1,25 @@
+{
+  "BUSD": {
+    "address": "0x676A6552B9caD2dfdb9d870f037cd5F5E2D22e88",
+    "decimals": 18
+  },
+  "BNB": {
+    "address": "0x1fcBff695Ec98cC73708c3a57995C7b5A3DFBf6a",
+    "decimals": 18
+  },
+  "ETH": {
+    "address": "0x47958fC74Aa6b3f62f7966adac197cF155f21CC4",
+    "decimals": 18
+  },
+  "PancakeRouter": {
+    "address": "0xD99D1c33F9fC3444f8101754aBC46c52416550D1"
+  },
+  "AntToken-BUSD": {
+    "address": "0x8264A21c3c3566140Aa14f3B843C741978417Af1",
+    "decimals": 18
+  },
+  "AntToken-BNB": {
+    "address": "0xF167D68072f6e4A244461791c0d7d6B46918bd2A",
+    "decimals": 18
+  }
+}

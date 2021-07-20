@@ -23,10 +23,10 @@ const UNI_FACTORY = '0x6725F303b657a9451d8BA641348b6761A6CC7a17';
 
 // Real networks with already deployed Swaps and BUSD
 const LOCAL_NETWORKS = ['dev'];
-const TEST_NETWORKS = ['bsc-testnet', 'bsc-local-testnet', 'eth-ropsten', 'eth-local-ropsten'];
+const TEST_NETWORKS = ['bsc-testnet', 'bsc-local-testnet', 'eth-ropsten', 'eth-local-ropsten', 'optimistic_ethereum'];
 const MAIN_NETWORKS = ['bsc-mainnet', 'bsc-local-mainnet', 'eth-mainnet', 'eth-local-mainnet'];
 const BSC_NETWORKS = ['bsc-testnet', 'bsc-local-testnet', 'bsc-mainnet', 'bsc-local-mainnet'];
-const ETH_NETWORKS = ['eth-ropsten', 'eth-local-ropsten', 'eth-mainnet', 'eth-local-mainnet'];
+const ETH_NETWORKS = ['eth-ropsten', 'eth-local-ropsten', 'eth-mainnet', 'eth-local-mainnet', 'optimistic_ethereum'];
 
 module.exports = {
     POOL_START_DATE,

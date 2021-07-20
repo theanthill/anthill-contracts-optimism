@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.7.6;
 
 /**
     Base contract for the tokens in the system
 
     All tokens are burnable and have an operator
  */
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
 
 import "../access/OperatorAccessControl.sol";
 
