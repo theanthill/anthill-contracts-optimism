@@ -23,7 +23,7 @@ async function migration(deployer, network, accounts) {
         return;
     }
 
-    const pancakeRouter = await getPancakeRouter(network);
+    const swapRouter = await getPancakeRouter(network);
     const bandOracle = await getBandOracle(network);
 
     const initialDeploymentPools = BSC_NETWORKS.includes(network)
@@ -32,7 +32,7 @@ async function migration(deployer, network, accounts) {
 
     for (let pool of initialDeploymentPools) {
         console.log(`Liquidity for the ${pool.mainToken}/${pool.otherToken} staking pool`);
-        await addLiquidity(network, accounts[0], pool, pancakeRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
+        await addLiquidity(network, accounts[0], pool, swapRouter, bandOracle, TEST_ANT_LIQUIDITY_PER_POOL);
     }
 }
 

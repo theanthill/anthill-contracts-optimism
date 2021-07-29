@@ -15,7 +15,7 @@ const AntToken = artifacts.require('AntToken');
 const AntShare = artifacts.require('AntShare');
 const AntBond = artifacts.require('AntBond');
 
-async function getPancakeFactory(network) {
+async function getSwapFactory(network) {
     return LOCAL_NETWORKS.includes(network)
         ? await PancakeFactory.deployed()
         : await PancakeFactory.at(knownContracts.PancakeFactory[network]);
@@ -66,7 +66,7 @@ async function getTokenContract(tokenName, network) {
 }
 
 module.exports = {
-    getPancakeFactory,
+    getSwapFactory,
     getPancakeRouter,
     getBUSD,
     getBNB,

@@ -4,7 +4,7 @@
  */
 const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
 const {BSC_NETWORKS} = require('../deploy.config');
-const {getTokenContract, getPancakeFactory} = require('./external-contracts');
+const {getTokenContract, getSwapFactory} = require('./external-contracts');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
@@ -12,7 +12,7 @@ const AntToken = artifacts.require('AntToken');
 // ============ Main Migration ============
 async function migration(deployer, network, accounts) {
     const antToken = await AntToken.deployed();
-    const pancakeFactory = await getPancakeFactory(network);
+    const swapFactory = await getSwapFactory(network);
 
     const initialDeploymentPools = BSC_NETWORKS.includes(network)
         ? INITIAL_BSC_DEPLOYMENT_POOLS
@@ -22,7 +22,7 @@ async function migration(deployer, network, accounts) {
         const otherToken = await getTokenContract(pool.otherToken, network);
 
         console.log(`Creating pair for the pool ANT/${pool.otherToken}`);
-        const pairAddress = await pancakeFactory.createPair(antToken.address, otherToken.address);
+        const pairAddress = await swapFactory.createPair(antToken.address, otherToken.address);
 
         console.log(`  - Pair created at address ${pairAddress.address}`);
     }

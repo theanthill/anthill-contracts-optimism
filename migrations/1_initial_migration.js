@@ -2,8 +2,8 @@ const Artifactor = require('@truffle/artifactor');
 const artifactor = new Artifactor(`${__dirname}/../build/contracts`);
 
 const ExternalArtifacts = {
-    PancakeFactory: require('@pancakeswap2/pancake-swap-core/build/PancakeFactory.json'),
-    PancakeRouter: require('@theanthill/pancake-swap-periphery/build/PancakeRouter.json'),
+    SwapFactory: require('@pancakeswap2/pancake-swap-core/build/PancakeFactory.json'),
+    SwapRouter: require('@theanthill/pancake-swap-periphery/build/PancakeRouter.json'),
 };
 
 const {LOCAL_NETWORKS, TEST_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');

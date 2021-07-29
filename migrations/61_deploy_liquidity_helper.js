@@ -1,7 +1,7 @@
 /**
  * Deploy the liquidity helper to allow for adding liquidity + staking LP tokens in one call
  */
-const {getTokenContract, getPancakeFactory, getPancakeRouter} = require('./external-contracts');
+const {getTokenContract, getSwapFactory, getPancakeRouter} = require('./external-contracts');
 const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
 const {BSC_NETWORKS} = require('../deploy.config');
 
@@ -12,8 +12,8 @@ const AntToken = artifacts.require('AntToken');
 module.exports = async (deployer, network, accounts) => {
     const antToken = await AntToken.deployed();
 
-    const pancakeFactory = await getPancakeFactory(network);
-    const pancakeRouter = await getPancakeRouter(network);
+    const swapFactory = await getSwapFactory(network);
+    const swapRouter = await getPancakeRouter(network);
 
     const initialDeploymentPools = BSC_NETWORKS.includes(network)
         ? INITIAL_BSC_DEPLOYMENT_POOLS
@@ -26,7 +26,7 @@ module.exports = async (deployer, network, accounts) => {
         const otherToken = await getTokenContract(pool.otherToken, network);
         const poolContract = await PoolContract.deployed();
 
-        const LPToken = await pancakeFactory.getPair(antToken.address, otherToken.address);
+        const LPToken = await swapFactory.getPair(antToken.address, otherToken.address);
 
         console.log(`Deploying liquidity helper for pair ANT/${pool.otherToken}`);
         const liquidityHelper = await deployer.deploy(
@@ -35,7 +35,7 @@ module.exports = async (deployer, network, accounts) => {
             otherToken.address,
             LPToken,
             poolContract.address,
-            pancakeRouter.address
+            swapRouter.address
         );
 
         console.log(`Assigning liquidity helper as ANT/${pool.otherToken} staking pool operator`);

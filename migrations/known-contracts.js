@@ -2,7 +2,7 @@
  * List of known addresses for the different networks
  */
 module.exports = {
-    PancakeFactory: {
+    SwapFactory: {
         // Binance
         'bsc-local-testnet': '0x6725F303b657a9451d8BA641348b6761A6CC7a17',
         'bsc-testnet': '0x6725F303b657a9451d8BA641348b6761A6CC7a17',
@@ -16,7 +16,7 @@ module.exports = {
         optimistic_ethereum: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
     },
 
-    PancakeRouter: {
+    SwapRouter: {
         // Binance
         'bsc-local-testnet': '0xD99D1c33F9fC3444f8101754aBC46c52416550D1',
         'bsc-testnet': '0xD99D1c33F9fC3444f8101754aBC46c52416550D1',

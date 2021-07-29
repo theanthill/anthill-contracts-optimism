@@ -16,7 +16,7 @@ const {
     TREASURY_TIMELOCK_PERIOD,
     OPERATOR_TIMELOCK_PERIOD,
 } = require('../deploy.config.js');
-const {getPancakeFactory, getBUSD, getBandOracle} = require('./external-contracts');
+const {getSwapFactory, getBUSD, getBandOracle} = require('./external-contracts');
 
 // ============ Contracts ============
 const AntToken = artifacts.require('AntToken');
@@ -34,12 +34,12 @@ async function migration(deployer, network, accounts) {
     const antToken = await AntToken.deployed();
     const antBond = await AntBond.deployed();
     const antShare = await AntShare.deployed();
-    const pancakeFactory = await getPancakeFactory(network);
+    const swapFactory = await getSwapFactory(network);
     const bandOracle = await getBandOracle(network);
     const BUSD = await getBUSD(network);
 
     // Get the ANT/BUSD pair
-    const ANTBUSDPair = await pancakeFactory.getPair(antToken.address, BUSD.address);
+    const ANTBUSDPair = await swapFactory.getPair(antToken.address, BUSD.address);
 
     // Deploy all governance contracts
     await deployer.deploy(Boardroom, antToken.address, antShare.address);
