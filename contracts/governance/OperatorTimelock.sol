@@ -4,7 +4,7 @@ pragma abicoder v2;
 /**
     Timelock contract for all operations managed by the Operator account
  */
-import "@openzeppelin/contracts/access/TimelockController.sol";
+import "@theanthill/openzeppelin-optimism/contracts/access/TimelockController.sol";
 
 import "../access/AdminAccessControl.sol";
 

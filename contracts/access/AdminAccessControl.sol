@@ -5,7 +5,7 @@ pragma solidity 0.7.6;
     Admin access to certain functions of a contract
  */
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@theanthill/openzeppelin-optimism/contracts/access/AccessControl.sol";
 
 /**
     Interface

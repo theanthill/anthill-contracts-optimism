@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
 
 import "../interfaces/IPancakePair.sol";
 

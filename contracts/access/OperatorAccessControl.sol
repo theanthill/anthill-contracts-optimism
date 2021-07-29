@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
 
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@theanthill/openzeppelin-optimism/contracts/access/AccessControl.sol";
 
 import "./AdminAccessControl.sol";
 

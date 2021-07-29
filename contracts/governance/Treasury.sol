@@ -5,9 +5,9 @@ pragma solidity 0.7.6;
  * Monetary policy logic to adjust supplies of Ant token assets
  */
 
-import "@openzeppelin/contracts/math/Math.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/Math.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/SafeERC20.sol";
 
 import "./Boardroom.sol";
 import "./Oracle.sol";

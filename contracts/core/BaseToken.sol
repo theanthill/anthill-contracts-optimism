@@ -6,7 +6,7 @@ pragma solidity 0.7.6;
 
     All tokens are burnable and have an operator
  */
-import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/ERC20Burnable.sol";
 
 import "../access/OperatorAccessControl.sol";
 

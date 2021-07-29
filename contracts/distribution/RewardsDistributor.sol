@@ -4,8 +4,8 @@ pragma solidity 0.7.6;
 /**
     COntract used to inject the initial reward to the staking pool
  */
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
 
 import "../access/OperatorAccessControl.sol";
 

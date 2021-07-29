@@ -5,8 +5,8 @@ pragma abicoder v2;
 /**
     Oracle to consult the current price of the token
 */
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
 
 import "../libraries/PancakeOracleLibrary.sol";
 import "../libraries/FixedPoint.sol";

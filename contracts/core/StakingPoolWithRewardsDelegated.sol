@@ -5,10 +5,10 @@ pragma solidity 0.7.6;
     Generic staking pool with delegated access. LP tokens staked here will generate ANT Token rewards
     to the holder
  */
-import "@openzeppelin/contracts/math/Math.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/Math.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/SafeERC20.sol";
 
 import "../access/RewardsDistributorControl.sol";
 

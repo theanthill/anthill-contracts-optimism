@@ -8,7 +8,7 @@ pragma solidity 0.7.6;
     @dev Calling the checkEpoch modifier will automatilly increase the epoch to the
     next period if the check succeeds
  */
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
 
 import "../access/OperatorAccessControl.sol";
 import "./StartTimeLock.sol";

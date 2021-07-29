@@ -10,9 +10,9 @@ pragma solidity 0.7.6;
     contract to add liquidity and stake all in one transaction
 */
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/SafeERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
 
 import "../access/OperatorAccessControl.sol";
 

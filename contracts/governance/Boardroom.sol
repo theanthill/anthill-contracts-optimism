@@ -5,9 +5,9 @@ pragma solidity 0.7.6;
     Boardroom for staking of the _tokenShares and earning rewards during inflationary periods
  */
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/SafeERC20.sol";
+import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
 
 import "../access/OperatorAccessControl.sol";
 import "../utils/ContractGuard.sol";
