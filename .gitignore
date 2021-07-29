@@ -6,3 +6,4 @@ typechain
 *.code-workspace
 artifacts
 *.log
+.env
