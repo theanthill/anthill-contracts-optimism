@@ -18,47 +18,33 @@
  *
  */
 
-// create a file at the root of your project and name it .env -- there you can set process variables
-// like the mnemomic below. Note: .env is ignored by git in this project to keep your private information safe
-//require('dotenv').config();
-//const ganacheMnemonic = process.env['GANACHE_MNEMONIC'];
-//const kovanMnemonic = process.env['KOVAN_MNEMONIC'];
-const mnemonic = 'test test test test test test test test test test test junk'; // process.env["MNEMONIC"];
+/**
+ * Create a file at the root of your project and name it .env -- there you can set process variables
+ * like the mnemomic below. Note: .env is ignored by git in this project to keep your private information safe
+ */
+require('dotenv').config();
 
-//const infuraKey = process.env['INFURA_KEY'];
-
-//uncomment to use mainnetMnemonic, be sure to set it in the .env file
-//const mainnetMnemonic = process.env["MAINNET_MNEMONIC"]
-
-//const {ganache} = require('@eth-optimism/plugins/ganache');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
+const localMnemonic = process.env['OPTIMISM_LOCAL_MNEMONIC'];
+const kovanMnemonic = process.env['OPTIMISM_KOVAN_MNEMONIC'];
+const mainnetMnemonic = process.env['OPTIMISM_MAINNET_MNEMONIC'];
+
+const infuraKey = process.env['INFURA_KEY'];
+
 module.exports = {
+    contracts_build_directory: './build/',
+    contracts_directory: './contracts/',
+
     networks: {
-        /*development: {
-            url: 'http://127.0.0.1:7545',
-            network_id: '*',
-        },
-        ganache: {
-            network_id: 108,
-            networkCheckTimeout: 100000,
-            provider: function () {
-                return ganache.provider({
-                    mnemonic: ganacheMnemonic,
-                    network_id: 108,
-                    default_balance_ether: 100,
-                });
-            },
-        },*/
-        //for use with local environment -- use `npm runLocalOptimism` to start
-        optimistic_ethereum: {
+        'optimistic-local-node': {
             network_id: 420,
             gas: 200000000,
             gasPrice: 15000000,
             provider: function () {
                 return new HDWalletProvider({
                     mnemonic: {
-                        phrase: mnemonic,
+                        phrase: localMnemonic,
                     },
                     providerOrUrl: 'http://127.0.0.1:8545/',
                     addressIndex: 0,
@@ -67,17 +53,28 @@ module.exports = {
                 });
             },
         },
-        optimistic_kovan: {
+        'optimistic-local-kovan': {
+            host: '127.0.0.1',
+            port: 8545,
+            network_id: 69,
+            skipDryRun: true,
+        },
+        'optimistic-kovan': {
             network_id: 69,
             chain_id: 69,
-            gas: 32970000,
+            gas: 11000000,
+            gasPrice: 15000000,
             provider: function () {
                 return new HDWalletProvider(kovanMnemonic, 'https://optimism-kovan.infura.io/v3/' + infuraKey, 0, 1);
             },
         },
-        // requires a mainnet mnemonic; you can save this in .env or in whatever secure location
-        // you wish to use
-        optimistic_mainnet: {
+        'optimistic-local-mainnet': {
+            host: '127.0.0.1',
+            port: 8545,
+            network_id: 10,
+            skipDryRun: true,
+        },
+        'optimistic-mainnet': {
             network_id: 10,
             chain_id: 10,
             provider: function () {

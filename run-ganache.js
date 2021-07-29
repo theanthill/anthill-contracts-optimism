@@ -1,5 +1,9 @@
+require('dotenv').config();
+
 const yargs = require('yargs');
 const {spawn} = require('child_process');
+
+const infuraKey = process.env['INFURA_KEY'];
 
 async function onExit(childProcess) {
     return new Promise((resolve, reject) => {
@@ -28,10 +32,19 @@ async function runGanache(network, blocktime) {
             ganacheArgs.push(...['-f', 'https://bsc-dataseed.binance.org/', '--chainId', '56']);
             break;
         case 'eth-local-ropsten':
-            ganacheArgs.push(
-                ...['-f', 'https://ropsten.infura.io/v3/6e5d84ddfd044f44b7b6ae6ec167f3f1', '--chainId', '3']
-            );
+            ganacheArgs.push(...['-f', 'https://ropsten.infura.io/v3/' + infuraKey, '--chainId', '3']);
             break;
+        case 'eth-local-mainnet':
+            ganacheArgs.push(...['-f', 'https://mainnet.infura.io/v3/' + infuraKey, '--chainId', '1']);
+            break;
+        case 'optimistic-local-kovan':
+            ganacheArgs.push(...['-f', 'https://optimism-kovan.infura.io/v3/' + infuraKey, '--chainId', '69']);
+            break;
+        case 'optimistic-local-mainnet':
+            ganacheArgs.push(...['-f', 'https://optimism-mainnet.infura.io/v3/' + infuraKey, '--chainId', '10']);
+            break;
+        default:
+            throw new Error('Unsupported network: ' + network);
     }
 
     // Automatic block mining time
