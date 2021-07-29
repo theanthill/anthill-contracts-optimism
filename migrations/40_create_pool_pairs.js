@@ -3,7 +3,7 @@
  * the pair contract already existing when its constructor is executed
  */
 const {INITIAL_BSC_DEPLOYMENT_POOLS, INITIAL_ETH_DEPLOYMENT_POOLS} = require('./migration-config');
-const {BSC_NETWORKS} = require('../deploy.config');
+const {BSC_NETWORKS, LIQUIDITY_FEE} = require('../deploy.config');
 const {getTokenContract, getSwapFactory} = require('./external-contracts');
 
 // ============ Contracts ============
@@ -22,9 +22,9 @@ async function migration(deployer, network, accounts) {
         const otherToken = await getTokenContract(pool.otherToken, network);
 
         console.log(`Creating pair for the pool ANT/${pool.otherToken}`);
-        const pairAddress = await swapFactory.createPair(antToken.address, otherToken.address);
+        const poolAddress = await swapFactory.createPool(antToken.address, otherToken.address, LIQUIDITY_FEE);
 
-        console.log(`  - Pair created at address ${pairAddress.address}`);
+        console.log(`  - Pool created at address ${poolAddress.address}`);
     }
 }
 

@@ -23,14 +23,12 @@ const MockBNB = artifacts.require('MockBNB');
 const MockETH = artifacts.require('MockETH');
 const MockBandOracle = artifacts.require('MockStdReference');
 const TokenFaucet = artifacts.require('TokenFaucet');
-const SwapFactory = artifacts.require('SwapFactory');
-const SwapRouter = artifacts.require('SwapRouter');
 
 // ============ Main Migration ============
 async function migration(deployer, network, accounts) {
     // BUSD
     if (!MAIN_NETWORKS.includes(network)) {
-        await deployer.deploy(MockBUSD);
+        await deployer.deploy(MockBUSD, {gas: 80000000});
         const mockBUSD = await MockBUSD.deployed();
 
         const unit = BigNumber(10 ** 18);
@@ -41,7 +39,7 @@ async function migration(deployer, network, accounts) {
 
     // BNB
     if (!MAIN_NETWORKS.includes(network)) {
-        await deployer.deploy(MockBNB);
+        await deployer.deploy(MockBNB, {gas: 80000000});
         const mockBNB = await MockBNB.deployed();
 
         const unit = BigNumber(10 ** 18);
@@ -52,7 +50,7 @@ async function migration(deployer, network, accounts) {
 
     // ETH
     if (!MAIN_NETWORKS.includes(network)) {
-        await deployer.deploy(MockETH);
+        await deployer.deploy(MockETH, {gas: 80000000});
         const mockETH = await MockETH.deployed();
 
         const unit = BigNumber(10 ** 18);
@@ -62,9 +60,7 @@ async function migration(deployer, network, accounts) {
     }
 
     // Band Oracle
-    if (LOCAL_NETWORKS.includes(network)) {
-        await deployer.deploy(MockBandOracle);
-    }
+    await deployer.deploy(MockBandOracle, {gas: 21000000});
 
     // Faucet
     if (!MAIN_NETWORKS.includes(network)) {
@@ -76,24 +72,20 @@ async function migration(deployer, network, accounts) {
 
         let nativeToken = BSC_NETWORKS.includes(network) ? await MockBNB.deployed() : await MockETH.deployed();
 
-        await deployer.deploy(TokenFaucet, antToken.address, mockBUSD.address, nativeToken.address, faucetMaxRefill, [
-            TEST_TREASURY_ACCOUNT,
-            TEST_OPERATOR_ACCOUNT,
-            TEST_ADMIN_ACCOUNT,
-            TEST_HQ_ACCOUNT,
-        ]);
+        await deployer.deploy(
+            TokenFaucet,
+            antToken.address,
+            mockBUSD.address,
+            nativeToken.address,
+            faucetMaxRefill,
+            [TEST_TREASURY_ACCOUNT, TEST_OPERATOR_ACCOUNT, TEST_ADMIN_ACCOUNT, TEST_HQ_ACCOUNT],
+            {gas: 37000000}
+        );
         const tokenFaucet = await TokenFaucet.deployed();
 
         await mockBUSD.mint(tokenFaucet.address, faucetInitialAllocation);
         await nativeToken.mint(tokenFaucet.address, faucetInitialAllocation);
         await antToken.mint(tokenFaucet.address, faucetInitialAllocation);
-    }
-
-    // PancakeSwap
-    if (LOCAL_NETWORKS.includes(network)) {
-        await deployer.deploy(SwapFactory, accounts[0]);
-        const swapFactory = await SwapFactory.deployed();
-        await deployer.deploy(SwapRouter, swapFactory.address, accounts[0]);
     }
 }
 

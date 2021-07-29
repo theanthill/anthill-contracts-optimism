@@ -7,12 +7,12 @@ pragma abicoder v2;
 */
 import "@theanthill/openzeppelin-optimism/contracts/math/SafeMath.sol";
 import "@theanthill/openzeppelin-optimism/contracts/token/ERC20/IERC20.sol";
+import "@uniswap/v3-core-optimism/contracts/interfaces/IUniswapV3Pool.sol";
 
 import "../libraries/PancakeOracleLibrary.sol";
 import "../libraries/FixedPoint.sol";
 
 import "../interfaces/IERC20Extended.sol";
-import "../interfaces/IPancakePair.sol";
 import "../interfaces/IStdReference.sol";
 
 import "../utils/EpochCounter.sol";
@@ -46,7 +46,7 @@ contract Oracle is IOracle, EpochCounter {
     string constant EXTERNAL_ORACLE_QUOTE = "USDC";
 
     // Immutables
-    IPancakePair public immutable pair;
+    IUniswapV3Pool public immutable pool;
     address public immutable token0;
     address public immutable token1;
     IStdReference public immutable bandOracle;
@@ -61,22 +61,22 @@ contract Oracle is IOracle, EpochCounter {
     FixedPoint.uq112x112 public price1Average;
 
     constructor(
-        IPancakePair _pair,
+        IUniswapV3Pool _pool,
         uint256 _period,
         uint256 _startTime,
         IStdReference _bandOracle
     ) EpochCounter(_period, _startTime, 0) {
-        pair = _pair;
+        pool = _pool;
 
-        token0 = _pair.token0();
-        token1 = _pair.token1();
+        token0 = _pool.token0();
+        token1 = _pool.token1();
 
         bandOracle = _bandOracle;
 
-        price0CumulativeLast = _pair.price0CumulativeLast();
-        price1CumulativeLast = _pair.price1CumulativeLast();
+        price0CumulativeLast = _pool.price0CumulativeLast();
+        price1CumulativeLast = _pool.price1CumulativeLast();
 
-        (, , blockTimestampLast) = _pair.getReserves();
+        (, , blockTimestampLast) = _pool.getReserves();
     }
 
     /** 
@@ -87,7 +87,7 @@ contract Oracle is IOracle, EpochCounter {
     function update() external override checkEpoch {
         // Obtain the TWAP for the latest block
         (uint256 price0Cumulative, uint256 price1Cumulative, uint32 blockTimestamp) = PancakeOracleLibrary
-        .currentCumulativePrices(address(pair));
+        .currentCumulativePrices(address(pool));
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
 
         // overflow is desired, casting never truncates
@@ -119,7 +119,7 @@ contract Oracle is IOracle, EpochCounter {
     }
 
     /**
-        Returns the latest known price from the external oracle for the BUSD/USDT pair
+        Returns the latest known price from the external oracle for the BUSD/USDT pool
 
         @return price  Latest external price of the token multiplied by 1e18
     */

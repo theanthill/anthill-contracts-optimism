@@ -4060,7 +4060,7 @@
           },
           {
             "internalType": "contract IPancakeRouter02",
-            "name": "pancakeRouter",
+            "name": "swapRouter",
             "type": "address"
           }
         ],
@@ -4951,7 +4951,7 @@
           },
           {
             "internalType": "contract IPancakeRouter02",
-            "name": "pancakeRouter",
+            "name": "swapRouter",
             "type": "address"
           }
         ],

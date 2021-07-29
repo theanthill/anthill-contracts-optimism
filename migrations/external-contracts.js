@@ -1,11 +1,12 @@
 /**
  * Accessor functions for external contracts that may be mocked depending on the deployment network
  */
+
 const knownContracts = require('./known-contracts');
 const {LOCAL_NETWORKS, MAIN_NETWORKS} = require('../deploy.config.js');
-
-const PancakeFactory = artifacts.require('PancakeFactory');
-const PancakeRouter = artifacts.require('PancakeRouter');
+const PositionManager = artifacts.require('INonfungiblePositionManager');
+const SwapFactory = artifacts.require('IUniswapV3FactoryWrap');
+const SwapRouter = artifacts.require('ISwapRouterWrap');
 const MockBUSD = artifacts.require('MockBUSD');
 const MockBNB = artifacts.require('MockBNB');
 const MockETH = artifacts.require('MockETH');
@@ -15,16 +16,16 @@ const AntToken = artifacts.require('AntToken');
 const AntShare = artifacts.require('AntShare');
 const AntBond = artifacts.require('AntBond');
 
-async function getSwapFactory(network) {
-    return LOCAL_NETWORKS.includes(network)
-        ? await PancakeFactory.deployed()
-        : await PancakeFactory.at(knownContracts.PancakeFactory[network]);
+async function getPositionManager(network) {
+    return await PositionManager.at(knownContracts.PositionManager[network]);
 }
 
-async function getPancakeRouter(network) {
-    return LOCAL_NETWORKS.includes(network)
-        ? await PancakeRouter.deployed()
-        : await PancakeRouter.at(knownContracts.PancakeRouter[network]);
+async function getSwapFactory(network) {
+    return await SwapFactory.at(knownContracts.SwapFactory[network]);
+}
+
+async function getSwapRouter(network) {
+    return await SwapRouter.at(knownContracts.SwapRouter[network]);
 }
 
 async function getBUSD(network) {
@@ -40,9 +41,7 @@ async function getETH(network) {
 }
 
 async function getBandOracle(network) {
-    return !LOCAL_NETWORKS.includes(network)
-        ? await MockBandOracle.at(knownContracts.BAND_ORACLE[network])
-        : await MockBandOracle.deployed();
+    return await MockBandOracle.deployed();
 }
 
 async function getTokenContract(tokenName, network) {
@@ -67,7 +66,7 @@ async function getTokenContract(tokenName, network) {
 
 module.exports = {
     getSwapFactory,
-    getPancakeRouter,
+    getSwapRouter,
     getBUSD,
     getBNB,
     getETH,

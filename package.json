@@ -7,18 +7,11 @@
     "build": "npm run compile && npm run migrate",
     "compile": "npx truffle compile",
     "clean": "npx rimraf build/* deployments/*.log",
-    "migrate:dev": "npx truffle migrate --network dev --reset | tee deployments/deploy.dev.log",
-    "migrate:bsc-local-testnet": "npx truffle migrate --network bsc-local-testnet --reset | tee deployments/deploy.bsc-local-testnet.log",
-    "migrate:bsc-local-mainnet": "npx truffle migrate --network bsc-local-mainnet --reset | tee deployments/deploy.bsc-local-mainnet.log",
-    "migrate:bsc-testnet": "npx truffle migrate --network bsc-testnet --reset | tee deployments/deploy.bsc-testnet.log",
-    "migrate:bsc-mainnet": "npx truffle migrate --network bsc-mainnet --reset | tee deployments/deploy.bsc-mainnet.log",
-    "migrate:eth-local-ropsten": "npx truffle migrate --network eth-local-ropsten --reset | tee deployments/deploy.eth-local-ropsten.log",
-    "migrate:eth-ropsten": "npx truffle migrate --network eth-ropsten --reset | tee deployments/deploy.eth-ropsten.log",
-    "ganache:bsc-local-testnet": "node run-ganache --network bsc-local-testnet --blocktime 3",
-    "ganache:bsc-local-mainnet": "node run-ganache --network bsc-local-mainnet --blocktime 3",
-    "ganache:eth-local-ropsten": "node run-ganache --network eth-local-ropsten --blocktime 3",
-    "ganache:eth-local-mainnet": "node run-ganache --network eth-local-mainnet --blocktime 3",
-    "ganache:dev": "node run-ganache --network dev"
+    "migrate:optimistic-local-kovan": "npx truffle migrate --network optimistic-local-kovan --reset | tee deployments/deploy.optimistic-local-kovan.log",
+    "migrate:optimistic-kovan": "npx truffle migrate --network optimistic-kovan --reset | tee deployments/deploy.optimistic-local-kovan.log",
+    "migrate:optimistic-local-mainnet": "npx truffle migrate --network optimistic-local-mainnet --reset | tee deployments/deploy.optimistic-local-mainnet.log",
+    "ganache:optimistic-local-kovan": "node run-ganache --network optimistic-local-kovan --blocktime 3",
+    "ganache:optimistic-local-mainnet": "node run-ganache --network optimistic-local-mainnet --blocktime 3"
   },
   "repository": {
     "type": "git",

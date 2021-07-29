@@ -15,6 +15,7 @@ const {
     TREASURY_PERIOD,
     TREASURY_TIMELOCK_PERIOD,
     OPERATOR_TIMELOCK_PERIOD,
+    LIQUIDITY_FEE,
 } = require('../deploy.config.js');
 const {getSwapFactory, getBUSD, getBandOracle} = require('./external-contracts');
 
@@ -39,10 +40,10 @@ async function migration(deployer, network, accounts) {
     const BUSD = await getBUSD(network);
 
     // Get the ANT/BUSD pair
-    const ANTBUSDPair = await swapFactory.getPair(antToken.address, BUSD.address);
+    const ANTBUSDPair = await swapFactory.getPool(antToken.address, BUSD.address, LIQUIDITY_FEE);
 
     // Deploy all governance contracts
-    await deployer.deploy(Boardroom, antToken.address, antShare.address);
+    await deployer.deploy(Boardroom, antToken.address, antShare.address, {gas: 100000000});
     await deployer.deploy(Oracle, ANTBUSDPair, ORACLE_PERIOD, ORACLE_START_DATE, bandOracle.address);
     await deployer.deploy(ContributionPool);
     await deployer.deploy(
@@ -54,7 +55,8 @@ async function migration(deployer, network, accounts) {
         Boardroom.address,
         ContributionPool.address,
         TREASURY_START_DATE,
-        TREASURY_PERIOD
+        TREASURY_PERIOD,
+        {gas: 100000000}
     );
 
     // Timelocks
